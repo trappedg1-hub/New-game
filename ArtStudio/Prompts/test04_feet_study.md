@@ -1,7 +1,8 @@
 # Test 04 — Художественный крупный план ног и ступней — канон v3.1
 
-Статус: ОЖИДАНИЕ (после Test 03)
+Статус: **APPROVED 2026-11-04** (кандидат 1/2)
 Файл: `Generated/Experiments/test04_feet_study_v1.png`
+Утверждённая копия: `Generated/Approved/HERO-01_test04_feet_study.png`
 
 ## Референсы (images, по порядку — identity ПЕРВЫМИ)
 
