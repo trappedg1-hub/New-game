@@ -59,7 +59,7 @@ M = фигура/тело A + look C (волосы, глаза, tan lines, top).
 | pose01 | back view | pose01_backview_v1.png | **APPROVE** | идентичность, силуэт, tan lines — в норме |
 | pose02 | look-back | pose02_lookback_v1.png | **APPROVE** | идентичность, tan lines на руках — в норме |
 | pose03 | high-angle | v1, v2 | к. —, одиночная | v1 **PARTIAL** → v2 **APPROVE** | v1: «не детализированные ножки, отсутствуют следы от загара» → v2: ноги детализированы, tan lines заметнее (мягковаты — принято), crop top устранён (top+skirt) |
-| pose04 | detail close-up | — | — | ожидает |
+| pose04 | detail close-up | pose04_detail_v1.png | **APPROVE** | шея/ключица/плечо с tan line, глянцевые волны, бретель; полного лица нет (по ТЗ) |
 | pose05 | playful | — | — | ожидает |
 
 ## События
