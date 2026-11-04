@@ -1,7 +1,8 @@
 # Test 01 — Портрет (новая концепция, канон v3.1)
 
-Статус: ЗАПУЩЕН 2026-11-04 (режим сравнения)
+Статус: **APPROVED 2026-11-04** (кандидат 1/2)
 Файл: `Generated/Experiments/test01b_portrait_v1.png`
+Утверждённая копия: `Generated/Approved/HERO-01_test01_portrait.png`
 (архив: v1–v3 тёмноволосой концепции — superseded, см. review log)
 
 ## Референсы (images, по порядку)
