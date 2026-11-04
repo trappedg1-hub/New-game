@@ -60,7 +60,19 @@ M = фигура/тело A + look C (волосы, глаза, tan lines, top).
 | pose02 | look-back | pose02_lookback_v1.png | **APPROVE** | идентичность, tan lines на руках — в норме |
 | pose03 | high-angle | v1, v2 | к. —, одиночная | v1 **PARTIAL** → v2 **APPROVE** | v1: «не детализированные ножки, отсутствуют следы от загара» → v2: ноги детализированы, tan lines заметнее (мягковаты — принято), crop top устранён (top+skirt) |
 | pose04 | detail close-up | pose04_detail_v1.png | **APPROVE** | шея/ключица/плечо с tan line, глянцевые волны, бретель; полного лица нет (по ТЗ) |
-| pose05 | playful | pose05_playful_v1.png | **REJECT** | комментарий пользователя: «Одежду сделать более Suggestive SFW, детализация кожи хромает, сделать более смелую playful картину» → v2: (1) form-fitting dress, deep neckline + high slit (SFW); (2) detailed skin rendering (хайлайты, текстура); (3) bold playful сцена (cheeky smile, рука за разрез, динамика) |
+| pose05 | playful | v1, v2 | —, одиночная | v1 **REJECT** → v2 **APPROVE** | v1: «Suggestive SFW, детализация кожи хромает, смелая playful» → v2: form-fitting dress + deep neckline + high slit, detailed skin, cheeky smile + рука за разрез — **сработало** |
+
+### Итоги Stage 2 (2026-11-04) — ЗАВЕРШЁН 5/5
+
+- Все 5 поз/ракурсов утверждены (pose03 — v2, pose05 — v2).
+- Утверждено в Approved/: pose01 back view, pose02 look-back, pose03 high-angle, pose04 detail,
+  pose05 playful.
+- Подтверждено: identity-first протокол + явные no-copy запреты стабильно держат идентичность
+  во ВСЕХ ракурсах, включая back view и detail close-up.
+- Системная слабость: **tan lines** генерируются мягче канона — при важных сценах усилять
+  формулировкой two-tone контраста.
+- UI-глюк пикера (3 случая) — обход: одиночная генерация; задокументировано в
+  `Docs/02_model-capabilities.md`.
 
 ## События
 
