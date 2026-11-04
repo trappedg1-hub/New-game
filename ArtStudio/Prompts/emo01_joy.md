@@ -1,7 +1,15 @@
-# Emo 01 — Радость (joy)
+# Emo 01 — Радость (joy) — v3 FIXED CAMERA
 
-Статус: ЗАПУЩЕН 2026-11-04
-Файл: `Generated/Experiments/emo01_joy_v1.png`
+Статус: v3 — ЗАПУСК (батч, следующий ход) — единая фиксированная камера по уточнению пользователя
+Файлы: v1 — double-frame артефакт; v2 — single (удалась, но вне единого рига); **v3 — в работе**
+
+## Камера (FIXED — одинакова во ВСЕХ 6 образах, по требованию пользователя 2026-11-04)
+
+- Front-facing, dead-on frontal angle; без наклона камеры
+- Голова: прямо вперёд, upright, **без tilt, без поворота**
+- Одинаковые distance/zoom/framing по всему сету
+- Кроп: лицо, голова, шея + небольшая часть верхней части груди
+- Единственное различие между 6 картинками = **выражение лица**
 
 ## Референсы (images, по порядку)
 
@@ -9,20 +17,30 @@
 2. `Generated/Approved/HERO-01_test01_portrait.png` — идентичность
 3. `Style/references/style_ref_01_fullbody.png` — **только** стиль
 
-## Prompt (EN)
+## Prompt (EN) — общий шаблон + блоками
 
 Identity: The first two attached images show the SAME target character — keep her face,
 hairstyle, eye color, skin tone, tan lines and body exactly consistent with them. The third
 attached image is the art-style reference ONLY — take style, never identity.
 
-Head-and-shoulders close-up portrait, same consistent set look. A beautiful adult anime woman
-in her late 20s: long beautiful golden-blonde hair with strong glossy waves (NO straight bangs,
-NO hair clips, NO hairpins, NO hair accessories of any kind), large expressive violet-purple
-anime eyes (violet irises, NOT blue), elegantly arched eyebrows, slender nose, soft full lips,
-mature elegant late-20s face, lightly tanned sun-kissed skin, natural tan lines on shoulders.
+One single woman, one single face in the image — do not draw the same character twice, no
+stacked panels, no before-after, no diptych.
+
+Camera: fixed dead-on front-facing camera, identical framing, distance and zoom for the whole
+set. The head faces straight forward, upright, no tilt, no turn, no rotation. Tight close-up
+composition: face, head, neck and only a small portion of the upper chest visible.
+
+A beautiful adult anime woman in her late 20s: long beautiful golden-blonde hair with strong
+glossy waves (NO straight bangs, NO hair clips, NO hairpins, NO hair accessories of any kind),
+large expressive violet-purple anime eyes (violet irises, NOT blue), elegantly arched eyebrows,
+slender nose, soft full lips, mature elegant late-20s face, lightly tanned sun-kissed skin,
+natural tan lines on shoulders.
+
 Expression: a bright joyful open smile, eyes bright and slightly narrowed with happiness,
-radiant cheerful expression, slight head tilt, warm energetic mood. She wears a simple black
-off-shoulder top. Dark neutral backdrop, soft studio key light with gentle rim light.
+radiant cheerful mood.
+
+She wears a simple black off-shoulder top. Dark neutral backdrop, soft studio key light with
+gentle rim light.
 
 Style: in EXACTLY the art style of the third attached style reference image — same lineart
 character, same shading method, same rendering quality, same lighting, same clean high-clarity
@@ -34,4 +52,6 @@ official game artwork.
 
 ## Changelog
 
-- v1 — первый запуск Stage 3 (сет эмоций).
+- v1 (батч) — double-frame (два портрета в одном кадре) — **артефакт, отклонено**.
+- v2 (одиночная) — single portrait, радость OK; но вне единого рига (наклон головы).
+- v3 — полный сет с фиксированной камерой (6/6), только эмоция меняется.

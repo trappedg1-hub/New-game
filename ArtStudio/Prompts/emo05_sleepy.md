@@ -1,7 +1,8 @@
-# Emo 05 — Сонливость (sleepy)
+# Emo 05 — Сонливость (sleepy) — v3 FIXED CAMERA
 
-Статус: ОЖИДАНИЕ (после emo04)
-Файл: `Generated/Experiments/emo05_sleepy_v1.png`
+Статус: v1 — single frame, но landscape + наклон головы (вне единого рига) → **v3 — в работе**
+
+## Камера (FIXED — см. emo01_joy.md, идентична для всего сета)
 
 ## Референсы (images, по порядку)
 
@@ -15,15 +16,24 @@ Identity: The first two attached images show the SAME target character — keep 
 hairstyle, eye color, skin tone, tan lines and body exactly consistent with them. The third
 attached image is the art-style reference ONLY — take style, never identity.
 
-Head-and-shoulders close-up portrait, same consistent set look. A beautiful adult anime woman
-in her late 20s: long beautiful golden-blonde hair with strong glossy waves (NO straight bangs,
-NO hair clips, NO hairpins, NO hair accessories of any kind), large expressive violet-purple
-anime eyes (violet irises, NOT blue), elegantly arched eyebrows, slender nose, soft full lips,
-mature elegant late-20s face, lightly tanned sun-kissed skin, natural tan lines on shoulders.
+One single woman, one single face in the image — do not draw the same character twice, no
+stacked panels, no before-after, no diptych.
+
+Camera: fixed dead-on front-facing camera, identical framing, distance and zoom for the whole
+set. The head faces straight forward, upright, no tilt, no turn, no rotation. Tight close-up
+composition: face, head, neck and only a small portion of the upper chest visible.
+
+A beautiful adult anime woman in her late 20s: long beautiful golden-blonde hair with strong
+glossy waves (NO straight bangs, NO hair clips, NO hairpins, NO hair accessories of any kind),
+large expressive violet-purple anime eyes (violet irises, NOT blue), elegantly arched eyebrows,
+slender nose, soft full lips, mature elegant late-20s face, lightly tanned sun-kissed skin,
+natural tan lines on shoulders.
+
 Expression: a sleepy drowsy expression, half-closed heavy eyes with lowered lashes, a soft
-relaxed face, faint parted lips as in a quiet yawn, languid relaxed mood, head tilted slightly
-to one side. She wears a simple black off-shoulder top. Dark neutral backdrop, soft studio key
-light with gentle rim light.
+relaxed face, faint parted lips as in a quiet yawn.
+
+She wears a simple black off-shoulder top. Dark neutral backdrop, soft studio key light with
+gentle rim light.
 
 Style: in EXACTLY the art style of the third attached style reference image — same lineart
 character, same shading method, same rendering quality, same lighting, same clean high-clarity
@@ -35,4 +45,6 @@ official game artwork.
 
 ## Changelog
 
-- v1 — сет эмоций.
+- v1 (батч) — single frame, хорошая сонная эмоция, НО landscape-кадр + наклон головы → вне
+  единого рига, в v3 пересъёмка.
+- v3 — фиксированная камера; «head tilted to one side» УБРАНО.

@@ -60,7 +60,27 @@ M = фигура/тело A + look C (волосы, глаза, tan lines, top).
 | pose02 | look-back | pose02_lookback_v1.png | **APPROVE** | идентичность, tan lines на руках — в норме |
 | pose03 | high-angle | v1, v2 | к. —, одиночная | v1 **PARTIAL** → v2 **APPROVE** | v1: «не детализированные ножки, отсутствуют следы от загара» → v2: ноги детализированы, tan lines заметнее (мягковаты — принято), crop top устранён (top+skirt) |
 | pose04 | detail close-up | pose04_detail_v1.png | **APPROVE** | шея/ключица/плечо с tan line, глянцевые волны, бретель; полного лица нет (по ТЗ) |
-| pose05 | playful | v1, v2 | —, одиночная | v1 **REJECT** → v2 **APPROVE** | v1: «Suggestive SFW, детализация кожи хромает, смелая playful» → v2: form-fitting dress + deep neckline + high slit, detailed skin, cheeky smile + рука за разрез — **сработало** |
+| pose05 | playful | v1, v2 | —, одиночная | v1 **REJECT** → v2 **APPROVE** |
+
+## Stage 3 — Сет эмоций (старт 2026-11-04)
+
+По запросу пользователя режим **батч**: все 6 эмоций (joy, sad, anger, surprise, sleepy, blush)
+генерируются одним заходом (одиночные генерации), пользователь выбирает/оценивает по сету.
+
+| # | Файл | Эмоция | Результат | Комментарий |
+|---|---|---|---|---|
+| emo01 | emo01_joy | Радость | v1 (offer_options): пользователь выбрал 2/2, **одобрил направление** — UI-глюк пикера (4-й), файл потерян; v1 (батч) — double-frame; v2 — single, радость OK | — |
+| emo02 | emo02_sad | Грусть | v1, v2 — double-frame | — |
+| emo03 | emo03_anger | Раздражение | v1, v2 — double-frame | — |
+| emo04 | emo04_surprise | Удивление | v1 — кроп нарушен (юбка/midriff); v2 — double-frame | — |
+| emo05 | emo05_sleepy | Сонливость | v1 — single, эмоция OK, но landscape + наклон головы (вне рига) | — |
+| emo06 | emo06_blush | Смущение | v1 — single, эмоция OK, но рука у щеки + наклон (вне рига) | — |
+
+**Уточнение пользователя (2026-11-04):** все 6 образов — единая FIXED-камера: front-facing,
+голова прямая без tilt/поворота, одинаковые distance/zoom/framing, кроп = лицо/голова/шея +
+небольшая часть верхней груди; **единственное различие = выражение лица**.
+→ **v3 = полный пересъём сета (6 шт.)** с единым camera-rig блоком и усиленным
+anti-duplication. Запуск v3 — следующий ход (в текущем исчерпан лимит 10 генераций/ход). v1: «Suggestive SFW, детализация кожи хромает, смелая playful» → v2: form-fitting dress + deep neckline + high slit, detailed skin, cheeky smile + рука за разрез — **сработало** |
 
 ### Итоги Stage 2 (2026-11-04) — ЗАВЕРШЁН 5/5
 

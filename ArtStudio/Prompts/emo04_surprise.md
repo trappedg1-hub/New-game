@@ -1,7 +1,9 @@
-# Emo 04 — Удивление (surprise)
+# Emo 04 — Удивление (surprise) — v3 FIXED CAMERA
 
-Статус: ОЖИДАНИЕ (после emo03)
-Файл: `Generated/Experiments/emo04_surprise_v1.png`
+Статус: v3 — ЗАПУСК (батч, следующий ход)
+Файлы: v1 — single, но кроп нарушен (crop top + юбка, midriff); v2 — double-frame; **v3 — в работе**
+
+## Камера (FIXED — см. emo01_joy.md, идентична для всего сета)
 
 ## Референсы (images, по порядку)
 
@@ -15,15 +17,24 @@ Identity: The first two attached images show the SAME target character — keep 
 hairstyle, eye color, skin tone, tan lines and body exactly consistent with them. The third
 attached image is the art-style reference ONLY — take style, never identity.
 
-Head-and-shoulders close-up portrait, same consistent set look. A beautiful adult anime woman
-in her late 20s: long beautiful golden-blonde hair with strong glossy waves (NO straight bangs,
-NO hair clips, NO hairpins, NO hair accessories of any kind), large expressive violet-purple
-anime eyes (violet irises, NOT blue), elegantly arched eyebrows, slender nose, soft full lips,
-mature elegant late-20s face, lightly tanned sun-kissed skin, natural tan lines on shoulders.
-Expression: a surprised shocked expression, high raised eyebrows, wide-open eyes with visible
-excitement, a slightly open mouth, a startled yet elegant reaction, head turned slightly. She
-wears a simple black off-shoulder top. Dark neutral backdrop, soft studio key light with gentle
-rim light.
+One single woman, one single face in the image — do not draw the same character twice, no
+stacked panels, no before-after, no diptych.
+
+Camera: fixed dead-on front-facing camera, identical framing, distance and zoom for the whole
+set. The head faces straight forward, upright, no tilt, no turn, no rotation. Tight close-up
+composition: face, head, neck and only a small portion of the upper chest visible.
+
+A beautiful adult anime woman in her late 20s: long beautiful golden-blonde hair with strong
+glossy waves (NO straight bangs, NO hair clips, NO hairpins, NO hair accessories of any kind),
+large expressive violet-purple anime eyes (violet irises, NOT blue), elegantly arched eyebrows,
+slender nose, soft full lips, mature elegant late-20s face, lightly tanned sun-kissed skin,
+natural tan lines on shoulders.
+
+Expression: a surprised shocked expression, high raised eyebrows, wide-open eyes, a slightly
+open mouth.
+
+She wears a simple black off-shoulder top. Dark neutral backdrop, soft studio key light with
+gentle rim light.
 
 Style: in EXACTLY the art style of the third attached style reference image — same lineart
 character, same shading method, same rendering quality, same lighting, same clean high-clarity
@@ -35,4 +46,6 @@ official game artwork.
 
 ## Changelog
 
-- v1 — сет эмоций.
+- v1 (батч) — single, но высокий кроп с юбкой/midriff (не UI-кадр).
+- v2 — double-frame (даже с «TIGHT head-and-shoulders» и «one figure» — не сработало).
+- v3 — фиксированная камера; «head turned slightly» УБРАНО.
