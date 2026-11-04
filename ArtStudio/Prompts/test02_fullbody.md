@@ -1,8 +1,10 @@
 # Test 02 — Полный рост (пропорции, ноги, силуэт) — канон v3.1
 
-Статус: v1 — IDENTITY FLAG (лицо = style-референс) → **v2 запущен** (усиленный identity)
+Статус: v1 — IDENTITY FLAG (redo по решению пользователя) → **v2 APPROVED 2026-11-04**
+(кандидат 2/2, идентичность проверена: violet-глаза, без клипсы, mature face)
 Файлы: v1 — `test02_fullbody_v1.png` (в Experiments, в Approved НЕ переносить),
 v2 — `test02_fullbody_v2.png`
+Утверждённая копия: `Generated/Approved/HERO-01_test02_fullbody.png`
 
 ## Референсы v2 (images, по порядку — identity ПЕРВЫМИ)
 
