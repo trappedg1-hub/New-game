@@ -1,7 +1,8 @@
 # Test 05 — Домашний образ: кружево + полупрозрачный шифон — канон v3.1
 
-Статус: ОЖИДАНИЕ (после Test 04)
+Статус: **APPROVED 2026-11-04** (кандидат 1/2) — раунд 1 завершён 5/5
 Файл: `Generated/Experiments/test05_loungewear_v1.png`
+Утверждённая копия: `Generated/Approved/HERO-01_test05_loungewear.png`
 
 ## Референсы (images, по порядку — identity ПЕРВЫМИ)
 
