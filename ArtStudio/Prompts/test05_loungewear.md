@@ -1,24 +1,38 @@
-# Test 05 — Домашний образ: кружево + полупрозрачный шифон
+# Test 05 — Домашний образ: кружево + полупрозрачный шифон — канон v3.1
 
 Статус: ОЖИДАНИЕ (после Test 04)
-Модель: —
 Файл: `Generated/Experiments/test05_loungewear_v1.png`
+
+## Референсы (images, по порядку)
+
+1. `Style/references/style_ref_01_fullbody.png` — стиль
+2. `Generated/Approved/HERO-01_canon_portrait.png` — идентичность (канон)
+3. `Style/references/style_ref_02_charasheet.png` — ткани/текстуры
 
 ## Prompt v1 (EN)
 
-Cozy elegant morning scene of a beautiful mature anime woman in her late 20s, long dark
-chocolate-brown slightly wavy hair reaching her lower back, large expressive crimson-red anime eyes,
-warm lightly tanned skin, elegant mature facial features with a soft defined jawline, delicate arched
-eyebrows, slender nose and full lips, voluptuous hourglass figure with a narrow defined waist and
-wide hips. She sits on the edge of a bed, relaxed graceful pose, slight turn toward the viewer, a
-soft sleepy smile. She wears an ivory lace-trimmed camisole and soft wide trousers; a semi-sheer
-chiffon robe is loosely draped and open over her shoulders, translucent fabric layers rendered in
-fine detail. Waist-length wavy hair slightly loose, a few strands over the cheek. Warm window light,
-soft shadows, muted bedroom colors. Tasteful and non-explicit. Premium anime game CG key visual,
-high-detail digital painting, detailed anatomy and face, clean confident lineart, soft cinematic
-lighting with gentle rim light, realistic fabric folds, rich material detail, elegant composition,
-polished official artwork.
+This is the SAME character as in the identity reference image (second attached image) — keep
+her face, hair, eye color, skin tone, tan lines and body exactly consistent with it. Use the
+first attached image for the art style only, and the third attached image as a reference for
+fabric textures and lace rendering.
+
+Cozy elegant morning scene. A beautiful adult anime woman in her late 20s, long beautiful
+golden-blonde hair with strong glossy waves, large expressive violet-purple anime eyes,
+strongly defined feminine hourglass figure, lightly tanned skin with clearly visible natural
+tan lines on shoulders, arms and waistline. She sits on the edge of a bed, relaxed graceful
+pose, slight turn toward the viewer, a soft sleepy smile. She wears an ivory lace-trimmed
+camisole and soft wide trousers; a semi-sheer chiffon robe is loosely draped and open over the
+shoulders, translucent fabric layers rendered in fine detail. Hair slightly loose with a few
+strands over the cheek. Warm window light, soft shadows, muted bedroom colors. Tasteful and
+non-explicit.
+
+Style: in EXACTLY the art style of the attached style reference image — same lineart character,
+same shading method, same rendering quality, same lighting, same clean high-clarity color
+palette. Reproduce the style faithfully, do not invent a new style. Thin uniform warm dark
+lineart, bright airy cel shading with soft warm gradients and subtle ambient occlusion, smooth
+glossy skin with minimal texture, realistic lace and sheer chiffon detail, glossy hair with
+strong bright highlight bands, crisp polished official game artwork.
 
 ## Changelog
 
-- v1 — первый промпт раунда 1 (base style + character anchor дословно).
+- v1 (новая концепция) — канон v3.1 + identity-референс + ref_02.

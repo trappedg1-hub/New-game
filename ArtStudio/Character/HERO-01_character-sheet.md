@@ -22,14 +22,17 @@
 Предыдущая концепция — **тёмно-шоколадные волосы + рубиновые глаза** — АРХИВИРОВАНА.
 **Не использовать в генерациях.** Старые тесты (test01 v1–v3) — только исторический архив.
 
-## English character anchor v3 (ядро, фиксировано — в каждый промпт дословно)
+## English character anchor v3.1 (ФИНАЛ — в каждый промпт дословно)
 
-> a beautiful adult anime woman in her late 20s, long beautiful light blonde hair, large
-> expressive anime eyes, lightly tanned skin with clearly visible natural tan lines showing
-> elegant soft skin-tone contrast, feminine attractive hourglass figure with an expressive
-> narrow waist and wide hips, beautiful slender elegant legs with refined anatomy
+> a beautiful adult anime woman in her late 20s, long beautiful golden-blonde hair with strong
+> glossy waves and high-shine bright highlights reaching her lower back, large expressive
+> violet-purple anime eyes with glassy radial-gradient irises and a large upper highlight,
+> elegantly arched eyebrows, slender nose, soft full lips, strongly defined feminine hourglass
+> figure with a clearly sculpted narrow waist and wide hips, smooth firm body contour, lightly
+> tanned skin with clearly visible natural tan lines showing elegant soft skin-tone contrast,
+> beautiful slender elegant legs with refined anatomy
 
-## Выбранный канон (решение пользователя 2026-11-04 — микс M: A-фигура + C-look)
+## ФИНАЛЬНЫЙ КАНОН (v3.1 — APPROVED 2026-11-04, микс M: A-фигура + C-look)
 
 | Параметр | Канон (M) | Источник |
 |---|---|---|
@@ -39,7 +42,9 @@
 | Фигура/тело | **выраженная отчетливость тела**: чётко скульптурная узкая талия, широкие бёдра, упругий контур | A |
 | Top (тестовый) | ivory sleeveless до талии | C |
 
-Статус: **предварительный** — канон фиксируется окончательно после APPROVE изображения `hero_varM_mix_v1.png` (v3.1).
+Статус: **УТВЕРЖДЁН** (APPROVE, 2026-11-04).
+**Identity-референс (канон внешности):** `Generated/Approved/HERO-01_canon_portrait.png` —
+обязателен во всех генерациях HERO-01 для консистентности (см. гайд §15).
 
 ### Протестированные варианты (архив решений)
 
@@ -70,3 +75,5 @@
 - 2026-11-04 — **v3: НОВАЯ КОНЦЕПЦИЯ** — светлые блондинистые волосы; лёгкий загар с заметными
   естественными tan lines как фирменная деталь; акцент на ноги и кожу; 25+; hourglass.
   Цвет глаз и детали волос — TBD через варианты A/B/C. Тёмноволосая концепция запрещена.
+- 2026-11-04 — **v3.1: ФИНАЛЬНЫЙ КАНОН (APPROVED)** — микс M: волосы/глаза/tan lines/top из C,
+  фигура/отчетливость тела из A. Identity-референс: `Generated/Approved/HERO-01_canon_portrait.png`.

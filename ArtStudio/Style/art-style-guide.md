@@ -151,10 +151,13 @@ character sheet. (Anchor v2 заarchивирован — был слишком g
 generic anime-стилю. Поэтому **каждая генерация ОБЯЗАТЕЛЬНО получает референсы как
 визуальный ориентир** (параметр `images`):
 
-1. Основной референс для ВСЕХ тестов: `references/style_ref_01_fullbody.png`
+1. Стилевой референс для ВСЕХ генераций: `references/style_ref_01_fullbody.png`
    (самая чёткая прорисовка лица/глаз/кожи).
 2. Для тестов с акцентом на одежду/чулки/обувь (test03, test04, test05) добавлять
    `references/style_ref_02_charasheet.png` (ткани, паттерны, обувь).
+3. **Identity-референс HERO-01 (обязателен для всех генераций героини):**
+   `../Generated/Approved/HERO-01_canon_portrait.png` — канон внешности (APPROVED v3.1).
+   Роль: лицо/волосы/глаза/тон кожи/tan lines/фигура — ТОЛЬКО идентичность; стиль — не брать.
 3. В промпте — дословно: `in EXACTLY the art style of the attached reference images ...`
    (Style Anchor v3, §12) + жёсткое: `do not copy the reference characters' faces, hair colors
    or identities` + усиленная идентификация HERO-01 (dark chocolate hair, crimson eyes,

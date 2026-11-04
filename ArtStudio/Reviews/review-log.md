@@ -35,6 +35,8 @@ M = фигура/тело A + look C (волосы, глаза, tan lines, top).
 
 ## События
 
+- 2026-11-04: **Var M — APPROVED.** Канон HERO-01 v3.1 закреплён; identity-референс
+  `Generated/Approved/HERO-01_canon_portrait.png`; Stage 1 запущен (тесты под новым каноном).
 - 2026-11-04: референсы стиля утверждены → Style Guide v1 (гайд §1–14).
 - 2026-11-04: фидбэк v2 → Style Replication Protocol (гайд §15), Anchor v2 → v3.
 - 2026-11-04: **ОБНОВЛЕНИЕ КОНЦЕПЦИИ HERO-01** — светлые блондинистые волосы, лёгкий загар
