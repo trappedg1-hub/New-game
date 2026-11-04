@@ -1,7 +1,8 @@
 # Test 03 — Элегантный образ: чулки + высокие каблуки — канон v3.1
 
-Статус: ЗАПУЩЕН 2026-11-04 (режим сравнения, identity-first протокол)
+Статус: **APPROVED 2026-11-04** (кандидат 1/2, идентичность проверена)
 Файл: `Generated/Experiments/test03_stockings_heels_v1.png`
+Утверждённая копия: `Generated/Approved/HERO-01_test03_stockings_heels.png`
 
 ## Референсы (images, по порядку — identity ПЕРВЫМИ)
 
