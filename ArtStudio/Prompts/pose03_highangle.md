@@ -1,7 +1,10 @@
 # Pose 03 — Вид сверху (high-angle)
 
-Статус: ОЖИДАНИЕ (после pose02)
-Файл: `Generated/Experiments/pose03_highangle_v1.png`
+Статус: v1 — **PARTIAL APPROVE** (без комментариев) → v2 готовится
+Диагноз (мой анализ): (1) tan lines слишком слабы — должны быть заметнее (фирменная деталь);
+(2) top ушёл в crop + открытый живот (девиация от «top + skirt» / элегантности).
+Исправления v2 (2): усиление tan lines; wardrobe → off-shoulder платье до колена (без midriff).
+Файл: v1 — `Generated/Experiments/pose03_highangle_v1.png`, v2 — `pose03_highangle_v2.png`
 
 ## Референсы (images, по порядку)
 

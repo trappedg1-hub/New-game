@@ -52,8 +52,19 @@
 Финальный выбор (2026-11-04): **МИКС M** — «A по фигуре тела, по отчетливости тела, в стиль из C».
 M = фигура/тело A + look C (волосы, глаза, tan lines, top). Запущен, ждёт оценки.
 
+## Stage 2 — Позы и ракурсы (старт 2026-11-04)
+
+| # | Поза | Файл | Оценка | Заметки |
+|---|---|---|---|---|
+| pose01 | back view | pose01_backview_v1.png | **APPROVE** | идентичность, силуэт, tan lines — в норме |
+| pose02 | look-back | pose02_lookback_v1.png | **APPROVE** | идентичность, tan lines на руках — в норме |
+| pose03 | high-angle | pose03_highangle_v1.png | **PARTIAL** (без комментариев) | диагноз: (1) tan lines слишком слабые; (2) crop + открытый живот вместо top+skirt. v2: усиление tan lines + off-shoulder платье до колена (без midriff) |
+| pose04 | detail close-up | — | — | ожидает |
+| pose05 | playful | — | — | ожидает |
+
 ## События
 
+- 2026-11-04: **Stage 2 старт** — позы и ракурсы; pose01, pose02 APPROVED; pose03 PARTIAL → v2.
 - 2026-11-04: **Test 04 — APPROVED** → `Generated/Approved/HERO-01_test04_feet_study.png`.
   Test 05 (loungewear: кружево + шифон) запущен — финальный тест раунда 1.
 - 2026-11-04: **Test 03 — APPROVED** → `Generated/Approved/HERO-01_test03_stockings_heels.png`.
