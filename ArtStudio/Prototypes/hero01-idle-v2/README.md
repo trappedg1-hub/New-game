@@ -4,7 +4,9 @@
 
 **Стабильная V1:** https://hero01-idle-prototype.vercel.app/
 
-V2 находится в отдельном проекте Vercel; точный адрес и статус защиты конкретного развёртывания указаны в [`QA.md`](QA.md).
+**V2 без входа (публичное production-зеркало отдельного проекта):** https://hero01-idle-v2-prototype.vercel.app/
+
+**V2 Preview:** https://hero01-idle-v2-prototype-gx0w0d35r-trappedg1-hub.vercel.app/ — Vercel требует авторизацию. В обоих адресах одна и та же версия прототипа; подробности проверки — в [`QA.md`](QA.md).
 
 ## Что изменено
 
