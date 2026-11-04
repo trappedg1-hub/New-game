@@ -1,11 +1,15 @@
 # Pose 05 — Кокетливая/уверенная поза (у стены)
 
-Статус: v1 — **REJECT** (без комментариев; одиночная генерация после UI-глюка пикера)
-Диагноз (мой анализ): (1) tan lines слишком слабые; (2) волны мягче канона («strong glossy waves»);
-(3) выражение плоское (calm вместо playful) + top ушёл в cowl/wrap.
-Исправления v2 (3): (1) two-tone контраст tan lines на плечах/руках/декольте;
-(2) «strong pronounced glossy wave pattern»; (3) «playful confident smile, slight head tilt,
-relaxed playful lean» + simple fitted off-shoulder top.
+Статус: v1 — **REJECT** → **v2 запущен** (одиночная генерация, UI-глюк пикера)
+Комментарий пользователя: «Одежду сделать более Suggestive SFW, детализация кожи хромает,
+сделать более смелую playful картину».
+Исправления v2 (ровно 3, по списку пользователя):
+(1) wardrobe → form-fitting black evening dress with tasteful deep neckline + high side slit
+   (suggestive, SFW);
+(2) skin → «detailed skin rendering: delicate warm gradients, soft highlights on collarbones,
+   shoulders and legs, refined subtle texture, glossy sheen»;
+(3) scene → «bold playful confident scene: cheeky playful smile, slight head tilt, one hand
+   behind the head, the other lightly pulling the dress slit, dynamic relaxed lean».
 Файлы: v1 — `pose05_playful_v1.png`, v2 — `pose05_playful_v2.png`
 
 ## Референсы (images, по порядку)
