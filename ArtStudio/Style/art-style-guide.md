@@ -104,17 +104,21 @@ CG-иллюстрации, дополнительные изображения. 
 
 ---
 
-## 12. English Style Anchor v2 (вставлять в КАЖДЫЙ промпт дословно)
+## 12. English Style Anchor v3 (вставлять в КАЖДЫЙ промпт дословно)
 
-> premium anime game character art in the style of high-end anime game CG, clean consistent
-> dark lineart, flat cel shading with soft airbrushed gradients and subtle ambient occlusion,
-> smooth glossy skin with warm tone and minimal texture, large detailed anime eyes with layered
-> iris highlights, glossy wavy hair with strong highlight bands and fine strand separation,
-> soft studio key light with gentle rim light, low-contrast elegant lighting, polished official
-> game artwork
+> in EXACTLY the art style of the attached reference images — same lineart character, same
+> shading method, same rendering quality, same lighting, same clean high-clarity color palette.
+> Reproduce the style faithfully, do not invent a new style, do not copy the reference
+> characters' faces or identities. Thin uniform warm dark lineart, bright airy cel shading with
+> soft warm gradients and subtle ambient occlusion, smooth glossy skin with minimal texture,
+> large bright open anime eyes with glassy radial-gradient irises and a large upper highlight,
+> simple small nose, small plump glossy lips, soft round cheeks with subtle blush, glossy wavy
+> hair with strong bright highlight bands and distinct strand clumps, dark neutral backdrop,
+> soft studio key light with gentle rim light, low-contrast elegant lighting, crisp polished
+> official game artwork
 
-Для HERO-01 добавлять поверх: `warm lightly tanned sun-kissed skin` (заменяет «ivory»)
-и character anchor из character sheet.
+Для HERO-01 поверх якоря: `warm lightly tanned sun-kissed skin` + character anchor из
+character sheet. (Anchor v2 заarchивирован — был слишком generic, см. §15.)
 
 ## 13. Чек-лист качества (сверка каждой генерации)
 
@@ -141,6 +145,36 @@ CG-иллюстрации, дополнительные изображения. 
 | Наяга, эксплицитные углы | Изящный неэксплицитный fanservice |
 | Дрейф внешности между картинками | Жёсткая идентичность по character sheet |
 
+## 15. Style Replication Protocol (добавлено 2026-11-04 после фидбэка на Test 01 v2)
+
+**Принцип:** текстового описания стиля недостаточно — модель по умолчанию тянет к собственному
+generic anime-стилю. Поэтому **каждая генерация ОБЯЗАТЕЛЬНО получает референсы как
+визуальный ориентир** (параметр `images`):
+
+1. Основной референс для ВСЕХ тестов: `references/style_ref_01_fullbody.png`
+   (самая чёткая прорисовка лица/глаз/кожи).
+2. Для тестов с акцентом на одежду/чулки/обувь (test03, test04, test05) добавлять
+   `references/style_ref_02_charasheet.png` (ткани, паттерны, обувь).
+3. В промпте — дословно: `in EXACTLY the art style of the attached reference images ...`
+   (Style Anchor v3, §12) + жёсткое: `do not copy the reference characters' faces, hair colors
+   or identities` + усиленная идентификация HERO-01 (dark chocolate hair, crimson eyes,
+   tanned skin — «completely different character from the references»).
+4. Промпт содержит МИКРО-ПРИЗНАКИ стиля (не абстрактные теги): «bright open eyes with large
+   glassy highlight», «thin uniform warm dark lineart», «bright airy cel shading»,
+   «strong bright hair highlight bands», «clean high-clarity palette, black clothing».
+
+**Журнал дрейфа (что уносилось при текстовом промпте без референсов):**
+
+| Версия | Дрейф |
+|---|---|
+| v1 (generic prompt) | semi-realistic живописная кожа, бледный фарфор, мягкая линия |
+| v2 (anchor v2, без референсов) | smoky тяжёлые глаза с liner'ом, реалистичные пропорции лица, тяжёлая серая линия, muddy тёмная палитра (тёмно-фиолет + золото), ювелирика вне канона |
+
+**Если кандидат снова дрейфует:** усилить микро-признаки промпта / оставить только ref_01 /
+сделать одиночную генерацию (без offer_options) в отдельный файл для контроля.
+
 ## Change log
 
 - 2026-11-04 — v1: профиль сформирован из утверждённых пользователем референсов стиля (2 файла).
+- 2026-11-04 — v1.1: Style Replication Protocol (§15); Anchor v2 → v3 (фидбэк на Test 01 v2:
+  генерация «слишком самостоятельна», референсы — основной визуальный ориентир).

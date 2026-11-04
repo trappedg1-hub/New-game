@@ -51,3 +51,5 @@ visual novel art, RPG key visual, semi-realistic, digital painting — **на т
 - 2026-11-04 — v1: первый канон, составлен из брифа.
 - 2026-11-04 — v2: базовый стиль заменён на утверждённый Style Anchor v2 (референсы);
   в каноне кожи усилено «sun-kissed tan»; эксперименты по 5 направлениям стилей заморожены.
+- 2026-11-04 — v2.1: Style Anchor v3 + Style Replication Protocol (референсы-изображения
+  обязательны в каждой генерации) — по фидбэку на Test 01 v2.
