@@ -1,7 +1,12 @@
 # Pose 05 — Кокетливая/уверенная поза (у стены)
 
-Статус: ОЖИДАНИЕ (после pose04)
-Файл: `Generated/Experiments/pose05_playful_v1.png`
+Статус: v1 — **REJECT** (без комментариев; одиночная генерация после UI-глюка пикера)
+Диагноз (мой анализ): (1) tan lines слишком слабые; (2) волны мягче канона («strong glossy waves»);
+(3) выражение плоское (calm вместо playful) + top ушёл в cowl/wrap.
+Исправления v2 (3): (1) two-tone контраст tan lines на плечах/руках/декольте;
+(2) «strong pronounced glossy wave pattern»; (3) «playful confident smile, slight head tilt,
+relaxed playful lean» + simple fitted off-shoulder top.
+Файлы: v1 — `pose05_playful_v1.png`, v2 — `pose05_playful_v2.png`
 
 ## Референсы (images, по порядку)
 

@@ -60,7 +60,7 @@ M = фигура/тело A + look C (волосы, глаза, tan lines, top).
 | pose02 | look-back | pose02_lookback_v1.png | **APPROVE** | идентичность, tan lines на руках — в норме |
 | pose03 | high-angle | v1, v2 | к. —, одиночная | v1 **PARTIAL** → v2 **APPROVE** | v1: «не детализированные ножки, отсутствуют следы от загара» → v2: ноги детализированы, tan lines заметнее (мягковаты — принято), crop top устранён (top+skirt) |
 | pose04 | detail close-up | pose04_detail_v1.png | **APPROVE** | шея/ключица/плечо с tan line, глянцевые волны, бретель; полного лица нет (по ТЗ) |
-| pose05 | playful | — | — | ожидает |
+| pose05 | playful | pose05_playful_v1.png | **REJECT** (без комментариев) | диагноз: (1) tan lines слабые; (2) волны мягче канона; (3) плоское выражение + cowl-топ. v2: two-tone tan lines, strong glossy wave pattern, playful smile + fitted off-shoulder top |
 
 ## События
 
