@@ -158,11 +158,12 @@ generic anime-стилю. Поэтому **каждая генерация ОБ�
 3. **Identity-референс HERO-01 (обязателен для всех генераций героини):**
    `../Generated/Approved/HERO-01_canon_portrait.png` — канон внешности (APPROVED v3.1).
    Роль: лицо/волосы/глаза/тон кожи/tan lines/фигура — ТОЛЬКО идентичность; стиль — не брать.
-3. В промпте — дословно: `in EXACTLY the art style of the attached reference images ...`
+4. В промпте — дословно: `in EXACTLY the art style of the attached reference images ...`
    (Style Anchor v3, §12) + жёсткое: `do not copy the reference characters' faces, hair colors
-   or identities` + усиленная идентификация HERO-01 (dark chocolate hair, crimson eyes,
-   tanned skin — «completely different character from the references»).
-4. Промпт содержит МИКРО-ПРИЗНАКИ стиля (не абстрактные теги): «bright open eyes with large
+   or identities` + идентификация утверждённой HERO-01 v3.1: golden-blonde glossy waves,
+   violet-purple eyes, lightly tanned skin с заметными tan lines. Тёмноволосый вариант с
+   рубиновыми глазами — архив, в новых генерациях запрещён.
+5. Промпт содержит МИКРО-ПРИЗНАКИ стиля (не абстрактные теги): «bright open eyes with large
    glassy highlight», «thin uniform warm dark lineart», «bright airy cel shading»,
    «strong bright hair highlight bands», «clean high-clarity palette, black clothing».
 
