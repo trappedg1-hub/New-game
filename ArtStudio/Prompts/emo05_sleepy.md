@@ -1,6 +1,8 @@
 # Emo 05 — Сонливость (sleepy) — v3 FIXED CAMERA
 
-Статус: v1 — single frame, но landscape + наклон головы (вне единого рига) → **v3 — в работе**
+Статус: исторический промпт v3; итоговый v5 **APPROVED** — `Generated/Approved/HERO-01_emo05_sleepy.png`.
+Фактический промпт и постобработка утверждённого сета: `emo_set_v5_template_lock.md`.
+Файлы: v1 — landscape и наклон; v3 — single; первый v5 — double-frame, retry — single.
 
 ## Камера (FIXED — см. emo01_joy.md, идентична для всего сета)
 

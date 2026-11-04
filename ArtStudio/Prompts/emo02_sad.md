@@ -1,7 +1,8 @@
 # Emo 02 — Грусть (sad) — v3 FIXED CAMERA
 
-Статус: v3 — ЗАПУСК (батч, следующий ход)
-Файлы: v1 — double-frame; v2 — double-frame; **v3 — в работе**
+Статус: исторический промпт v3; итоговый v5 **APPROVED** — `Generated/Approved/HERO-01_emo02_sad.png`.
+Фактический промпт и постобработка утверждённого сета: `emo_set_v5_template_lock.md`.
+Файлы: v1/v2 — double-frame; v3 — single.
 
 ## Камера (FIXED — см. emo01_joy.md, идентична для всего сета)
 

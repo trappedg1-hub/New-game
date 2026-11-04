@@ -1,7 +1,8 @@
 # Emo 04 — Удивление (surprise) — v3 FIXED CAMERA
 
-Статус: v3 — ЗАПУСК (батч, следующий ход)
-Файлы: v1 — single, но кроп нарушен (crop top + юбка, midriff); v2 — double-frame; **v3 — в работе**
+Статус: исторический промпт v3; итоговый v5 **APPROVED** — `Generated/Approved/HERO-01_emo04_surprise.png`.
+Фактический промпт и постобработка утверждённого сета: `emo_set_v5_template_lock.md`.
+Файлы: v1 — неверный кроп; v2/v3 — double-frame; v4 — single.
 
 ## Камера (FIXED — см. emo01_joy.md, идентична для всего сета)
 
