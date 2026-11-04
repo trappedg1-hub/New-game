@@ -1,10 +1,12 @@
 # Pose 03 — Вид сверху (high-angle)
 
-Статус: v1 — **PARTIAL APPROVE** (без комментариев) → v2 готовится
-Диагноз (мой анализ): (1) tan lines слишком слабы — должны быть заметнее (фирменная деталь);
-(2) top ушёл в crop + открытый живот (девиация от «top + skirt» / элегантности).
-Исправления v2 (2): усиление tan lines; wardrobe → off-shoulder платье до колена (без midriff).
-Файл: v1 — `Generated/Experiments/pose03_highangle_v1.png`, v2 — `pose03_highangle_v2.png`
+Статус: v1 — **PARTIAL APPROVE** → **v2 запущен**
+Комментарий пользователя: «Не детализированные ножки, отсутствуют следы от загара».
+Исправления v2 (ровно 2, остальное — включая crop top — не менять):
+(1) ноги: «detailed knees, graceful ankles, elegant instep, refined leg shading and highlights»;
+(2) tan lines: «clearly visible natural tan lines on shoulders, arms and legs — distinct soft
+skin-tone contrast».
+Файлы: v1 — `Generated/Experiments/pose03_highangle_v1.png`, v2 — `pose03_highangle_v2.png`
 
 ## Референсы (images, по порядку)
 

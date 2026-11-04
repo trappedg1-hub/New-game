@@ -58,7 +58,7 @@ M = фигура/тело A + look C (волосы, глаза, tan lines, top).
 |---|---|---|---|---|
 | pose01 | back view | pose01_backview_v1.png | **APPROVE** | идентичность, силуэт, tan lines — в норме |
 | pose02 | look-back | pose02_lookback_v1.png | **APPROVE** | идентичность, tan lines на руках — в норме |
-| pose03 | high-angle | pose03_highangle_v1.png | **PARTIAL** (без комментариев) | диагноз: (1) tan lines слишком слабые; (2) crop + открытый живот вместо top+skirt. v2: усиление tan lines + off-shoulder платье до колена (без midriff) |
+| pose03 | high-angle | pose03_highangle_v1.png | **PARTIAL** | комментарий пользователя: «Не детализированные ножки, отсутствуют следы от загара» → v2: (1) детализация ног (колено/лодыжка/свод), (2) clearly visible tan lines на плечах/руках/ногах; остальное (вкл. crop top) не менять |
 | pose04 | detail close-up | — | — | ожидает |
 | pose05 | playful | — | — | ожидает |
 
