@@ -8,7 +8,7 @@ Premium anime fanservice clicker (браузерная игра). Цель: вы
 
 - Канон HERO-01 v3.1 утверждён; композиционные тесты Stage 1 — **5/5**, позы Stage 2 — **5/5**.
 - Сет эмоций Stage 3 — **6/6 APPROVED**; отдельные портреты находятся в `Generated/Approved/`.
-- [Stage 4 — наряды](Docs/04_stage4_outfits_plan.md): пляжный тест v1 выбран из двух кандидатов и ждёт оценки.
+- [Stage 4 — наряды](Docs/04_stage4_outfits_plan.md): пляжный тест v1 — PARTIAL; v2 с мини-бикини ждёт оценки.
 
 ## Структура
 
