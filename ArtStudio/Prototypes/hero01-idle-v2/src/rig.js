@@ -3,8 +3,16 @@ import * as PIXI from 'pixi.js';
 export const SOURCE_WIDTH = 1184;
 export const SOURCE_HEIGHT = 3488;
 export const MESH_STEP = 16;
-export const COLS = SOURCE_WIDTH / MESH_STEP + 1;
-export const ROWS = SOURCE_HEIGHT / MESH_STEP + 1;
+// Keep a 16px grid only where the separately matted strands must share exact
+// vertices with the original mesh. Elsewhere, use a lighter nonuniform grid;
+// static head/legs need no extra tessellation at all.
+const sequence = (start, end, step) => Array.from({ length: (end - start) / step + 1 }, (_, i) => start + i * step);
+export const MESH_X = [...sequence(0, 128, 16), ...sequence(160, 1056, 32),
+  ...sequence(1072, 1152, 16), SOURCE_WIDTH];
+export const MESH_Y = [...sequence(0, 512, 128), 608, ...sequence(640, 1280, 32),
+  ...sequence(1296, 1488, 16), ...sequence(1520, 1936, 32), 1952, ...sequence(2080, SOURCE_HEIGHT, 128)];
+export const COLS = MESH_X.length;
+export const ROWS = MESH_Y.length;
 export const BLINK_DURATION = 0.37;
 
 const clamp01 = value => Math.max(0, Math.min(1, value));
@@ -118,24 +126,43 @@ function makeApplication(host) {
 
 function createPlane(texture, box = [0, 0, SOURCE_WIDTH, SOURCE_HEIGHT]) {
   const [x0, y0, x1, y1] = box;
-  const cols = (x1 - x0) / MESH_STEP + 1;
-  const rows = (y1 - y0) / MESH_STEP + 1;
-  if (!Number.isInteger(cols) || !Number.isInteger(rows)) throw new Error('Motion mesh is not aligned');
-  const mesh = new PIXI.SimplePlane(texture, cols, rows);
+  // Every patch vertex is present in the main grid, with identical diagonals.
+  const xs = MESH_X.filter(x => x >= x0 && x <= x1);
+  const ys = MESH_Y.filter(y => y >= y0 && y <= y1);
+  if (xs[0] !== x0 || xs[xs.length - 1] !== x1 || ys[0] !== y0 || ys[ys.length - 1] !== y1) {
+    throw new Error('Motion mesh is not aligned');
+  }
+  const cols = xs.length, rows = ys.length;
+  const vertices = new Float32Array(cols * rows * 2);
+  const uvs = new Float32Array(vertices.length);
+  const indices = new Uint16Array((cols - 1) * (rows - 1) * 6);
+  const active = [];
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const i = row * cols + col, x = xs[col], y = ys[row];
+      vertices[i * 2] = x - x0;
+      vertices[i * 2 + 1] = y - y0;
+      uvs[i * 2] = (x - x0) / (x1 - x0);
+      uvs[i * 2 + 1] = (y - y0) / (y1 - y0);
+      if (y > 610 && y < 1950) active.push({ index: i, weights: motionWeights(x, y) });
+      if (row < rows - 1 && col < cols - 1) {
+        const k = (row * (cols - 1) + col) * 6;
+        indices.set([i, i + 1, i + cols, i + 1, i + cols + 1, i + cols], k);
+      }
+    }
+  }
+  const geometry = new PIXI.MeshGeometry(vertices, uvs, indices);
+  const mesh = new PIXI.Mesh(geometry, new PIXI.MeshMaterial(texture));
   mesh.position.set(x0, y0);
-  const buffer = mesh.geometry.getBuffer('aVertexPosition');
-  const base = Float32Array.from(buffer.data);
-  const weights = [];
-  for (let i = 0; i < base.length; i += 2) weights.push(motionWeights(x0 + base[i], y0 + base[i + 1]));
-  return { mesh, buffer, base, weights, cols, rows, box };
+  const buffer = geometry.getBuffer('aVertexPosition');
+  return { mesh, buffer, base: Float32Array.from(vertices), active, cols, rows, box };
 }
 
 function updatePlane(rig, phases, strength, strand = null) {
   const vertices = rig.buffer.data;
   const offset = [0, 0];
   let maximumIndependent = 0;
-  for (let i = 0; i < rig.weights.length; i++) {
-    const weights = rig.weights[i];
+  for (const { index, weights } of rig.active) {
     motionOffset(weights, phases, strength, offset);
     let extra = 0;
     if (strand) {
@@ -143,8 +170,8 @@ function updatePlane(rig, phases, strength, strand = null) {
       extra = strandBend(weights.y, strand.anchors, strand.amplitude, phase, strength);
       maximumIndependent = Math.max(maximumIndependent, Math.abs(extra));
     }
-    vertices[i * 2] = rig.base[i * 2] + offset[0] + extra;
-    vertices[i * 2 + 1] = rig.base[i * 2 + 1] + offset[1];
+    vertices[index * 2] = rig.base[index * 2] + offset[0] + extra;
+    vertices[index * 2 + 1] = rig.base[index * 2 + 1] + offset[1];
   }
   rig.buffer.update();
   return maximumIndependent;
@@ -275,7 +302,7 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
     let maximumFaceDisplacement = 0;
     let maximumFeetDisplacement = 0;
     let minimumCellCross = Infinity;
-    for (let i = 0; i < mesh.weights.length; i++) {
+    for (let i = 0; i < mesh.base.length / 2; i++) {
       const dx = points[i * 2] - mesh.base[i * 2];
       const dy = points[i * 2 + 1] - mesh.base[i * 2 + 1];
       const displacement = Math.hypot(dx, dy);

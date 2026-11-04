@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import {
-  SOURCE_WIDTH, SOURCE_HEIGHT, MESH_STEP, COLS, ROWS, BLINK_DURATION,
+  SOURCE_WIDTH, SOURCE_HEIGHT, MESH_STEP, MESH_X, MESH_Y, COLS, ROWS, BLINK_DURATION,
   smoothstep, breathAt, blinkEnvelope, blinkSchedule, automaticBlink,
   motionWeights, motionPhases, motionOffset, strandBend,
 } from '../src/rig.js';
@@ -90,7 +90,7 @@ test('two real strand overlays have independent, end-anchored motion', () => {
 test('maximum intensity mesh stays bounded without flipped triangles', () => {
   const weights = [];
   for (let row = 0; row < ROWS; row++) {
-    for (let col = 0; col < COLS; col++) weights.push(motionWeights(col * MESH_STEP, row * MESH_STEP));
+    for (let col = 0; col < COLS; col++) weights.push(motionWeights(MESH_X[col], MESH_Y[row]));
   }
   const positions = new Float64Array(COLS * ROWS * 2);
   let maxDisplacement = 0, minCross = Infinity;
@@ -154,6 +154,9 @@ test('approved source is locked and V2 atlases and hair patches have the expecte
     const width = strand.box[2] - strand.box[0], height = strand.box[3] - strand.box[1];
     assert.equal(width % MESH_STEP, 0);
     assert.equal(height % MESH_STEP, 0);
+    for (let x = strand.box[0]; x <= strand.box[2]; x += MESH_STEP) assert.ok(MESH_X.includes(x));
+    for (let y = strand.box[1]; y <= strand.box[3]; y += MESH_STEP) assert.ok(MESH_Y.includes(y));
+    assert.ok(COLS * ROWS < 4000, 'mobile mesh should stay lightweight');
     assert.ok(strand.neutral_mean_error < 0.01 && strand.neutral_max_error < 1);
     for (const layer of ['restore', 'strand']) checkPng(`hair_${strand.name}_${layer}`, width, height);
   }
