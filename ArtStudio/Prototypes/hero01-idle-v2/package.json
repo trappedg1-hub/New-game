@@ -1,0 +1,22 @@
+{
+  "name": "hero01-idle-v2-prototype",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "V2 of the isolated PixiJS motion study using approved HERO-01 artwork",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test scripts/motion.test.mjs",
+    "test:ui": "node scripts/ui-test.mjs",
+    "test:webkit": "node scripts/webkit-test.mjs"
+  },
+  "dependencies": {
+    "pixi.js": "7.4.3"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.51.1",
+    "vite": "6.4.5"
+  }
+}

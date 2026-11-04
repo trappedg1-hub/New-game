@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f2ed" />
+    <meta name="description" content="Сравнение утверждённого изображения HERO-01 и экспериментального PixiJS-ригa." />
+    <title>HERO-01 — Motion Study V2</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand" aria-label="ArtStudio Motion Lab">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2.5v19M2.5 12h19M5.3 5.3l13.4 13.4M18.7 5.3 5.3 18.7" stroke="currentColor" stroke-width="1.2"/><circle cx="12" cy="12" r="4.3" fill="currentColor"/></svg></span>
+        <span class="brand-name">ARTSTUDIO <span>/</span> MOTION LAB</span>
+      </div>
+      <div class="topbar-right"><span class="topbar-note">CHARACTER STUDY</span><span class="topbar-number">V2</span></div>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> АНИМАЦИЯ V2 <span class="eyebrow-index">/ HERO-01</span></div>
+          <h1 id="page-title">Немного <em>живее.</em></h1>
+        </div>
+        <p class="intro-copy">Знакомый образ, деликатное движение. Сравните анимацию с утверждённым оригиналом — он остаётся нетронутым.</p>
+      </section>
+
+      <section class="studio" aria-labelledby="studio-title">
+        <div class="studio-heading">
+          <div class="studio-title-group">
+            <span class="section-number">01 <span>/ 01</span></span>
+            <div>
+              <p class="section-kicker">СРАВНЕНИЕ ОБРАЗА</p>
+              <h2 id="studio-title">Один образ. Два состояния.</h2>
+            </div>
+          </div>
+          <div class="view-switch" role="group" aria-label="Масштаб просмотра">
+            <button type="button" class="view-option is-active" id="view-body" aria-pressed="true">В полный рост</button>
+            <button type="button" class="view-option" id="view-face" aria-pressed="false">Лицо крупно</button>
+          </div>
+        </div>
+
+        <div class="viewport-pair">
+          <article class="viewport-card" aria-label="Утверждённый оригинал">
+            <div class="panel-head">
+              <div class="panel-label"><span class="panel-number">01</span><div><strong>Оригинал</strong><small>УТВЕРЖДЁННЫЙ АРТ</small></div></div>
+              <span class="panel-tag">STATIC</span>
+            </div>
+            <div class="viewport" id="original-view" role="img" aria-label="Утверждённое статичное изображение HERO-01"></div>
+            <div class="panel-bottom"><span>HERO-01 <i> / </i> MAID</span><span>REFERENCE</span></div>
+          </article>
+          <article class="viewport-card animated-card" aria-label="Анимационный прототип">
+            <div class="panel-head">
+              <div class="panel-label"><span class="panel-number animated-number">02</span><div><strong>В движении</strong><small>ЭКСПЕРИМЕНТАЛЬНЫЙ РИГ V2</small></div></div>
+              <span class="panel-tag live-tag"><span></span> LIVE</span>
+            </div>
+            <div class="viewport" id="animated-view" role="img" aria-label="Анимированное изображение HERO-01"></div>
+            <div class="panel-bottom"><span>HERO-01 <i> / </i> IDLE</span><span>PIXIJS · 2D</span></div>
+          </article>
+          <div class="loading" id="loading" role="status"><span class="loading-orbit"></span><span>Готовим сцену...</span></div>
+          <div class="error-message" id="error-message" role="alert" hidden></div>
+        </div>
+
+        <div class="controls">
+          <div class="control-buttons">
+            <button class="play-button" id="play-toggle" type="button" aria-label="Пауза" aria-pressed="false" disabled>
+              <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+              <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7z" fill="currentColor"/></svg>
+            </button>
+            <div class="play-label"><strong id="play-label">Пауза</strong><small id="play-status">Анимация включена</small></div>
+            <div class="controls-divider"></div>
+            <button class="blink-button" id="blink-button" type="button" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.7 12s3.3-5.2 9.3-5.2 9.3 5.2 9.3 5.2-3.3 5.2-9.3 5.2S2.7 12 2.7 12Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+              Проверить моргание
+            </button>
+          </div>
+          <div class="intensity-control">
+            <div class="intensity-label"><label for="intensity">Сила движения</label><output id="intensity-value" for="intensity">100%</output></div>
+            <input id="intensity" type="range" min="0" max="150" value="100" step="5" disabled />
+            <div class="intensity-scale"><span>МЕНЬШЕ</span><span>БОЛЬШЕ</span></div>
+          </div>
+          <div class="control-live"><span class="status-dot"></span><span id="connection-status">ЗАГРУЗКА</span></div>
+        </div>
+      </section>
+
+      <footer class="notes">
+        <div class="notes-title"><span class="notes-icon" aria-hidden="true">✳</span><span>ЗАМЕТКИ<br />О ПРОТОТИПЕ</span></div>
+        <p><strong>Что вы видите</strong> Более мягкое дыхание, отдельные пряди, движение волос и ткани, а также моргание. Ползунок меняет силу движения; кнопка проверяет моргание отдельно.</p>
+        <p><strong>Важная деталь</strong> Исходник плоский: большая часть волос и одежды движется общей сеткой. Две пряди и слои век — экспериментальные, не новый утверждённый арт.</p>
+        <div class="notes-end">БАЗОВАЯ ВЕРСИЯ<br /><a href="https://hero01-idle-prototype.vercel.app/">V1 ↗</a></div>
+      </footer>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

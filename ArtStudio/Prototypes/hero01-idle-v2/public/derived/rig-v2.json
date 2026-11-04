@@ -1,0 +1,90 @@
+{
+  "source_sha256": "91111189c23d1d7ac424e85d3406202bf028e8d3330ae8c50b33223312f236fd",
+  "mesh_step": 16,
+  "near_eye_alignment": {
+    "matrix": [
+      [
+        0.9993891,
+        0.0002702,
+        0.0909176
+      ],
+      [
+        -0.0002702,
+        0.9993891,
+        0.3854195
+      ]
+    ],
+    "matches": 360,
+    "inliers": 308
+  },
+  "strands": [
+    {
+      "name": "left",
+      "box": [
+        16,
+        1280,
+        128,
+        1488
+      ],
+      "anchors": [
+        1300,
+        1465
+      ],
+      "amplitude": 3.4,
+      "restored_pixels": 2880,
+      "neutral_mean_error": 0.006545,
+      "neutral_max_error": 0.5765
+    },
+    {
+      "name": "right",
+      "box": [
+        1056,
+        1312,
+        1152,
+        1440
+      ],
+      "anchors": [
+        1360,
+        1415
+      ],
+      "amplitude": 1.2,
+      "restored_pixels": 943,
+      "neutral_mean_error": 0.006044,
+      "neutral_max_error": 0.5647
+    }
+  ],
+  "eyes": [
+    {
+      "name": "left",
+      "box": [
+        395,
+        340,
+        540,
+        430
+      ],
+      "frames": 33,
+      "columns": 7,
+      "padding": 4,
+      "cell": [
+        153,
+        98
+      ]
+    },
+    {
+      "name": "right",
+      "box": [
+        565,
+        280,
+        705,
+        375
+      ],
+      "frames": 33,
+      "columns": 7,
+      "padding": 4,
+      "cell": [
+        148,
+        103
+      ]
+    }
+  ]
+}
