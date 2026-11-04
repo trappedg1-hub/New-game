@@ -1,0 +1,55 @@
+{
+  "source": "Generated/Approved/HERO-01_outfit02_playful_maid.png",
+  "source_sha256": "91111189c23d1d7ac424e85d3406202bf028e8d3330ae8c50b33223312f236fd",
+  "crop_xyxy": [
+    300,
+    40,
+    870,
+    610
+  ],
+  "candidate": "artifacts/closed_eyes_candidate.png (experimental, not approved)",
+  "alignment_matrix": [
+    [
+      0.9992813,
+      0.0003351,
+      0.1073859
+    ],
+    [
+      -0.0003351,
+      0.9992813,
+      0.3475244
+    ]
+  ],
+  "matching_features": 359,
+  "alignment_inliers": 315,
+  "eyes": [
+    {
+      "name": "left",
+      "box": [
+        395,
+        340,
+        540,
+        430
+      ],
+      "pivot": [
+        468,
+        403
+      ],
+      "angle": -0.085
+    },
+    {
+      "name": "right",
+      "box": [
+        565,
+        280,
+        705,
+        375
+      ],
+      "pivot": [
+        638,
+        347
+      ],
+      "angle": -0.21
+    }
+  ]
+}
