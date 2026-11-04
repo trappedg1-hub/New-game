@@ -172,9 +172,20 @@ generic anime-стилю. Поэтому **каждая генерация ОБ�
 |---|---|
 | v1 (generic prompt) | semi-realistic живописная кожа, бледный фарфор, мягкая линия |
 | v2 (anchor v2, без референсов) | smoky тяжёлые глаза с liner'ом, реалистичные пропорции лица, тяжёлая серая линия, muddy тёмная палитра (тёмно-фиолет + золото), ювелирика вне канона |
+| test02 v1 (full-body, 2026-11-04) | **identity drift**: лицо/причёса/глаза style-референса (blue eyes, крестовая клипса, челка, young face, поза скопирована). Причина: style-референс — full-body той же блондинки и перетянул identity в full-body фрейминге |
 
-**Если кандидат снова дрейфует:** усилить микро-признаки промпта / оставить только ref_01 /
-сделать одиночную генерацию (без offer_options) в отдельный файл для контроля.
+**Рецепт против identity drift (проверен на test02 v2):**
+1. **Identity-референсы ПЕРВЫМИ** в images-списке (canon + лучший утверждённый тест),
+   style-референс — последним.
+2. **Два identity-референса** для full-body фреймингов (canon-портрет + утверждённый портрет).
+3. **Явные запреты** в промпте: `NO straight bangs, NO hair clips, NO hairpins, NO hair
+   accessories; eyes violet-purple, NOT blue; mature late-20s face, NOT teenage`.
+4. **Поза, отличная от позы style-референса** (чтобы не копировать жест).
+5. Формулировка: «The first N attached images show the SAME target character — identity from
+   them ONLY; the last attached image is the art-style reference ONLY».
+
+**Если кандидат снова дрейфует:** усилить микро-признаки промпта / сделать одиночную
+генерацию (без offer_options) в отдельный файл для контроля.
 
 ## Change log
 
