@@ -79,10 +79,41 @@ jobs:
             await page.waitForTimeout(500);
             const pausedB = await animated.screenshot();
             assert.deepEqual(pausedA, pausedB, 'paused animation must freeze');
+            // Click the real control, then sample at animation-frame boundaries.
+            // Element screenshots can scroll the button and canvas in opposite
+            // directions and miss this deliberately short 420 ms animation.
             await page.locator('#blink-button').click();
-            await page.waitForTimeout(120);
-            const blinking = await animated.screenshot();
-            assert.notDeepEqual(pausedB, blinking, 'manual blink must change the rendered frame while paused');
+            await page.waitForTimeout(600);
+            const blinkFrames = await page.evaluate(() => new Promise(resolve => {
+              const source = document.querySelector('#animated-view canvas');
+              const sample = document.createElement('canvas');
+              sample.width = source.width;
+              sample.height = source.height;
+              const ctx = sample.getContext('2d', { willReadFrequently: true });
+              const frames = [];
+              const started = performance.now();
+              document.querySelector('#blink-button').click();
+              const capture = now => {
+                ctx.clearRect(0, 0, sample.width, sample.height);
+                ctx.drawImage(source, 0, 0);
+                const pixels = ctx.getImageData(0, 0, sample.width, sample.height).data;
+                let hash = 2166136261, opaque = 0;
+                for (let i = 0; i < pixels.length; i += 16) {
+                  if (pixels[i + 3]) opaque++;
+                  hash = Math.imul(hash ^ pixels[i], 16777619);
+                  hash = Math.imul(hash ^ pixels[i + 1], 16777619);
+                  hash = Math.imul(hash ^ pixels[i + 2], 16777619);
+                  hash = Math.imul(hash ^ pixels[i + 3], 16777619);
+                }
+                frames.push({ elapsed: Math.round(now - started), hash: hash >>> 0, opaque });
+                if (performance.now() - started < 700) requestAnimationFrame(capture);
+                else resolve(frames);
+              };
+              requestAnimationFrame(capture);
+            }));
+            const visibleFrames = blinkFrames.filter(frame => frame.opaque > 100);
+            assert.ok(new Set(visibleFrames.map(frame => frame.hash)).size > 1,
+              `manual blink must alter rendered frames while paused: ${JSON.stringify(blinkFrames)}`);
             await page.screenshot({ path: '/tmp/hero-vercel-iphone-webkit.png', fullPage: true });
             assert.deepEqual(errors, [], `browser errors: ${errors.join('\n')}`);
             console.log(`::notice title=WebKit QA::PASS: public Vercel URL, deployed source SHA-256 ${hash}, six eye assets, iPhone 13-sized WebKit layout, animation, pause and blink.`);
