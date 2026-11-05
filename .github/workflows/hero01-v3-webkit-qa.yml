@@ -1,5 +1,5 @@
 name: Temporary HERO-01 V3 WebKit verification
-# Report WebKit blink buffer differences and run all checks even on failure.
+# Record input clocks and WebKit blink differences; enforce all check results.
 on:
   push:
     branches: [arena/680e6caa-new-game]
@@ -52,7 +52,10 @@ jobs:
         env:
           HERO_DEVICE: mobile
         run: |
-          if npm run test:ui > /tmp/hero-v3-mobile.log 2>&1; then cat /tmp/hero-v3-mobile.log; else
+          if npm run test:ui > /tmp/hero-v3-mobile.log 2>&1; then
+            cat /tmp/hero-v3-mobile.log
+            node -e "const s=require('fs').readFileSync('/tmp/hero-v3-mobile.log','utf8').slice(-3000); console.log('::notice title=V3 mobile WebKit results::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          else
             cat /tmp/hero-v3-mobile.log
             node -e "const s=require('fs').readFileSync('/tmp/hero-v3-mobile.log','utf8').slice(-3500); console.log('::error title=V3 mobile WebKit::'+s.replace(/%/g,'%25').replace(/\\r/g,'%0D').replace(/\\n/g,'%0A'))"
             exit 1
@@ -63,7 +66,10 @@ jobs:
         env:
           HERO_DEVICE: landscape
         run: |
-          if npm run test:ui > /tmp/hero-v3-landscape.log 2>&1; then cat /tmp/hero-v3-landscape.log; else
+          if npm run test:ui > /tmp/hero-v3-landscape.log 2>&1; then
+            cat /tmp/hero-v3-landscape.log
+            node -e "const s=require('fs').readFileSync('/tmp/hero-v3-landscape.log','utf8').slice(-3000); console.log('::notice title=V3 landscape WebKit results::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          else
             cat /tmp/hero-v3-landscape.log
             node -e "const s=require('fs').readFileSync('/tmp/hero-v3-landscape.log','utf8').slice(-3500); console.log('::error title=V3 landscape WebKit::'+s.replace(/%/g,'%25').replace(/\\r/g,'%0D').replace(/\\n/g,'%0A'))"
             exit 1
@@ -91,7 +97,10 @@ jobs:
           HERO_TEST_URL: https://hero01-interactive-v3-prototype.vercel.app/
           HERO_V1_TEST_URL: ''
         run: |
-          if npm run test:ui > /tmp/hero-v3-public.log 2>&1; then cat /tmp/hero-v3-public.log; else
+          if npm run test:ui > /tmp/hero-v3-public.log 2>&1; then
+            cat /tmp/hero-v3-public.log
+            node -e "const s=require('fs').readFileSync('/tmp/hero-v3-public.log','utf8').slice(-3000); console.log('::notice title=V3 public WebKit results::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          else
             cat /tmp/hero-v3-public.log
             node -e "const s=require('fs').readFileSync('/tmp/hero-v3-public.log','utf8').slice(-3500); console.log('::error title=Public V3 WebKit::'+s.replace(/%/g,'%25').replace(/\\r/g,'%0D').replace(/\\n/g,'%0A'))"
             exit 1
