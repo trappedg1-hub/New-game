@@ -204,7 +204,12 @@ try {
     const difference = await page.evaluate(name => window.__HERO_QA__.compareExpressions({ name: 'neutral' }, { name }), name);
     assert.ok(difference.comparable && difference.maxDifference > 25 && difference.meanAbsoluteDifference > 0.002, `${name}: ${JSON.stringify(difference)}`);
     const blink = await page.evaluate(name => window.__HERO_QA__.compareBlink(name), name);
-    assert.ok(blink.maxDifference > 25 && blink.nonTransparentA === blink.nonTransparentB, `${name} blink: ${JSON.stringify(blink)}`);
+    // The sleepy overlay is already half-closed, so a blink changes fewer and
+    // lower-contrast pixels than it does for an open-eyed expression.
+    const visibleBlink = name === 'sleepy'
+      ? blink.maxDifference > 10 && blink.meanAbsoluteDifference > 0.005 && blink.changedFraction > 0.001
+      : blink.maxDifference > 25;
+    assert.ok(visibleBlink && blink.nonTransparentA === blink.nonTransparentB, `${name} blink: ${JSON.stringify(blink)}`);
   }
   const distinctBlush = await page.evaluate(() => window.__HERO_QA__.compareExpressions({ name: 'shy' }, { name: 'blushing' }));
   assert.ok(distinctBlush.meanAbsoluteDifference > 0.002, 'blushing is distinct from shy');

@@ -1,5 +1,5 @@
 name: Temporary HERO-01 V3 WebKit verification
-# Verify the fixed reaction clock locally before promoting V3 to production.
+# Recheck the fixed reaction clock and sleepy-eye blink before V3 promotion.
 on:
   push:
     branches: [arena/680e6caa-new-game]
