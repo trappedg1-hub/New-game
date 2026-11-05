@@ -50,13 +50,27 @@ jobs:
         continue-on-error: true
         env:
           HERO_DEVICE: mobile
-        run: npm run test:ui
+        run: |
+          if npm run test:ui > /tmp/hero-v3-mobile.log 2>&1; then status=0; else status=$?; fi
+          cat /tmp/hero-v3-mobile.log
+          node -e "const s=require('fs').readFileSync('/tmp/hero-v3-mobile.log','utf8').slice(-8000);console.log('::notice title=V3 mobile WebKit::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          if [ "$status" -ne 0 ]; then
+            node -e "const s=require('fs').readFileSync('/tmp/hero-v3-mobile.log','utf8').slice(-8000);console.log('::error title=V3 mobile WebKit failure::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          fi
+          exit "$status"
       - name: Landscape WebKit joints, input, expressions and V1 comparison
         id: landscape
         continue-on-error: true
         env:
           HERO_DEVICE: landscape
-        run: npm run test:ui
+        run: |
+          if npm run test:ui > /tmp/hero-v3-landscape.log 2>&1; then status=0; else status=$?; fi
+          cat /tmp/hero-v3-landscape.log
+          node -e "const s=require('fs').readFileSync('/tmp/hero-v3-landscape.log','utf8').slice(-8000);console.log('::notice title=V3 landscape WebKit::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          if [ "$status" -ne 0 ]; then
+            node -e "const s=require('fs').readFileSync('/tmp/hero-v3-landscape.log','utf8').slice(-8000);console.log('::error title=V3 landscape WebKit failure::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          fi
+          exit "$status"
       - name: Require both configurations to pass
         if: always()
         run: |
