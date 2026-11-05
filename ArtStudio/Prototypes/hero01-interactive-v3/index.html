@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f5f2ed" />
-    <meta name="description" content="Сравнение утверждённого изображения HERO-01 и экспериментального PixiJS-ригa." />
-    <title>HERO-01 — Motion Study</title>
+    <meta name="description" content="Интерактивный эксперимент HERO-01 на основе утверждённой V1-анимации." />
+    <title>HERO-01 — Interactive V3</title>
   </head>
   <body>
     <header class="topbar">
@@ -19,10 +19,10 @@
     <main class="page-shell">
       <section class="intro" aria-labelledby="page-title">
         <div>
-          <div class="eyebrow"><span class="eyebrow-line"></span> ПЕРВЫЙ ЭКСПЕРИМЕНТ <span class="eyebrow-index">/ HERO-01</span></div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> ИНТЕРАКТИВНЫЙ ЭКСПЕРИМЕНТ <span class="eyebrow-index">/ HERO-01</span></div>
           <h1 id="page-title">Немного <em>живее.</em></h1>
         </div>
-        <p class="intro-copy">Знакомый образ, деликатное движение. Сравните анимацию с утверждённым оригиналом — он остаётся нетронутым.</p>
+        <p class="intro-copy">Коснитесь персонажа — он отвечает на разные прикосновения. Утверждённый оригинал по-прежнему доступен для сравнения.</p>
       </section>
 
       <section class="studio" aria-labelledby="studio-title">
@@ -30,18 +30,24 @@
           <div class="studio-title-group">
             <span class="section-number">01 <span>/ 01</span></span>
             <div>
-              <p class="section-kicker">СРАВНЕНИЕ ОБРАЗА</p>
-              <h2 id="studio-title">Один образ. Два состояния.</h2>
+              <p class="section-kicker">HERO-01 / INTERACTIVE V3</p>
+              <h2 id="studio-title">Встреча с персонажем.</h2>
             </div>
           </div>
-          <div class="view-switch" role="group" aria-label="Масштаб просмотра">
-            <button type="button" class="view-option is-active" id="view-body" aria-pressed="true">В полный рост</button>
-            <button type="button" class="view-option" id="view-face" aria-pressed="false">Лицо крупно</button>
+          <div class="heading-switches">
+            <div class="view-switch" role="group" aria-label="Режим просмотра">
+              <button type="button" class="view-option is-active" id="layout-solo" aria-pressed="true">Персонаж</button>
+              <button type="button" class="view-option" id="layout-compare" aria-pressed="false">Сравнение</button>
+            </div>
+            <div class="view-switch" role="group" aria-label="Масштаб просмотра">
+              <button type="button" class="view-option is-active" id="view-body" aria-pressed="true">В полный рост</button>
+              <button type="button" class="view-option" id="view-face" aria-pressed="false">Лицо крупно</button>
+            </div>
           </div>
         </div>
 
-        <div class="viewport-pair">
-          <article class="viewport-card" aria-label="Утверждённый оригинал">
+        <div class="viewport-pair is-solo">
+          <article class="viewport-card original-card" aria-label="Утверждённый оригинал">
             <div class="panel-head">
               <div class="panel-label"><span class="panel-number">01</span><div><strong>Оригинал</strong><small>УТВЕРЖДЁННЫЙ АРТ</small></div></div>
               <span class="panel-tag">STATIC</span>
@@ -54,12 +60,14 @@
               <div class="panel-label"><span class="panel-number animated-number">02</span><div><strong>В движении</strong><small>ЭКСПЕРИМЕНТАЛЬНЫЙ РИГ</small></div></div>
               <span class="panel-tag live-tag"><span></span> LIVE</span>
             </div>
-            <div class="viewport" id="animated-view" role="img" aria-label="Анимированное изображение HERO-01"></div>
-            <div class="panel-bottom"><span>HERO-01 <i> / </i> IDLE</span><span>PIXIJS · 2D</span></div>
+            <div class="viewport" id="animated-view" role="application" tabindex="0" aria-label="Интерактивный персонаж HERO-01. Коснитесь персонажа или используйте клавиши с 1 по 9 для разных зон."></div>
+            <div class="panel-bottom"><span>HERO-01 <i> / </i> INTERACTIVE</span><span>PIXIJS · 2D</span></div>
           </article>
           <div class="loading" id="loading" role="status"><span class="loading-orbit"></span><span>Готовим сцену...</span></div>
           <div class="error-message" id="error-message" role="alert" hidden></div>
         </div>
+
+        <div class="interaction-tip"><span class="interaction-spark" aria-hidden="true">✳</span><span id="touch-status" role="status" aria-live="polite">Коснитесь волос, лица или других частей образа</span></div>
 
         <div class="controls">
           <div class="control-buttons">
@@ -85,8 +93,8 @@
 
       <footer class="notes">
         <div class="notes-title"><span class="notes-icon" aria-hidden="true">✳</span><span>ЗАМЕТКИ<br />О ПРОТОТИПЕ</span></div>
-        <p><strong>Что вы видите</strong> Мягкое дыхание, движение волос и ткани, а также моргание. Ползунок меняет силу сетки, кнопка проверяет моргание отдельно.</p>
-        <p><strong>Важная деталь</strong> Исходник плоский: волосы и одежда движутся как части общей сетки. Слои век — экспериментальные, не новый утверждённый арт.</p>
+        <p><strong>Что вы видите</strong> Касайтесь разных частей образа: реакции и выражения меняются. Дыхание и моргание продолжаются; масштаб, сравнение и настройки V1 сохранены.</p>
+        <p><strong>Важная деталь</strong> Исходник плоский: волосы и одежда движутся в общей сетке. Новые выражения — локальные экспериментальные слои, не утверждённый арт.</p>
         <div class="notes-end">MADE FOR<br /><strong>HERO-01</strong></div>
       </footer>
     </main>

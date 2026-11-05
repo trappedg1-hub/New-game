@@ -1,4 +1,7 @@
 import * as PIXI from 'pixi.js';
+import { buildReactionWeights, reactionOffset } from './reaction-motion.js';
+import { createHitboxes } from './pixi-hitboxes.js';
+import { createExpressionLayers, loadExpressions } from './pixi-expressions.js';
 
 export const SOURCE_WIDTH = 1184;
 export const SOURCE_HEIGHT = 3488;
@@ -67,6 +70,10 @@ function makeApplication(host) {
     powerPreference: 'high-performance',
   });
   app.stop();
+  // Pixi defaults to touch-action:none. Restore native scrolling/pinch and
+  // let a cancelled gesture clear the pending Pixi tap rather than firing it.
+  app.renderer.events.autoPreventDefault = false;
+  app.view.style.touchAction = 'manipulation';
   app.view.setAttribute('aria-hidden', 'true');
   host.appendChild(app.view);
   return app;
@@ -79,21 +86,26 @@ function createMesh(texture) {
   const buffer = mesh.geometry.getBuffer('aVertexPosition');
   const base = Float32Array.from(buffer.data);
   const weights = [];
+  const reactionWeights = [];
   for (let i = 0; i < base.length; i += 2) {
     weights.push(motionWeights(base[i], base[i + 1]));
+    reactionWeights.push(buildReactionWeights(base[i], base[i + 1]));
   }
-  return { mesh, buffer, base, weights };
+  return { mesh, buffer, base, weights, reactionWeights };
 }
 
-function updateMesh(rig, time, strength) {
+function updateMesh(rig, time, strength, contributions = []) {
   const phases = motionPhases(time);
   const vertices = rig.buffer.data;
   const offset = [0, 0];
+  const extra = { x: 0, y: 0 };
   for (let i = 0; i < rig.weights.length; i++) {
     const weights = rig.weights[i];
     motionOffset(weights, phases, strength, offset);
-    vertices[i * 2] = weights.x + offset[0];
-    vertices[i * 2 + 1] = weights.y + offset[1];
+    // No-reaction branch uses the byte-for-byte V1 equations above.
+    if (contributions.length) reactionOffset(rig.reactionWeights[i], contributions, strength, extra);
+    vertices[i * 2] = weights.x + offset[0] + extra.x;
+    vertices[i * 2 + 1] = weights.y + offset[1] + extra.y;
   }
   rig.buffer.update();
 }
@@ -165,7 +177,7 @@ function fit(root, width, height, view) {
   root.position.set(width / 2 - centerX * scale, screenCenterY - centerY * scale);
 }
 
-export async function createStage(originalHost, animatedHost, sourceUrl, assetsBase) {
+export async function createStage(originalHost, animatedHost, sourceUrl, assetsBase, { debug = false, onTap = () => {} } = {}) {
   // Load the original and the tiny eye derivatives once; both panes use the same texture.
   const response = await fetch(`${assetsBase}derived/rig.json`);
   if (!response.ok) throw new Error('Не удалось загрузить параметры экспериментального рига.');
@@ -184,6 +196,8 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
     eyeTextures[key] = await PIXI.Assets.load(`${assetsBase}derived/eye_${eye.name}_${layer}.png`);
   })));
 
+  const expressionAssets = await loadExpressions(assetsBase, metadata.eyes);
+
   const originalApp = makeApplication(originalHost);
   let animatedApp;
   try {
@@ -200,7 +214,12 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
   animatedApp.stage.addChild(animatedRoot);
   const mesh = createMesh(texture);
   animatedRoot.addChild(mesh.mesh);
+  const expressions = createExpressionLayers(animatedRoot, expressionAssets, metadata.eyes);
   const eyes = metadata.eyes.map(eye => createEye(animatedRoot, eye, eyeTextures));
+  expressions.attachForeground();
+  const hitboxes = createHitboxes(animatedRoot, mesh, {
+    cols: COLS, rows: ROWS, width: SOURCE_WIDTH, height: SOURCE_HEIGHT, debug, onTap,
+  });
 
   let view = 'body';
   function resize() {
@@ -218,10 +237,27 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
   observer.observe(animatedHost);
   resize();
 
-  function render(time, strength, blink) {
-    updateMesh(mesh, time, strength);
+  function render(time, strength, blink, { contributions = [], expression = null } = {}) {
+    updateMesh(mesh, time, strength, contributions);
     eyes.forEach(eye => updateEye(eye, blink));
+    expressions.update(expression, blink);
+    hitboxes.update();
     animatedApp.renderer.render(animatedApp.stage);
+  }
+  function zoneAtClient(x, y) {
+    const rect = animatedApp.view.getBoundingClientRect();
+    const screenX = (x - rect.left) * animatedApp.screen.width / rect.width;
+    const screenY = (y - rect.top) * animatedApp.screen.height / rect.height;
+    const boundary = animatedApp.renderer.events.rootBoundary;
+    boundary.rootTarget ||= animatedApp.stage;
+    return boundary.hitTest(screenX, screenY)?.name || null;
+  }
+  function sourceToClient(x, y) {
+    const point = hitboxes.toLocal(x, y);
+    const global = animatedRoot.toGlobal(new PIXI.Point(point.x, point.y));
+    const rect = animatedApp.view.getBoundingClientRect();
+    return { x: rect.left + global.x * rect.width / animatedApp.screen.width,
+      y: rect.top + global.y * rect.height / animatedApp.screen.height };
   }
   function setView(nextView) {
     view = nextView;
@@ -290,12 +326,12 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
     return compareBuffers(readPixels(originalApp), readPixels(animatedApp));
   }
   function compareFrames(first, second) {
-    render(first.time, first.strength, first.blink);
+    render(first.time, first.strength, first.blink, first);
     const a = readPixels(animatedApp);
-    render(second.time, second.strength, second.blink);
+    render(second.time, second.strength, second.blink, second);
     const b = readPixels(animatedApp);
     return compareBuffers(a, b);
   }
 
-  return { render, setView, geometryStats, comparePixels, compareFrames, metadata, originalApp, animatedApp };
+  return { render, setView, geometryStats, comparePixels, compareFrames, sourceToClient, zoneAtClient, hitboxes, metadata, originalApp, animatedApp };
 }

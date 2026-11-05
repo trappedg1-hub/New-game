@@ -150,3 +150,22 @@ h2 { font-family: Georgia, serif; font-weight: 400; font-size: 20px; letter-spac
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* V3 adds a larger interaction view; comparison remains the original two-pane layout. */
+.heading-switches { display: flex; gap: 8px; align-items: center; }
+.viewport-pair.is-solo { grid-template-columns: 1fr; }
+.viewport-pair.is-solo .original-card, .viewport-pair.is-solo::before { display: none; }
+.viewport-pair.is-solo .animated-card { height: clamp(570px, 72vh, 800px); }
+#animated-view { touch-action: manipulation; outline-offset: -4px; }
+#animated-view:focus-visible { outline: 3px solid #e4b4aa; }
+.interaction-tip { display: flex; align-items: center; gap: 9px; min-height: 38px; padding: 9px 23px; border-bottom: 1px solid #f0e8e2; color: #827572; font-size: 10px; line-height: 1.4; }
+.interaction-spark { color: #b77e76; font-size: 16px; line-height: 1; }
+@media (max-width: 850px) {
+  .heading-switches { flex-wrap: wrap; justify-content: flex-end; }
+}
+@media (max-width: 570px) {
+  .heading-switches { width: 100%; gap: 7px; }
+  .heading-switches .view-switch { width: 100%; }
+  .viewport-pair.is-solo .animated-card { height: min(76vh, 720px); min-height: 520px; }
+  .interaction-tip { padding: 9px 15px; }
+}

@@ -1,0 +1,52 @@
+{
+  "sourceCropOffset": [
+    300,
+    40
+  ],
+  "mouthRect": [
+    525,
+    420,
+    130,
+    75
+  ],
+  "frames": 25,
+  "columns": 5,
+  "studies": {
+    "happy": {
+      "file": "happy_candidate.png",
+      "matches": 395,
+      "inliers": 352
+    },
+    "surprised": {
+      "file": "surprised_candidate2.png",
+      "matches": 401,
+      "inliers": 355
+    },
+    "shy": {
+      "file": "shy_candidate.png",
+      "matches": 380,
+      "inliers": 311
+    },
+    "playful": {
+      "file": "playful_candidate.png",
+      "matches": 428,
+      "inliers": 382
+    },
+    "sad": {
+      "file": "sad_candidate.png",
+      "matches": 350,
+      "inliers": 286
+    }
+  },
+  "sleepyEyes": {
+    "file": "sleepy_candidate.png",
+    "matches": 371,
+    "inliers": 312
+  },
+  "blushRect": [
+    415,
+    355,
+    300,
+    115
+  ]
+}

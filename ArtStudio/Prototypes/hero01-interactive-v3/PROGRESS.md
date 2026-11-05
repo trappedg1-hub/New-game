@@ -2,19 +2,24 @@
 
 ## Current state
 
-V3 is being developed separately in `ArtStudio/Prototypes/hero01-interactive-v3/` on the fixed session branch `arena/680e6caa-new-game`. The session does not permit creating a separate branch; this directory is the isolation boundary. Starting repository commit: `71eb43301b9678e63b70861048cd15ea9f0d349c`.
+V3 is isolated at `ArtStudio/Prototypes/hero01-interactive-v3/` on fixed session branch `arena/680e6caa-new-game`. A new dedicated branch is not permitted in this session. Original repository starting commit: `71eb43301b9678e63b70861048cd15ea9f0d349c`; V3 baseline-copy commit: `b260f1c`.
 
-V1 is `ArtStudio/Prototypes/hero01-idle/`: source `src/rig.js` copied byte-for-byte into V3. It uses PixiJS **7.4.3**, Vite 6.4.5, a 51 × 149 Pixi SimplePlane over the unchanged 1184 × 3488 approved artwork, two Pixi applications for original/animated comparison, localized open/underpaint/closed eye sprites, one `requestAnimationFrame` timeline and responsive root transforms. Body, hair, clothing and background are one flat mesh, not independently occluding layers. V1 production is https://hero01-idle-prototype.vercel.app/, project `hero01-idle-prototype` with production branch `main` and deployment `dpl_DJ6ou9Bqx6VfW1uhf7PLYfmyVvDm` from commit `f3ef0305b55f1b802051915732845ade2ac73cc7`; no V1 settings were changed. V2 remains a separate experiment.
+Implementation is present: V1 PixiJS 7.4.3 `51 × 149` shared mesh/idle/blink plus separately transformed polygonal Pixi interaction zones, bounded additive reactions, eight facial states, single-pointer handling, history/cooldown/combo, responsive solo/compare modes and opt-in hitbox diagnostics. Six AI-generated candidate studies are retained in V3 only; small aligned mouth/sleepy-eye derivatives and a color blush layer are local to V3. The underlying illustration is flat; no independent arm/hair/leg rig exists. The V1 eye/blink code remains active.
 
-Baseline: V3 copy installed successfully, `npm test` passed 5/5, `npm run build` succeeded and copied `src/rig.js` matched V1 SHA-256 `d683fa8dbfe87f01ba041652c46fa96c3e626a399ec291b4bf51ecbf6d25fef0`. Approved artwork SHA-256 is `91111189c23d1d7ac424e85d3406202bf028e8d3330ae8c50b33223312f236fd`.
+`npm ci`, 13/13 unit tests, build, npm audit, desktop Chromium, iPhone-sized Chromium touch and landscape Chromium passed locally. Desktop idle/blink WebGL output matched V1 pixels exactly outside the changed UI label; mobile matched within 1/255. See `QA.md` for exact sampling and limitations.
 
-## Incomplete
+## Still incomplete
 
-No V3 interaction, expression controller, hitboxes, mobile interaction QA or V3 deployment is complete yet. Experimental facial studies may exist locally, but must be aligned, masked, inspected and integrated without modifying V1, V2 or approved assets. Do not treat the V1-copy build as a completed V3.
+- WebKit (including iPhone-sized and landscape input) has not yet been run for V3; real iPhone Safari has not been tested.
+- Separate Vercel project `hero01-interactive-v3-prototype` (`prj_6ohITCsTvMMgxMtf8jYPPXzTb5q7`) has been created with V3-only build commands; no V3 deployment has yet been verified.
+- Final V1, V2 and Approved source-preservation checks and remote-file checks remain.
 
 ## Next steps
 
-1. Prepare localized experimental facial layers from matching studies; retain V1 blink untouched in neutral.
-2. Implement separate transformed Pixi hit polygons, pointer/touch cancellation and a debug overlay.
-3. Add a bounded reaction state machine and additive motion over V1's exact idle mesh; keep the V1 controls.
-4. Compare V1/V3 rendered idle frames; test all zones, expressions, reactions, mobile WebKit and deployment separately.
+1. Commit/push this isolated implementation. Use a temporary GitHub Actions workflow to run V3 production build and iPhone/landscape Playwright WebKit if local WebKit is unavailable; remove only the temporary workflow afterward. Do not use stopped sandbox or Codespaces approaches.
+2. Deploy the **separate** V3 Vercel project. Publish a public production alias if preview protection prevents anonymous use; label actual protected previews accurately. Verify built V3 locally and publicly.
+3. Compare V1/V2/Approved tree entries to the baseline; check V1 and V2 public deployments remain unchanged, approved source SHA `91111189c23d1d7ac424e85d3406202bf028e8d3330ae8c50b33223312f236fd`, V3 GitHub hashes, README and QA results. Report physical-device and flat-mesh limitations honestly.
+
+## V1 deployment safety
+
+V1 production: https://hero01-idle-prototype.vercel.app/, project `hero01-idle-prototype`, production branch `main`, deployment `dpl_DJ6ou9Bqx6VfW1uhf7PLYfmyVvDm` from `f3ef0305b55f1b802051915732845ade2ac73cc7`. V2 public production: https://hero01-idle-v2-prototype.vercel.app/; its actual earlier Preview is protected. Never change their project settings or overwrite either deployment.
