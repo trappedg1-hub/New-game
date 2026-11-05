@@ -1,5 +1,5 @@
 name: Temporary HERO-01 V3 WebKit verification
-# Compare actual WebGL buffers synchronously, not stale compositor screenshots.
+# Report the WebKit intermediate-blink buffer difference separately.
 on:
   push:
     branches: [arena/680e6caa-new-game]
