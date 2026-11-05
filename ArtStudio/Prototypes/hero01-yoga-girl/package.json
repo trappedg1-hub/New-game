@@ -1,0 +1,21 @@
+{
+  "name": "hero01-yoga-girl-preview",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Isolated YOGA GIRL jointed-motion review, based on approved V3",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test scripts/*.test.mjs",
+    "qa:browser": "node scripts/browser-qa.mjs"
+  },
+  "dependencies": {
+    "pixi.js": "7.4.3"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.51.1",
+    "vite": "6.4.5"
+  }
+}

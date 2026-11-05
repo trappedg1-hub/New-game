@@ -1,0 +1,47 @@
+{
+  "source_sha256": "5cd0f5faca1f86fa3f0dfca6429615a877cc98b60c5af542ccbb99a1ff16a317",
+  "eyes": [
+    {
+      "name": "left",
+      "box": [
+        758,
+        294,
+        895,
+        382
+      ],
+      "pivot": [
+        829,
+        351
+      ],
+      "angle": -0.12
+    },
+    {
+      "name": "right",
+      "box": [
+        919,
+        270,
+        1006,
+        352
+      ],
+      "pivot": [
+        962,
+        325
+      ],
+      "angle": -0.23
+    }
+  ],
+  "study_matches": 661,
+  "study_inliers": 622,
+  "alignment_matrix": [
+    [
+      0.9994111,
+      -6.6e-05,
+      0.1813559
+    ],
+    [
+      6.6e-05,
+      0.9994111,
+      0.2421571
+    ]
+  ]
+}
