@@ -1,0 +1,55 @@
+{
+  "source_sha256": "91111189c23d1d7ac424e85d3406202bf028e8d3330ae8c50b33223312f236fd",
+  "size": [
+    1184,
+    3488
+  ],
+  "body": "body.png",
+  "layers": {
+    "leg_back": {
+      "file": "leg_back.png",
+      "box": [
+        477,
+        1878,
+        407,
+        1408
+      ]
+    },
+    "leg_front": {
+      "file": "leg_front.png",
+      "box": [
+        223,
+        1878,
+        404,
+        1610
+      ]
+    },
+    "leg_back_foot": {
+      "file": "leg_back_foot.png",
+      "box": [
+        457,
+        3220,
+        202,
+        268
+      ]
+    },
+    "arm_down": {
+      "file": "arm_down.png",
+      "box": [
+        806,
+        1046,
+        369,
+        921
+      ]
+    },
+    "arm_raised": {
+      "file": "arm_raised.png",
+      "box": [
+        271,
+        473,
+        352,
+        737
+      ]
+    }
+  }
+}

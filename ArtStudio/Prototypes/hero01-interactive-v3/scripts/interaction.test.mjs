@@ -118,7 +118,7 @@ test('additive poses are bounded, intensity-zero is exact, and shoes remain anch
     const offset = reactionOffset(weights, parts, 1.5);
     assert.ok(Number.isFinite(offset.x) && Number.isFinite(offset.y));
     assert.ok(Math.abs(offset.x) < 45 && Math.abs(offset.y) < 25);
-    if (y >= 3300) assert.deepEqual(offset, { x: 0, y: 0 }, `anchored shoes at ${x},${y}`);
+    if (y >= 3300) assert.deepEqual(offset, { x: 0, y: 0 }, `anchored body-plane floor at ${x},${y}`);
   }
 });
 

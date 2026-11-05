@@ -120,11 +120,11 @@ async function initialize() {
     // A plain public visit never exposes the QA hook or debug overlay.
     if (new URLSearchParams(location.search).has('qa') || debug) {
       window.__HERO_QA__ = {
-        frame({ time = 0, blink = 0, strength = 1, expression = 'neutral', amount = 1, contributions = [] } = {}) {
+        frame({ time = 0, blink = 0, strength = 1, expression = 'neutral', amount = 1, contributions = [], jointPose = null } = {}) {
           state.testMode = true;
           reactionClock.reset(performance.now());
           const face = { name: expression, amount: expression === 'neutral' ? 0 : amount, ...(EXPRESSIONS[expression] || EXPRESSIONS.neutral) };
-          stage.render(time, strength, blink, { expression: face, contributions });
+          stage.render(time, strength, blink, { expression: face, contributions, jointPose });
           return stage.geometryStats();
         },
         resume() {
@@ -134,6 +134,8 @@ async function initialize() {
         getState() { return { ...state, reaction: reactions.sample(state.reactionTime), facial: { current: mixer.current, target: mixer.target, amount: mixer.amount }, sourceHash: stage.metadata.source_sha256 }; },
         geometry() { return stage.geometryStats(); },
         pose() { return stage.pose(); },
+        joints() { return stage.jointAngles(); },
+        limbPoint(name, x, y) { return stage.limbPoint(name, x, y); },
         deformedSourcePoint(x, y) { return stage.deformedSourcePoint(x, y); },
         comparePixels() { return stage.comparePixels(); },
         compareFrames(first, second) { state.testMode = true; return stage.compareFrames(first, second); },

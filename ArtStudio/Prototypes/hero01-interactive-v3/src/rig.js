@@ -4,6 +4,7 @@ import { composeReactionPose } from './animation/reaction-pose.js';
 import { HEAD_PIVOT } from './animation/head-controller.js';
 import { createHitboxes } from './pixi-hitboxes.js';
 import { createExpressionLayers, loadExpressions } from './pixi-expressions.js';
+import { createJointed, loadJointed } from './pixi-jointed.js';
 
 import { SOURCE_WIDTH, SOURCE_HEIGHT, smoothstep, motionWeights, motionPhases, motionOffset,
   blinkEnvelope, automaticBlink } from './animation/idle-controller.js';
@@ -13,6 +14,9 @@ const COLS = 51;
 const ROWS = 149;
 
 function makeApplication(host) {
+  // Layered skins increase fill cost. Cap dense touch-screen rendering at 1.5x
+  // (including landscape phones) rather than 2x; desktop keeps the V1 cap.
+  const compactTouch = navigator.maxTouchPoints > 0 && Math.min(window.innerWidth, window.innerHeight) <= 600;
   const app = new PIXI.Application({
     width: 1,
     height: 1,
@@ -20,7 +24,7 @@ function makeApplication(host) {
     antialias: true,
     autoDensity: true,
     autoStart: false,
-    resolution: Math.min(window.devicePixelRatio || 1, 2),
+    resolution: Math.min(window.devicePixelRatio || 1, compactTouch ? 1.5 : 2),
     powerPreference: 'high-performance',
   });
   app.stop();
@@ -34,8 +38,8 @@ function makeApplication(host) {
   return app;
 }
 
-// The approved flat illustration remains one mesh. Precomputed smooth fields
-// add bounded reactions on top of the unchanged V1 idle deformation.
+// The underpainted V3 body retains the V1 plane and its bounded smooth fields.
+// Separate skinned limb meshes are projected through these very same triangles.
 function createMesh(texture) {
   const mesh = new PIXI.SimplePlane(texture, COLS, ROWS);
   const buffer = mesh.geometry.getBuffer('aVertexPosition');
@@ -152,7 +156,13 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
     eyeTextures[key] = await PIXI.Assets.load(`${assetsBase}derived/eye_${eye.name}_${layer}.png`);
   })));
 
-  const expressionAssets = await loadExpressions(assetsBase, metadata.eyes);
+  const [expressionAssets, jointedAssets] = await Promise.all([
+    loadExpressions(assetsBase, metadata.eyes), loadJointed(assetsBase),
+  ]);
+  if (jointedAssets.metadata.source_sha256 !== metadata.source_sha256
+      || jointedAssets.body.width !== SOURCE_WIDTH || jointedAssets.body.height !== SOURCE_HEIGHT) {
+    throw new Error('Экспериментальные части не соответствуют исходному изображению.');
+  }
 
   const originalApp = makeApplication(originalHost);
   let animatedApp;
@@ -168,17 +178,26 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
 
   const animatedRoot = new PIXI.Container();
   animatedApp.stage.addChild(animatedRoot);
-  const mesh = createMesh(texture);
+  const mesh = createMesh(jointedAssets.body);
   animatedRoot.addChild(mesh.mesh);
-  // Existing V1 blink sprites and V3 expression sprites travel together with
-  // the rigid face area of the mesh. No art or textures are duplicated.
+  const jointed = createJointed(jointedAssets, mesh, { cols: COLS, rows: ROWS, width: SOURCE_WIDTH, height: SOURCE_HEIGHT });
+  // The thighs cross in one order and the shoes in the opposite order. The
+  // split back shoe shares exactly the same hip/knee/ankle chain as its shin.
+  for (const layer of ['leg_back', 'leg_front', 'leg_back_foot', 'arm_down']) {
+    animatedRoot.addChild(jointed.skins[layer].mesh);
+  }
+  // Face expressions are behind the genuinely separate raised hand, so that
+  // its source-derived fingers still overlap the face when the hand moves.
   const faceRoot = new PIXI.Container();
   animatedRoot.addChild(faceRoot);
   const expressions = createExpressionLayers(faceRoot, expressionAssets, metadata.eyes);
   const eyes = metadata.eyes.map(eye => createEye(faceRoot, eye, eyeTextures));
   expressions.attachForeground();
+  animatedRoot.addChild(jointed.skins.arm_raised.mesh);
+  jointed.update(0, 0);
   const hitboxes = createHitboxes(animatedRoot, mesh, {
     cols: COLS, rows: ROWS, width: SOURCE_WIDTH, height: SOURCE_HEIGHT, debug, onTap,
+    deformZonePoint: jointed.zonePoint,
   });
 
   let view = 'body';
@@ -198,9 +217,10 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
   resize();
 
   let currentPose = null;
-  function render(time, strength, blink, { contributions = [], expression = null } = {}) {
+  function render(time, strength, blink, { contributions = [], expression = null, jointPose = null } = {}) {
     currentPose = contributions.length && strength > 0 ? composeReactionPose(contributions, strength) : null;
     updateMesh(mesh, time, strength, currentPose);
+    jointed.update(time, strength, contributions, jointPose);
     const head = currentPose?.head;
     if (head && (head.x || head.y || head.rotation || head.scaleDelta)) {
       faceRoot.pivot.set(HEAD_PIVOT.x, HEAD_PIVOT.y);
@@ -264,7 +284,8 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
         minimumCellCross = Math.min(minimumCellCross, cross, cross2);
       }
     }
-    return { maximumDisplacement, maximumFaceDisplacement, maximumFeetDisplacement, maximumShoeDisplacement, minimumCellCross };
+    return { maximumDisplacement, maximumFaceDisplacement, maximumFeetDisplacement, maximumShoeDisplacement,
+      minimumCellCross, limbs: jointed.geometryStats() };
   }
   // Opt-in visual QA reads the actual WebGL output, not a mock of the rig.
   function readPixels(app) {
@@ -312,5 +333,6 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
 
   return { render, setView, geometryStats, comparePixels, compareFrames, sourceToClient, zoneAtClient,
     deformedSourcePoint: (x, y) => hitboxes.toLocal(x, y), pose: () => currentPose,
+    jointAngles: () => jointed.angles(), limbPoint: jointed.point,
     hitboxes, metadata, originalApp, animatedApp };
 }

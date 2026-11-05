@@ -1,10 +1,10 @@
 import * as PIXI from 'pixi.js';
-import { ZONES } from './zones.js';
+import { ZONES, zoneAtSource } from './zones.js';
 
 // Interpolate the actual two triangles Pixi's PlaneGeometry uses per cell.
 // Source polygons therefore follow V1 and reaction deformations, and inherit
 // the same responsive, zoom and root transforms as the painted character.
-export function deformedPoint(x, y, positions, cols, rows, width, height) {
+export function deformedPoint(x, y, positions, cols, rows, width, height, result = { x: 0, y: 0 }) {
   const gridX = Math.max(0, Math.min(cols - 1, x / width * (cols - 1)));
   const gridY = Math.max(0, Math.min(rows - 1, y / height * (rows - 1)));
   const col = Math.min(cols - 2, Math.floor(gridX));
@@ -19,10 +19,14 @@ export function deformedPoint(x, y, positions, cols, rows, width, height) {
     resultX = positions[b] * (1 - v) + positions[c] * (1 - u) + positions[d] * (u + v - 1);
     resultY = positions[b + 1] * (1 - v) + positions[c + 1] * (1 - u) + positions[d + 1] * (u + v - 1);
   }
-  return { x: resultX, y: resultY };
+  result.x = resultX; result.y = resultY;
+  return result;
 }
 
-export function createHitboxes(parent, mesh, { cols, rows, width, height, debug, onTap }) {
+export function createHitboxes(parent, mesh, { cols, rows, width, height, debug, onTap, deformZonePoint }) {
+  const project = (zone, x, y) => deformZonePoint
+    ? deformZonePoint(zone, x, y)
+    : deformedPoint(x, y, mesh.buffer.data, cols, rows, width, height);
   const container = new PIXI.Container();
   container.eventMode = 'passive';
   parent.addChild(container);
@@ -92,12 +96,11 @@ export function createHitboxes(parent, mesh, { cols, rows, width, height, debug,
     parent.addChild(outlines);
   }
   function update() {
-    const positions = mesh.buffer.data;
     if (outlines) outlines.clear();
     for (const area of hitAreas) {
       const points = area.polygon.points;
       for (let i = 0; i < area.source.length; i += 2) {
-        const transformed = deformedPoint(area.source[i], area.source[i + 1], positions, cols, rows, width, height);
+        const transformed = project(area.zone.id, area.source[i], area.source[i + 1]);
         points[i] = transformed.x; points[i + 1] = transformed.y;
       }
       if (outlines) {
@@ -106,7 +109,7 @@ export function createHitboxes(parent, mesh, { cols, rows, width, height, debug,
     }
   }
   function toLocal(x, y) {
-    return deformedPoint(x, y, mesh.buffer.data, cols, rows, width, height);
+    return project(zoneAtSource(x, y), x, y);
   }
   function destroy() {
     window.removeEventListener('pointerup', release);

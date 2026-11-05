@@ -1,6 +1,6 @@
-// Source-pixel amplitudes for one original, flat illustration. These are
-// bounded, reversible 2D pose approximations, not independently drawn bones.
-// Each profile coordinates compatible parts; y components do not flip sign.
+// Bounded source-pixel amplitudes for the shared V1-derived body underpaint.
+// Independently skinned 2D joint chains live in jointed-rig.js. Each profile
+// coordinates compatible parts; y components do not flip sign.
 export const PHYSICAL_PROFILES = Object.freeze({
   head:          { head: [9, -2.5, 0.021, 0.007], hair: [-8, 10], torso: [1.4, -0.7], cloth: 1.0 },
   hair:          { head: [-5, 0.5, -0.012, -0.002], hair: [-14, 14], shoulderLeft: [-1, -2], shoulderRight: [1, -2], cloth: 1.0 },

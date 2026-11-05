@@ -112,7 +112,7 @@ test('idle breathing continues independently during a reaction', () => {
   assert.ok(Math.abs(((b[1] + extra.y) - (a[1] + extra.y)) - (b[1] - a[1])) < 1e-12);
 });
 
-test('all three-way maximum-intensity zone combinations preserve mesh orientation and shoe anchors', () => {
+test('all three-way maximum-intensity zone combinations preserve body-plane orientation and floor anchors', () => {
   const ids = ZONES.map(zone => zone.id), weights = [], base = [], phases = motionPhases(1.2);
   for (let row = 0; row < ROWS; row++) for (let col = 0; col < COLS; col++) {
     const x = col * W / (COLS - 1), y = row * H / (ROWS - 1);

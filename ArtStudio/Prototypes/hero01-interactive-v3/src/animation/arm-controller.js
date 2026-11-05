@@ -1,6 +1,6 @@
 import { addVector } from './controller-utils.js';
-// The raised hand is baked over the face, so its cue is shared with the
-// upper arm/head. Only the lowered hand has a local, bounded mesh cue.
+// Bounded fields coordinate the body/sleeve underpaint. The independent
+// shoulder/elbow/wrist chains are composed separately in jointed-rig.js.
 export function accumulateArms(pose, profile, factor, direction) {
   addVector(pose.armLeft, profile.armLeft, factor, direction);
   addVector(pose.armRight, profile.armRight, factor, direction);

@@ -128,26 +128,44 @@ async function regressionAgainstV1() {
   if (!process.env.HERO_V1_TEST_URL) return;
   const v1Url = new URL(process.env.HERO_V1_TEST_URL); v1Url.searchParams.set('qa', '1');
   const old = await context.newPage();
+  if (mobile) {
+    // V3 intentionally caps compact touch canvases at 1.5x; force the V1 QA
+    // tab to the same resolution so cross-version buffers are comparable.
+    await old.addInitScript(() => Object.defineProperty(window, 'devicePixelRatio', { configurable: true, value: 1.5 }));
+  }
   await ready(old, v1Url);
   await page.locator('#layout-compare').click();
   for (const view of ['body', 'face']) {
     await page.locator(`#view-${view}`).click(); await old.locator(`#view-${view}`).click();
-    for (const [time, blink] of [[0, 0], [1.2, 0], [3.4, 0], [0, 0.5], [0, 1]]) {
+    // V3 intentionally has independent idle limb motion now. Only the rest
+    // pose and inherited blink are expected to resemble V1; animated frames
+    // must no longer be falsely asserted pixel-identical to V1.
+    const frames = [];
+    for (const [time, blink] of [[0, 0], [0, 0.5], [0, 1]]) {
       await old.bringToFront();
       const a = await captureWebGL(old, { time, blink, strength: 1 });
       await page.bringToFront();
       const b = await captureWebGL(page, { time, blink, strength: 1 });
       const result = compareWebGL(a, b);
+      frames.push({ a, b });
       assert.ok(result.sameSize && result.visible > 1000, JSON.stringify(result));
-      if (engine === 'webkit' && blink > 0) {
-        // WebKit software WebGL can differ locally in the first-use eye
-        // overlay across separate contexts. Keep and report the measured
-        // result; do not claim exact parity at these sampled blink frames.
-        console.log(`WebKit blink ${blink} difference ${view}: ${JSON.stringify(result)}`);
-        assert.ok(result.mean < 1 && result.changed < a.width * a.height * 0.1, `${view} at ${time}/${blink}: ${JSON.stringify(result)}`);
-      } else {
-        assert.ok(result.max <= 1 && result.mean < 0.001, `${view} at ${time}/${blink}: ${JSON.stringify(result)}`);
-      }
+      // Compositing several independently minified textures cannot be
+      // pixel-identical to filtering a flattened image. The source-resolution
+      // offline reconstruction is measured separately. WebKit's inherited
+      // blink layers also vary across software contexts, as before.
+      console.log(`${engine} V1/rest ${view} blink ${blink}: ${JSON.stringify(result)}`);
+      const threshold = engine === 'webkit' && blink > 0 ? 1 : 0.4;
+      assert.ok(result.mean < threshold && result.changed < a.width * a.height * 0.36,
+        `${view} at ${time}/${blink}: ${JSON.stringify(result)}`);
+    }
+    if (view === 'face') {
+      // Ensure the captured buffers actually contain different blink states;
+      // otherwise two stale/read-cleared frames could falsely look identical.
+      const v1Blink = compareWebGL(frames[0].a, frames[2].a);
+      const v3Blink = compareWebGL(frames[0].b, frames[2].b);
+      assert.ok(v1Blink.max > 25 && v1Blink.changed > 100, `V1 blink capture: ${JSON.stringify(v1Blink)}`);
+      assert.ok(v3Blink.max > 25 && v3Blink.changed > 100, `V3 blink capture: ${JSON.stringify(v3Blink)}`);
+      console.log('Open vs closed eyes were rendered in both versions:', { v1Blink, v3Blink });
     }
   }
   console.log('V1 vs V3: synchronous WebGL comparisons completed (WebKit blink frames reported separately).');
@@ -194,8 +212,72 @@ try {
   assert.equal(neutral.geometry.maximumFaceDisplacement, 0);
   assert.equal(neutral.geometry.maximumFeetDisplacement, 0);
   assert.ok(neutral.pixels.comparable);
-  assert.ok(neutral.pixels.meanAbsoluteDifference < 0.25 && neutral.pixels.maxDifference <= 20, JSON.stringify(neutral.pixels));
-  console.log('Neutral static/mesh mean difference:', neutral.pixels.meanAbsoluteDifference);
+  // Minification and alpha compositing happen independently on each skin;
+  // exact equality is not expected at WebGL sampling boundaries.
+  assert.ok(neutral.pixels.meanAbsoluteDifference < 0.25 && neutral.pixels.maxDifference <= 100
+    && neutral.pixels.changedFraction < 0.25, JSON.stringify(neutral.pixels));
+  console.log('Neutral static/mesh comparison:', neutral.pixels);
+
+  // Freeze the shared body and all other limbs. Exercise every actual joint
+  // in both directions and compare the WebGL buffers as well as the joint's
+  // projected source-space descendant. This cannot pass via whole-mesh sway.
+  const jointCases = [
+    ['raised', 'shoulder', [350, 1120], 'arm_raised'],
+    ['raised', 'elbow', [430, 710], 'arm_raised'],
+    ['raised', 'wrist', [585, 500], 'arm_raised'],
+    ['lowered', 'shoulder', [1090, 1870], 'arm_down'],
+    ['lowered', 'elbow', [1090, 1870], 'arm_down'],
+    ['lowered', 'wrist', [1130, 1930], 'arm_down'],
+    ['frontLeg', 'hip', [515, 2390], 'leg_front'],
+    ['frontLeg', 'knee', [425, 3350], 'leg_front'],
+    ['frontLeg', 'ankle', [490, 3410], 'leg_front'],
+    ['backLeg', 'hip', [650, 2390], 'leg_back'],
+    ['backLeg', 'knee', [565, 3350], 'leg_back'],
+    ['backLeg', 'ankle', [630, 3410], 'leg_back_foot'],
+  ];
+  let minimumJointShift = Infinity, minimumJointPixels = Infinity, minLimbCross = Infinity;
+  for (const [limb, joint, [x, y], layer] of jointCases) for (const direction of [-1, 1]) {
+    const result = await page.evaluate(({ limb, joint, x, y, layer, direction }) => {
+      const qa = window.__HERO_QA__, neutral = { time: 0, strength: 0, blink: 0, jointPose: {} };
+      const active = { ...neutral, jointPose: { [limb]: { [joint]: direction * 0.012 } } };
+      qa.frame(neutral); const a = qa.limbPoint(limb, x, y);
+      const geometry = qa.frame(active), b = qa.limbPoint(limb, x, y);
+      const diff = qa.compareFrames(neutral, active);
+      const others = Object.entries(geometry.limbs)
+        .filter(([name]) => name !== layer && !(limb === 'backLeg' && name === 'leg_back')
+          && !(limb === 'backLeg' && name === 'leg_back_foot'))
+        .map(([, stat]) => stat.maximumJointDisplacement);
+      return { geometry, diff, shift: Math.hypot(b.x - a.x, b.y - a.y), maxOther: Math.max(...others) };
+    }, { limb, joint, x, y, layer, direction });
+    assert.ok(result.shift > 0.5 && result.maxOther < 0.001, `${limb}/${joint}/${direction}: ${JSON.stringify(result)}`);
+    assert.equal(result.geometry.maximumDisplacement, 0, 'joint QA moved the body plane');
+    assert.ok(result.diff.comparable && result.diff.maxDifference > 3 && result.diff.changedFraction > 0.000001,
+      `${limb}/${joint}/${direction}: no rendered change ${JSON.stringify(result.diff)}`);
+    for (const stat of Object.values(result.geometry.limbs)) minLimbCross = Math.min(minLimbCross, stat.minimumCellCross);
+    minimumJointShift = Math.min(minimumJointShift, result.shift);
+    minimumJointPixels = Math.min(minimumJointPixels, result.diff.changedFraction);
+  }
+  assert.ok(minLimbCross > 300, `isolated limb grid inverted or compressed: ${minLimbCross}`);
+  console.log('24 isolated WebGL joint directions:', { minimumJointShift, minimumJointPixels, minLimbCross });
+
+  const jointHitCases = [
+    ['armLeft', 'raised', { shoulder: 0.02, elbow: 0.025, wrist: -0.02 }],
+    ['handLeft', 'raised', { shoulder: -0.02, elbow: -0.025, wrist: 0.02 }],
+    ['armRight', 'lowered', { shoulder: -0.02, elbow: -0.025, wrist: 0.03 }],
+    ['handRight', 'lowered', { shoulder: 0.02, elbow: 0.025, wrist: -0.03 }],
+    ['legLeft', 'frontLeg', { hip: 0.012, knee: 0.015, ankle: -0.018 }],
+    ['legRight', 'backLeg', { hip: -0.012, knee: -0.015, ankle: 0.018 }],
+  ];
+  for (const [zone, limb, angles] of jointHitCases) {
+    const hit = await page.evaluate(({ zone, limb, angles, source }) => {
+      const qa = window.__HERO_QA__;
+      qa.frame({ time: 0, strength: 0, jointPose: { [limb]: angles } });
+      const pos = qa.sourceToClient(...source);
+      return qa.zoneAtClient(pos.x, pos.y);
+    }, { zone, limb, angles, source: samples[zone] });
+    assert.equal(hit, zone, `${zone}: hitbox did not follow isolated ${limb} joints`);
+  }
+  console.log('PASS: six arm/hand/leg hitboxes follow independent joint poses.');
 
   if (!mobile) {
     let minCross = Infinity, maxDisplacement = 0;
@@ -207,6 +289,19 @@ try {
     }
     assert.ok(minCross > 300 && maxDisplacement < 48, `mesh: ${minCross}, ${maxDisplacement}`);
     console.log('Combined V1 + reaction geometry:', { minCross, maxDisplacement });
+    let minCombinedLimbCross = Infinity, maxCombinedJointDisplacement = 0;
+    for (const time of [0, 0.8, 2, 4, 7]) for (const variant of [0, 1, 2]) {
+      const stats = await page.evaluate(({ time, variant }) => window.__HERO_QA__.frame({ time, strength: 1.5,
+        contributions: ['armLeft', 'armRight', 'legLeft', 'legRight'].map(zone =>
+          ({ zone, amount: 1, followAmount: 1, lateAmount: 1, variant })) }), { time, variant });
+      for (const limb of Object.values(stats.limbs)) {
+        minCombinedLimbCross = Math.min(minCombinedLimbCross, limb.minimumCellCross);
+        maxCombinedJointDisplacement = Math.max(maxCombinedJointDisplacement, limb.maximumJointDisplacement);
+      }
+    }
+    assert.ok(minCombinedLimbCross > 300 && maxCombinedJointDisplacement < 60,
+      `combined skins: ${minCombinedLimbCross}, ${maxCombinedJointDisplacement}`);
+    console.log('15 combined arm/leg stress poses:', { minCombinedLimbCross, maxCombinedJointDisplacement });
   }
 
   // Check movement in the actual rendered buffer, not only controller values.
@@ -335,6 +430,9 @@ try {
   assert.deepEqual(multiContact, { started: 1, afterSecondContact: 0, after: multiContact.before, before: multiContact.before, pending: 0 },
     `multi-contact suppression: ${JSON.stringify(multiContact)}`);
   console.log('PASS: synthetic multi-contact cancellation (not a native WebKit pinch test).');
+  // The synthetic touch intentionally arms Pixi's 800 ms compatibility-mouse
+  // suppression; wait before exercising subsequent real desktop mouse taps.
+  if (!mobile) await page.waitForTimeout(850);
 
   // A drag/swipe must not generate a tap. On mobile Chromium verify scrolling;
   // desktop verifies movement tolerance with real mouse events.

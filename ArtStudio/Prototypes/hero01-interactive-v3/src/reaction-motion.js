@@ -1,8 +1,8 @@
 import { HEAD_PIVOT } from './animation/head-controller.js';
 import { composeReactionPose } from './animation/reaction-pose.js';
 
-// Smooth influence fields over the existing V1 plane. The texture remains the
-// approved single illustration: these are constrained 2D poses, not new bones.
+// Smooth influence fields over the V1-derived underpaint plane. Independent
+// transparent limb meshes add FK/skin deformation on top in pixi-jointed.js.
 const bell = (value, center, radius) => Math.exp(-0.5 * ((value - center) / radius) ** 2);
 const smooth = value => { const t = Math.max(0, Math.min(1, value)); return t * t * (3 - 2 * t); };
 
