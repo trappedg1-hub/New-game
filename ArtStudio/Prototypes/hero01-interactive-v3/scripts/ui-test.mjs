@@ -232,6 +232,32 @@ try {
   for (const [zone, point] of Object.entries(samples)) await tapZone(zone, point);
   console.log(`PASS: ${Object.keys(samples).length} source-space zones using ${mobile ? 'touchscreen' : 'mouse'} events.`);
 
+  // Supplemental deterministic regression: dispatch two Pixi pointer pairs
+  // more than the cooldown apart without letting an animation frame run.
+  // This is intentionally synthetic and does not replace the real taps above.
+  await page.waitForTimeout(250);
+  await scrollPointIntoView(...samples.head);
+  const stalledFrame = await page.evaluate(({ head, hair, pointerType }) => {
+    const qa = window.__HERO_QA__, canvas = document.querySelector('#animated-view canvas');
+    const send = ([x, y]) => {
+      const point = qa.sourceToClient(x, y);
+      for (const type of ['pointerdown', 'pointerup']) canvas.dispatchEvent(new PointerEvent(type, {
+        pointerId: 91, pointerType, isPrimary: true, clientX: point.x, clientY: point.y,
+        bubbles: true, buttons: type === 'pointerdown' ? 1 : 0,
+      }));
+    };
+    const before = qa.getState().reaction.count;
+    send(head);
+    const first = qa.getState();
+    const start = performance.now(); while (performance.now() - start < 220) { /* no rAF */ }
+    send(hair);
+    const second = qa.getState();
+    return { before, first: first.reaction.count, second: second.reaction.count, zone: second.lastReaction?.zone };
+  }, { head: samples.head, hair: samples.hair, pointerType: mobile ? 'touch' : 'mouse' });
+  assert.deepEqual(stalledFrame, { before: stalledFrame.before, first: stalledFrame.before + 1,
+    second: stalledFrame.before + 2, zone: 'hair' }, `slow-frame cooldown: ${JSON.stringify(stalledFrame)}`);
+  console.log('PASS: spaced Pixi input remains responsive between animation frames.');
+
   // A drag/swipe must not generate a tap. On mobile Chromium verify scrolling;
   // desktop verifies movement tolerance with real mouse events.
   const torso = await scrollPointIntoView(600, 1200);

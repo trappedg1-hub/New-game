@@ -1,7 +1,7 @@
 import './style.css';
 import approvedSource from '../../../Generated/Approved/HERO-01_outfit02_playful_maid.png';
 import { automaticBlink, blinkEnvelope, createStage } from './rig.js';
-import { EXPRESSIONS, ExpressionMixer, ReactionController, STATES } from './reactions.js';
+import { EXPRESSIONS, ExpressionMixer, ReactionClock, ReactionController, STATES } from './reactions.js';
 
 const $ = selector => document.querySelector(selector);
 const controls = {
@@ -23,6 +23,7 @@ const reactions = new ReactionController();
 const mixer = new ExpressionMixer();
 let stage;
 let previousTime = performance.now();
+const reactionClock = new ReactionClock(previousTime);
 let needsRedraw = true;
 let shownIdleHint = true;
 
@@ -58,6 +59,7 @@ function setLayout(layout) {
 }
 
 function touch(zone, pointerType = 'unknown') {
+  if (!state.testMode && !document.hidden) state.reactionTime = reactionClock.advance(performance.now());
   const event = reactions.trigger(zone, state.reactionTime);
   if (!event) return null;
   state.lastReaction = event;
@@ -76,7 +78,7 @@ function draw(now) {
     if (state.playing) state.time += delta;
     // Pausing freezes V1 idle; the independent reaction clock still permits
     // a tap or manual blink to play while paused. No interval/timer stacking.
-    state.reactionTime += Math.min(0.2, elapsed);
+    state.reactionTime = reactionClock.advance(now);
     const reaction = reactions.sample(state.reactionTime);
     mixer.setTarget(reaction.expression);
     const expression = mixer.update(Math.min(0.1, elapsed));
@@ -111,6 +113,7 @@ async function initialize() {
     controls.intensity.disabled = false;
     syncPlayback();
     previousTime = performance.now();
+    reactionClock.reset(previousTime);
     requestAnimationFrame(draw);
 
     // Diagnostics are opt-in; ?debug=1 additionally draws hit outlines.
@@ -119,11 +122,15 @@ async function initialize() {
       window.__HERO_QA__ = {
         frame({ time = 0, blink = 0, strength = 1, expression = 'neutral', amount = 1, contributions = [] } = {}) {
           state.testMode = true;
+          reactionClock.reset(performance.now());
           const face = { name: expression, amount: expression === 'neutral' ? 0 : amount, ...(EXPRESSIONS[expression] || EXPRESSIONS.neutral) };
           stage.render(time, strength, blink, { expression: face, contributions });
           return stage.geometryStats();
         },
-        resume() { state.testMode = false; needsRedraw = true; previousTime = performance.now(); },
+        resume() {
+          state.testMode = false; needsRedraw = true; previousTime = performance.now();
+          reactionClock.reset(previousTime);
+        },
         getState() { return { ...state, reaction: reactions.sample(state.reactionTime), facial: { current: mixer.current, target: mixer.target, amount: mixer.amount }, sourceHash: stage.metadata.source_sha256 }; },
         geometry() { return stage.geometryStats(); },
         comparePixels() { return stage.comparePixels(); },
@@ -172,5 +179,5 @@ $('#animated-view').addEventListener('keydown', event => {
   const zones = { 1: 'head', 2: 'hair', 3: 'face', 4: 'shoulderRight', 5: 'armRight', 6: 'handRight', 7: 'upperTorso', 8: 'waist', 9: 'legLeft' };
   if (zones[event.key]) { event.preventDefault(); touch(zones[event.key], 'keyboard'); }
 });
-document.addEventListener('visibilitychange', () => { previousTime = performance.now(); });
+document.addEventListener('visibilitychange', () => { previousTime = performance.now(); reactionClock.reset(previousTime); });
 initialize();

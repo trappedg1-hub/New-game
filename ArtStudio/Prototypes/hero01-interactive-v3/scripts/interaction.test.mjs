@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { ZONES, ZONES_BY_ID, zoneAtSource, pointInPolygon } from '../src/zones.js';
-import { COOLDOWN_SECONDS, EXPRESSIONS, STATES, ExpressionMixer, ReactionController } from '../src/reactions.js';
+import { COOLDOWN_SECONDS, EXPRESSIONS, STATES, ExpressionMixer, ReactionClock, ReactionController } from '../src/reactions.js';
 import { buildReactionWeights, reactionOffset } from '../src/reaction-motion.js';
 import { SOURCE_HEIGHT as SOURCE_H, SOURCE_WIDTH as SOURCE_W, motionOffset, motionWeights, motionPhases } from '../src/rig.js';
 const COLS = 51, ROWS = 149;
@@ -72,6 +72,20 @@ test('cooldown suppresses duplicate input; repeated taps and fast combinations c
   const combo = new ReactionController();
   combo.trigger('head', 1); combo.trigger('face', 1.2); combo.trigger('hair', 1.4);
   assert.equal(combo.trigger('waist', 1.6).expression, 'playful');
+});
+
+test('reaction time advances on input between slow frames and skips suspended time', () => {
+  const clock = new ReactionClock(1000);
+  const reactions = new ReactionController();
+  assert.ok(reactions.trigger('head', clock.advance(1050)));
+  // No animation-frame update between these inputs, but 160 ms really passed.
+  assert.ok(reactions.trigger('hair', clock.advance(1210)));
+  assert.equal(reactions.trigger('face', clock.advance(1250)), null);
+  assert.equal(reactions.count, 2);
+  const time = clock.value;
+  assert.equal(clock.advance(1230), time, 'stale frame timestamps must not move the clock backward');
+  clock.reset(10_000); // tab hidden or deterministic QA paused
+  assert.ok(Math.abs(clock.advance(10_050) - (time + 0.05)) < 1e-9);
 });
 
 test('per-zone variation cycles and stale expressions are replaced, not queued', () => {

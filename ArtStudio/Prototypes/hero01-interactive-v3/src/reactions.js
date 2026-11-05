@@ -46,6 +46,25 @@ function envelope(elapsed) {
   return smooth(elapsed / ATTACK) * (1 - smooth((elapsed - HOLD_END) / (END - HOLD_END)));
 }
 
+// Track active elapsed time independently of rAF. Input can arrive between
+// slow frames; a frame-only clock incorrectly treats well-spaced taps as
+// duplicates. Reset the anchor when diagnostics or the page are suspended.
+export class ReactionClock {
+  constructor(now) {
+    this.value = 0;
+    this.last = now;
+  }
+  advance(now) {
+    if (!Number.isFinite(now)) return this.value;
+    this.value += Math.max(0, now - this.last) / 1000;
+    this.last = Math.max(this.last, now);
+    return this.value;
+  }
+  reset(now) {
+    if (Number.isFinite(now)) this.last = Math.max(this.last, now);
+  }
+}
+
 // No timers: a single monotonic animation clock advances all state. New taps
 // immediately replace the target and fade the previous *bounded* motion out.
 export class ReactionController {

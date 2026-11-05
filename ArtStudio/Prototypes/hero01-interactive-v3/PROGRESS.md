@@ -23,3 +23,7 @@ Implementation is present: V1 PixiJS 7.4.3 `51 × 149` shared mesh/idle/blink pl
 ## V1 deployment safety
 
 V1 production: https://hero01-idle-prototype.vercel.app/, project `hero01-idle-prototype`, production branch `main`, deployment `dpl_DJ6ou9Bqx6VfW1uhf7PLYfmyVvDm` from `f3ef0305b55f1b802051915732845ade2ac73cc7`. V2 public production: https://hero01-idle-v2-prototype.vercel.app/; its actual earlier Preview is protected. Never change their project settings or overwrite either deployment.
+
+### Slow-frame touch fix in progress
+- iPhone-sized WebKit run `41987401458` recorded the missing face tap: the actual pointer events reached the correct Pixi zone, but 175 ms passed without the frame-based reaction clock advancing, so cooldown discarded the tap.
+- The reaction clock now advances on both input and frames, while hidden/test intervals are excluded. A unit test and supplemental synthetic-Pixi slow-frame check cover that case; real Chromium mouse/touch checks still exercise all 13 zones. Local 14/14 unit tests, build and desktop/portrait/landscape Chromium pass. WebKit verification and production promotion are pending.
