@@ -1,5 +1,9 @@
 # HERO-01 V3 — progress and recovery
 
+## User approval and continuing reference
+
+On 2026-11-05 the user approved this V3 as the continuing visual and technical **quality reference** for future costumes and animations. The approved runtime is pinned to `22f50059fbfd63562c3034b689438819679df5f4` and deployment `dpl_25hW1sGahNHWQgJbhYAGYszyS7vn`. This is **not** a pose or motion template: each new costume needs a fresh concept-appropriate pose and individual motion mechanics. Full requirements: [`../../Docs/06_hero01_quality_reference_v3.md`](../../Docs/06_hero01_quality_reference_v3.md). Existing V1/V2 and the approved reference remain intact; known QA limitations still apply.
+
 ## Current source and verification
 
 V3 is isolated at `ArtStudio/Prototypes/hero01-interactive-v3/` on `arena/680e6caa-new-game`, based on V1 rather than V2. The current source replaces the rejected shared-mesh-only limb motion with four independent, bounded, three-joint 2D FK/skinning chains on separate limb textures. A split shoe layer shares its leg chain to reproduce the crossed-pose layering. V1 idle/blink equations, V3 expressions, 13 zones and the original PixiJS 7.4.3 remain. See `README.md`, `QA.md` and `artifacts/PROVENANCE.md` for operation, results and substantial flat-art limitations.
