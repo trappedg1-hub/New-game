@@ -72,9 +72,46 @@ jobs:
             node -e "const s=require('fs').readFileSync('/tmp/hero-v3-landscape.log','utf8').slice(-8000);console.log('::error title=V3 landscape WebKit failure::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
           fi
           exit "$status"
-      - name: Require both configurations to pass
+      - name: Verify public bundle and jointed textures match this build
+        id: bundle
+        continue-on-error: true
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import { readFileSync } from 'node:fs';
+          import { createHash } from 'node:crypto';
+          const root = 'https://hero01-interactive-v3-prototype.vercel.app/';
+          const html = await fetch(root, { cache: 'no-store' });
+          assert.equal(html.status, 200, 'public V3 must not require a Vercel login');
+          const local = readFileSync('dist/index.html', 'utf8'), remote = await html.text();
+          const js = text => text.match(/assets\/index-[^" ]+\.js/)?.[0];
+          assert.ok(js(local)); assert.equal(js(remote), js(local), 'production JS differs from this build');
+          const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+          for (const file of ['jointed.json', 'body.png', 'arm_down.png', 'arm_raised.png', 'leg_front.png', 'leg_back.png', 'leg_back_foot.png']) {
+            const response = await fetch(`${root}derived/jointed/${file}`, { cache: 'no-store' });
+            assert.equal(response.status, 200, file);
+            assert.equal(hash(Buffer.from(await response.arrayBuffer())), hash(readFileSync(`dist/derived/jointed/${file}`)), `${file} differs`);
+          }
+          console.log(`::notice title=Public V3 bundle and assets match::${js(remote)}; jointed.json and all six PNGs match the local build.`);
+          JS
+      - name: Run iPhone-sized WebKit on public production V3
+        id: public
+        continue-on-error: true
+        env:
+          HERO_DEVICE: mobile
+          HERO_TEST_URL: https://hero01-interactive-v3-prototype.vercel.app/
+          HERO_V1_TEST_URL: ''
+        run: |
+          if npm run test:ui > /tmp/hero-v3-public.log 2>&1; then status=0; else status=$?; fi
+          cat /tmp/hero-v3-public.log
+          node -e "const s=require('fs').readFileSync('/tmp/hero-v3-public.log','utf8').slice(-8000);console.log('::notice title=V3 production WebKit::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          if [ "$status" -ne 0 ]; then
+            node -e "const s=require('fs').readFileSync('/tmp/hero-v3-public.log','utf8').slice(-8000);console.log('::error title=V3 production WebKit failure::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          fi
+          exit "$status"
+      - name: Require all configurations to pass
         if: always()
         run: |
-          for result in '${{ steps.mobile.outcome }}' '${{ steps.landscape.outcome }}'; do
-            if [ "$result" != 'success' ]; then echo '::error::A WebKit check failed or was skipped'; exit 1; fi
+          for result in '${{ steps.mobile.outcome }}' '${{ steps.landscape.outcome }}' '${{ steps.bundle.outcome }}' '${{ steps.public.outcome }}'; do
+            if [ "$result" != 'success' ]; then echo '::error::A V3 verification check failed or was skipped'; exit 1; fi
           done
