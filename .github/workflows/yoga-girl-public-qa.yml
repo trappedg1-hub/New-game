@@ -1,0 +1,34 @@
+name: YOGA GIRL public preview QA
+on:
+  workflow_dispatch:
+  push:
+    branches: [arena/680e6caa-new-game]
+    paths:
+      - '.github/workflows/yoga-girl-public-qa.yml'
+      - 'ArtStudio/Prototypes/hero01-yoga-girl/scripts/public-qa.mjs'
+permissions:
+  contents: read
+jobs:
+  public-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: ArtStudio/Prototypes/hero01-yoga-girl
+    env:
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      YOGA_PUBLIC_URL: https://hero01-yoga-girl-prototype.vercel.app/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build the isolated preview
+        run: |
+          npm ci --no-audit --no-fund
+          npm test
+          npm run build
+      - name: Install WebKit and its dependencies
+        run: npx playwright-core install --with-deps webkit
+      - name: Check public assets and iPhone-sized WebKit interaction
+        run: node scripts/public-qa.mjs
