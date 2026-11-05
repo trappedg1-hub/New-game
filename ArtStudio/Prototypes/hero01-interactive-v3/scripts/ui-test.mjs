@@ -63,7 +63,19 @@ async function tapZone(zone, point) {
   const before = (await page.evaluate(() => window.__HERO_QA__.getState())).reaction.count;
   if (mobile) await page.touchscreen.tap(pos.x, pos.y);
   else await page.mouse.click(pos.x, pos.y);
-  await page.waitForFunction(expected => window.__HERO_QA__.getState().reaction.count >= expected, before + 1, { timeout: 5000 });
+  try {
+    await page.waitForFunction(expected => window.__HERO_QA__.getState().reaction.count >= expected, before + 1, { timeout: 5000 });
+  } catch (error) {
+    const diagnostics = await page.evaluate(({ x, y }) => ({
+      hidden: document.hidden, visibility: document.visibilityState,
+      viewport: [innerWidth, innerHeight], scrollY,
+      element: document.elementFromPoint(x, y)?.tagName ?? null,
+      canvas: document.querySelector('#animated-view canvas').getBoundingClientRect().toJSON(),
+      state: window.__HERO_QA__.getState(), pending: window.__HERO_QA__.pendingPointers(),
+      events: window.__HERO_TEST_EVENTS__?.slice(-10),
+    }), pos);
+    throw new Error(`No reaction for ${zone} at ${JSON.stringify(pos)}: ${JSON.stringify(diagnostics)}; ${error}`);
+  }
   const after = await page.evaluate(() => window.__HERO_QA__.getState());
   assert.equal(after.reaction.count, before + 1, `duplicate event or missing tap at ${zone}`);
   assert.equal(after.lastReaction.zone, zone);
@@ -113,8 +125,11 @@ async function regressionAgainstV1() {
     }
   }
   console.log(`V1 vs V3 idle/blink: 10 rendered comparisons ${mobile ? 'within 1/255' : 'identical'} (excluding renamed footer label).`);
-  // This environment's --single-process Chromium exits when a context closes;
-  // leaving the second page open until browser.close avoids that problem.
+  // The V1 comparison tab must not leave V3 backgrounded: WebKit suspends
+  // requestAnimationFrame there, which would freeze the reaction clock.
+  await page.bringToFront();
+  await old.close();
+  await page.waitForFunction(() => !document.hidden);
   await page.locator('#layout-solo').click();
   await page.locator('#view-body').click();
   await page.evaluate(() => window.__HERO_QA__.resume());
@@ -122,6 +137,17 @@ async function regressionAgainstV1() {
 
 try {
   await ready(page);
+  await page.evaluate(() => {
+    window.__HERO_TEST_EVENTS__ = [];
+    for (const type of ['pointerdown', 'pointerup', 'pointercancel', 'touchstart', 'touchend', 'touchcancel']) {
+      document.addEventListener(type, event => {
+        const entry = { type, target: event.target?.tagName, pointerType: event.pointerType,
+          pointerId: event.pointerId, x: event.clientX, y: event.clientY };
+        window.__HERO_TEST_EVENTS__.push(entry);
+        if (window.__HERO_TEST_EVENTS__.length > 24) window.__HERO_TEST_EVENTS__.shift();
+      }, true);
+    }
+  });
   assert.equal(await page.locator('#layout-solo').getAttribute('aria-pressed'), 'true');
   assert.equal(await page.locator('#view-body').getAttribute('aria-pressed'), 'true');
   assert.equal(await page.locator('#animated-view canvas').evaluate(node => node.style.touchAction), 'manipulation');

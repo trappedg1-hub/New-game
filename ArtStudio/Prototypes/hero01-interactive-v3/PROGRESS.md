@@ -10,8 +10,8 @@ Implementation is present: V1 PixiJS 7.4.3 `51 × 149` shared mesh/idle/blink pl
 
 ## Still incomplete
 
-- WebKit (including iPhone-sized and landscape input) has not yet been run for V3; real iPhone Safari has not been tested.
-- Separate Vercel project `hero01-interactive-v3-prototype` (`prj_6ohITCsTvMMgxMtf8jYPPXzTb5q7`) has been created with V3-only build commands; no V3 deployment has yet been verified.
+- First iPhone-sized WebKit CI run `41985596576` matched 10 V1/V3 screenshots and initialized the V3 scene, but failed while waiting for a tap reaction after its V1 comparison tab was opened. The cause is not yet verified: the runner may leave V3 in the background, so the test now foregrounds V3 and includes diagnostics. Landscape WebKit has not yet run; real iPhone Safari has not been tested.
+- Separate Vercel project `hero01-interactive-v3-prototype` (`prj_6ohITCsTvMMgxMtf8jYPPXzTb5q7`) deployed commit `f0ed50e1afddc43554c253e40f27c0f6e566e647` as production `dpl_8CxpiLqDiTJtUHL5GpeCF7HZXb6t` (READY), alias https://hero01-interactive-v3-prototype.vercel.app/; public browser execution still needs verification. Preview protection is separate.
 - Final V1, V2 and Approved source-preservation checks and remote-file checks remain.
 
 ## Next steps
