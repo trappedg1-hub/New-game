@@ -2,28 +2,24 @@
 
 ## Current state
 
-V3 is isolated at `ArtStudio/Prototypes/hero01-interactive-v3/` on fixed session branch `arena/680e6caa-new-game`. A new dedicated branch is not permitted in this session. Original repository starting commit: `71eb43301b9678e63b70861048cd15ea9f0d349c`; V3 baseline-copy commit: `b260f1c`.
+V3 is isolated at `ArtStudio/Prototypes/hero01-interactive-v3/` on the fixed session branch `arena/680e6caa-new-game`. A separate branch cannot be created in this session; a separate folder and Vercel project were used instead. The V3 baseline-copy commit `b260f1c` was made directly from approved V1, not V2.
 
-Implementation is present: V1 PixiJS 7.4.3 `51 × 149` shared mesh/idle/blink plus separately transformed polygonal Pixi interaction zones, bounded additive reactions, eight facial states, single-pointer handling, history/cooldown/combo, responsive solo/compare modes and opt-in hitbox diagnostics. Six AI-generated candidate studies are retained in V3 only; small aligned mouth/sleepy-eye derivatives and a color blush layer are local to V3. The underlying illustration is flat; no independent arm/hair/leg rig exists. The V1 eye/blink code remains active.
+The implementation retains V1's PixiJS 7.4.3 `51 × 149` shared mesh, idle and blink, and adds 13 transformed polygonal Pixi interaction zones, bounded reactions, eight facial states, cooldown/combo history, responsive solo/compare modes and opt-in hitbox diagnostics. The character image remains a flat mesh: it is not a layered or skeletal rig. Six AI expression studies and the derived mouth/sleepy-eye patches remain experimental and isolated to V3.
 
-`npm ci`, 13/13 unit tests, build, npm audit, desktop Chromium, iPhone-sized Chromium touch and landscape Chromium passed locally. Desktop idle/blink WebGL output matched V1 pixels exactly outside the changed UI label; mobile matched within 1/255. See `QA.md` for exact sampling and limitations.
+## Production deployment
 
-## Still incomplete
+- Public **production**: https://hero01-interactive-v3-prototype.vercel.app/
+- Separate project `hero01-interactive-v3-prototype` (`prj_6ohITCsTvMMgxMtf8jYPPXzTb5q7`), production deployment `dpl_Dd5Qi6fHdg9sUQWisWbBRXrTe5Pq`, READY/PROMOTED from `683f09cf9e5076a7bed253dffbfb2cb956fa57ee`. Later commits only modify tests or documentation, not the deployed runtime.
+- GitHub Actions [`41988835670`](https://github.com/trappedg1-hub/New-game/actions/runs/41988835670) checked the public JS bundle against the tested build and passed the public URL through iPhone-sized WebKit, including all 13 touchscreen zones. This is browser emulation, not a physical iPhone.
 
-- First iPhone-sized WebKit CI run `41985596576` matched 10 V1/V3 screenshots and initialized the V3 scene, but failed while waiting for a tap reaction after its V1 comparison tab was opened. Runs `41986101688` and `41986273501` failed a screenshot comparison around intermediate blink when switching tabs; this may be a stale WebKit compositor frame rather than a rig difference. Runs `41986603189` and `41986835226` found small but non-zero differences in synchronous WebGL buffers in sampled blink frames; do not claim exact WebKit blink parity. The test now reports that intermediate difference separately and continues to investigate touch; touch remains unverified in WebKit. Landscape WebKit has not yet run; real iPhone Safari has not been tested.
-- Separate Vercel project `hero01-interactive-v3-prototype` (`prj_6ohITCsTvMMgxMtf8jYPPXzTb5q7`) deployed commit `f0ed50e1afddc43554c253e40f27c0f6e566e647` as production `dpl_8CxpiLqDiTJtUHL5GpeCF7HZXb6t` (READY), alias https://hero01-interactive-v3-prototype.vercel.app/; public browser execution still needs verification. Preview protection is separate.
-- Final V1, V2 and Approved source-preservation checks and remote-file checks remain.
+## Verification and limitations
 
-## Next steps
+- 14/14 unit tests, reproducible expression derivatives/asset checks, build and audit passed. Desktop, portrait and landscape Chromium and iPhone-sized portrait/landscape WebKit passed the interaction and controls suite.
+- A WebKit run before the fix (`41987401458`) showed a real lost tap: 175 ms elapsed between events, but a frame-only reaction clock had not advanced. The reaction clock now updates on input and frames; explicit slow-frame tests cover this regression.
+- WebKit idle frames with eyes open matched the strict V1 pixel tolerance. Some WebKit blink-frame comparisons produced variable local differences; the cause is not established and exact WebKit blink parity is **not** claimed. See `QA.md` for metrics and test thresholds.
+- Real iPhone Safari and a WebKit swipe were not tested. The V1 blink can visibly flatten eyes mid-blink, and high-zoom expression transitions can show brief softness/ghosting. Expression studies have not been approved as final assets.
+- A final tree comparison found all 79 V1/V2/Approved Git entries identical to the pre-V3 baseline; approved source SHA-256 is `91111189c23d1d7ac424e85d3406202bf028e8d3330ae8c50b33223312f236fd`. V1 and V2 production deployments were not changed.
 
-1. Commit/push this isolated implementation. Use a temporary GitHub Actions workflow to run V3 production build and iPhone/landscape Playwright WebKit if local WebKit is unavailable; remove only the temporary workflow afterward. Do not use stopped sandbox or Codespaces approaches.
-2. Deploy the **separate** V3 Vercel project. Publish a public production alias if preview protection prevents anonymous use; label actual protected previews accurately. Verify built V3 locally and publicly.
-3. Compare V1/V2/Approved tree entries to the baseline; check V1 and V2 public deployments remain unchanged, approved source SHA `91111189c23d1d7ac424e85d3406202bf028e8d3330ae8c50b33223312f236fd`, V3 GitHub hashes, README and QA results. Report physical-device and flat-mesh limitations honestly.
+## V1/V2 deployment safety
 
-## V1 deployment safety
-
-V1 production: https://hero01-idle-prototype.vercel.app/, project `hero01-idle-prototype`, production branch `main`, deployment `dpl_DJ6ou9Bqx6VfW1uhf7PLYfmyVvDm` from `f3ef0305b55f1b802051915732845ade2ac73cc7`. V2 public production: https://hero01-idle-v2-prototype.vercel.app/; its actual earlier Preview is protected. Never change their project settings or overwrite either deployment.
-
-### Slow-frame touch fix in progress
-- iPhone-sized WebKit run `41987401458` recorded the missing face tap: the actual pointer events reached the correct Pixi zone, but 175 ms passed without the frame-based reaction clock advancing, so cooldown discarded the tap.
-- The reaction clock now advances on both input and frames, while hidden/test intervals are excluded. A unit test and supplemental synthetic-Pixi slow-frame check cover that case; real Chromium mouse/touch checks still exercise all 13 zones. Local 14/14 unit tests, build and desktop/portrait/landscape Chromium pass. WebKit verification and production promotion are pending.
+V1 production: https://hero01-idle-prototype.vercel.app/, deployment `dpl_DJ6ou9Bqx6VfW1uhf7PLYfmyVvDm`. V2 production: https://hero01-idle-v2-prototype.vercel.app/, deployment `dpl_8DRApt5WKiiMsqzPtCxTDgokCdZE`. Their separate projects and approved artwork are not the V3 target.
