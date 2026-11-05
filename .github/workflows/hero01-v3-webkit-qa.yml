@@ -1,5 +1,5 @@
 name: Temporary HERO-01 V3 WebKit verification
-# V3 must stay foregrounded after its V1-reference tab is closed.
+# Foreground each page before comparing WebKit compositor frames.
 on:
   push:
     branches: [arena/680e6caa-new-game]

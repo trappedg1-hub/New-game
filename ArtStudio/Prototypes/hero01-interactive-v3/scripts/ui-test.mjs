@@ -110,9 +110,15 @@ async function regressionAgainstV1() {
   for (const view of ['body', 'face']) {
     await page.locator(`#view-${view}`).click(); await old.locator(`#view-${view}`).click();
     for (const [time, blink] of [[0, 0], [1.2, 0], [3.4, 0], [0, 0.5], [0, 1]]) {
+      // WebKit can defer compositing a background page. Foreground each
+      // page before drawing and wait for presentation, not just JS execution.
+      await old.bringToFront();
       await old.evaluate(frame => window.__HERO_QA__.frame(frame), { time, blink, strength: 1 });
-      await page.evaluate(frame => window.__HERO_QA__.frame(frame), { time, blink, strength: 1 });
+      await old.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
       const a = await old.locator('#animated-view canvas').screenshot();
+      await page.bringToFront();
+      await page.evaluate(frame => window.__HERO_QA__.frame(frame), { time, blink, strength: 1 });
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
       const b = await page.locator('#animated-view canvas').screenshot();
       // Body panel labels are intentionally different V1/V3 UI text. The
       // bottom 50 CSS px are outside the artwork on the shared full-body fit.
