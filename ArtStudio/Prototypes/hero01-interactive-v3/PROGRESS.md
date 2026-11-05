@@ -10,7 +10,7 @@ Implementation is present: V1 PixiJS 7.4.3 `51 × 149` shared mesh/idle/blink pl
 
 ## Still incomplete
 
-- First iPhone-sized WebKit CI run `41985596576` matched 10 V1/V3 screenshots and initialized the V3 scene, but failed while waiting for a tap reaction after its V1 comparison tab was opened. A second run `41986101688` failed a screenshot comparison after browser tab switching (a likely compositor timing issue, not yet proven). The test now foregrounds/presents each frame and records tap diagnostics; touch remains unverified in WebKit. Landscape WebKit has not yet run; real iPhone Safari has not been tested.
+- First iPhone-sized WebKit CI run `41985596576` matched 10 V1/V3 screenshots and initialized the V3 scene, but failed while waiting for a tap reaction after its V1 comparison tab was opened. Runs `41986101688` and `41986273501` failed a screenshot comparison around intermediate blink when switching tabs; this may be a stale WebKit compositor frame rather than a rig difference. The test now compares synchronous WebGL readPixels directly and records tap diagnostics; touch remains unverified in WebKit. Landscape WebKit has not yet run; real iPhone Safari has not been tested.
 - Separate Vercel project `hero01-interactive-v3-prototype` (`prj_6ohITCsTvMMgxMtf8jYPPXzTb5q7`) deployed commit `f0ed50e1afddc43554c253e40f27c0f6e566e647` as production `dpl_8CxpiLqDiTJtUHL5GpeCF7HZXb6t` (READY), alias https://hero01-interactive-v3-prototype.vercel.app/; public browser execution still needs verification. Preview protection is separate.
 - Final V1, V2 and Approved source-preservation checks and remote-file checks remain.
 

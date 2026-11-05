@@ -83,22 +83,32 @@ async function tapZone(zone, point) {
   assert.equal(await page.evaluate(() => window.__HERO_QA__.pendingPointers()), 0);
 }
 
-async function compareScreenshots(a, b, bottomToIgnore = 0) {
-  return page.evaluate(async ([first, second, bottom]) => {
-    const image = base64 => new Promise((resolve, reject) => {
-      const img = new Image(); img.onload = () => resolve(img); img.onerror = reject; img.src = `data:image/png;base64,${base64}`;
-    });
-    const [one, two] = await Promise.all([image(first), image(second)]);
-    if (one.width !== two.width || one.height !== two.height) return { sameSize: false, widths: [one.width, two.width], heights: [one.height, two.height] };
-    const canvas = document.createElement('canvas'); canvas.width = one.width; canvas.height = one.height;
-    const context = canvas.getContext('2d', { willReadFrequently: true });
-    context.drawImage(one, 0, 0); const aa = context.getImageData(0, 0, one.width, one.height - bottom).data;
-    context.clearRect(0, 0, canvas.width, canvas.height); context.drawImage(two, 0, 0);
-    const bb = context.getImageData(0, 0, one.width, one.height - bottom).data;
-    let total = 0, max = 0, changed = 0;
-    for (let i = 0; i < aa.length; i++) { const diff = Math.abs(aa[i] - bb[i]); total += diff; max = Math.max(max, diff); if (diff) changed++; }
-    return { sameSize: true, mean: total / aa.length, max, changed };
-  }, [a.toString('base64'), b.toString('base64'), bottomToIgnore]);
+async function captureWebGL(target, frame) {
+  // Read the actual Pixi drawing buffer immediately after the deterministic
+  // render. Browser screenshots can lag a frame when WebKit switches tabs.
+  return target.evaluate(frame => {
+    window.__HERO_QA__.frame(frame);
+    const canvas = document.querySelector('#animated-view canvas');
+    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    if (!gl) throw new Error('No existing WebGL context on animated canvas');
+    const width = gl.drawingBufferWidth, height = gl.drawingBufferHeight;
+    const pixels = new Uint8Array(width * height * 4);
+    gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+    let binary = '';
+    for (let i = 0; i < pixels.length; i += 32768) binary += String.fromCharCode(...pixels.subarray(i, i + 32768));
+    return { width, height, base64: btoa(binary) };
+  }, frame);
+}
+
+function compareWebGL(a, b) {
+  if (a.width !== b.width || a.height !== b.height) return { sameSize: false, dimensions: [a.width, a.height, b.width, b.height] };
+  const first = Buffer.from(a.base64, 'base64'), second = Buffer.from(b.base64, 'base64');
+  let total = 0, max = 0, changed = 0, visible = 0;
+  for (let i = 0; i < first.length; i++) {
+    const diff = Math.abs(first[i] - second[i]); total += diff; max = Math.max(max, diff); if (diff) changed++;
+    if (i % 4 === 3 && first[i] > 0) visible++;
+  }
+  return { sameSize: true, mean: total / first.length, max, changed, visible };
 }
 
 async function regressionAgainstV1() {
@@ -110,27 +120,16 @@ async function regressionAgainstV1() {
   for (const view of ['body', 'face']) {
     await page.locator(`#view-${view}`).click(); await old.locator(`#view-${view}`).click();
     for (const [time, blink] of [[0, 0], [1.2, 0], [3.4, 0], [0, 0.5], [0, 1]]) {
-      // WebKit can defer compositing a background page. Foreground each
-      // page before drawing and wait for presentation, not just JS execution.
       await old.bringToFront();
-      await old.evaluate(frame => window.__HERO_QA__.frame(frame), { time, blink, strength: 1 });
-      await old.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      const a = await old.locator('#animated-view canvas').screenshot();
+      const a = await captureWebGL(old, { time, blink, strength: 1 });
       await page.bringToFront();
-      await page.evaluate(frame => window.__HERO_QA__.frame(frame), { time, blink, strength: 1 });
-      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-      const b = await page.locator('#animated-view canvas').screenshot();
-      // Body panel labels are intentionally different V1/V3 UI text. The
-      // bottom 50 CSS px are outside the artwork on the shared full-body fit.
-      const pixelRatio = mobile ? 3 : 1;
-      const result = await compareScreenshots(a, b, view === 'body' ? 50 * pixelRatio : 0);
-      assert.ok(result.sameSize, JSON.stringify(result));
-      // Mobile screenshots can differ by one 8-bit level because of
-      // compositing/color rounding at fractional CSS coordinates.
-      assert.ok(result.max <= (mobile ? 1 : 0) && result.mean < (mobile ? 0.15 : 0.00001), `${view} at ${time}/${blink}: ${JSON.stringify(result)}`);
+      const b = await captureWebGL(page, { time, blink, strength: 1 });
+      const result = compareWebGL(a, b);
+      assert.ok(result.sameSize && result.visible > 1000, JSON.stringify(result));
+      assert.ok(result.max <= 1 && result.mean < 0.001, `${view} at ${time}/${blink}: ${JSON.stringify(result)}`);
     }
   }
-  console.log(`V1 vs V3 idle/blink: 10 rendered comparisons ${mobile ? 'within 1/255' : 'identical'} (excluding renamed footer label).`);
+  console.log('V1 vs V3 idle/blink: 10 synchronous WebGL buffer comparisons within 1/255.');
   // The V1 comparison tab must not leave V3 backgrounded: WebKit suspends
   // requestAnimationFrame there, which would freeze the reaction clock.
   await page.bringToFront();
