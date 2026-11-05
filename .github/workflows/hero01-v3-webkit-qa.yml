@@ -1,3 +1,4 @@
+# V1 comparisons match the actual V3 canvas density in each WebKit environment.
 name: Temporary HERO-01 V3 jointed WebKit verification
 on:
   push:

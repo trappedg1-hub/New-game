@@ -16,7 +16,10 @@ const ROWS = 149;
 function makeApplication(host) {
   // Layered skins increase fill cost. Cap dense touch-screen rendering at 1.5x
   // (including landscape phones) rather than 2x; desktop keeps the V1 cap.
-  const compactTouch = navigator.maxTouchPoints > 0 && Math.min(window.innerWidth, window.innerHeight) <= 600;
+  // Some WebKit environments expose touch events but report zero
+  // maxTouchPoints (notably emulators). Do not miss their mobile size cap.
+  const touchCapable = navigator.maxTouchPoints > 0 || window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+  const compactTouch = touchCapable && Math.min(window.innerWidth, window.innerHeight) <= 600;
   const app = new PIXI.Application({
     width: 1,
     height: 1,

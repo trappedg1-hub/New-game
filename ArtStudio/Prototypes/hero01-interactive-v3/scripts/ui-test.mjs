@@ -129,9 +129,12 @@ async function regressionAgainstV1() {
   const v1Url = new URL(process.env.HERO_V1_TEST_URL); v1Url.searchParams.set('qa', '1');
   const old = await context.newPage();
   if (mobile) {
-    // V3 intentionally caps compact touch canvases at 1.5x; force the V1 QA
-    // tab to the same resolution so cross-version buffers are comparable.
-    await old.addInitScript(() => Object.defineProperty(window, 'devicePixelRatio', { configurable: true, value: 1.5 }));
+    // Match the V1 QA tab to V3's actual canvas density. Different WebKit
+    // emulations expose touch capabilities differently, and comparing buffers
+    // with unequal drawing sizes would be meaningless.
+    const density = await page.locator('#animated-view canvas').evaluate(canvas => canvas.width / canvas.clientWidth);
+    await old.addInitScript(value => Object.defineProperty(window, 'devicePixelRatio', { configurable: true, value }), density);
+    console.log(`V1 QA resolution matched to V3 canvas density: ${density}`);
   }
   await ready(old, v1Url);
   await page.locator('#layout-compare').click();
@@ -199,6 +202,10 @@ try {
   assert.equal(await page.locator('#layout-solo').getAttribute('aria-pressed'), 'true');
   assert.equal(await page.locator('#view-body').getAttribute('aria-pressed'), 'true');
   assert.equal(await page.locator('#animated-view canvas').evaluate(node => node.style.touchAction), 'pan-y');
+  const rendering = await page.evaluate(() => ({ dpr: devicePixelRatio, maxTouchPoints: navigator.maxTouchPoints,
+    coarsePointer: matchMedia('(pointer: coarse)').matches, touchEvents: 'ontouchstart' in window,
+    canvasDensity: document.querySelector('#animated-view canvas').width / document.querySelector('#animated-view canvas').clientWidth }));
+  console.log(`${engine}/${mode} rendering:`, rendering);
   const size = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
   assert.ok(size.scroll <= size.width, `horizontal overflow: ${JSON.stringify(size)}`);
 
