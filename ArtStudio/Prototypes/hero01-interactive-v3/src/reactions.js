@@ -1,8 +1,10 @@
 import { ZONES_BY_ID } from './zones.js';
+import { variantFor } from './animation/profiles.js';
 
 export const STATES = Object.freeze({
   IDLE: 'IDLE',
   TOUCH_REACTION: 'TOUCH_REACTION',
+  REACTION_TRANSITION: 'REACTION_TRANSITION',
   SPECIAL_REACTION: 'SPECIAL_REACTION',
   RETURN_TO_IDLE: 'RETURN_TO_IDLE',
 });
@@ -82,7 +84,8 @@ export class ReactionController {
     if (!ZONES_BY_ID[zone] || !Number.isFinite(now) || now < this.lastAcceptedAt || now - this.lastAcceptedAt < COOLDOWN_SECONDS) return null;
     const previous = this.sample(now);
     this.retiring = previous.contributions.slice(-2).map(part => ({
-      zone: part.zone, amount: part.amount, started: now,
+      zone: part.zone, variant: part.variant, amount: part.amount,
+      followAmount: part.followAmount, lateAmount: part.lateAmount, started: now,
     }));
     this.history = this.history.filter(entry => now - entry.time <= 2.2);
     const repeated = this.history.filter(entry => entry.zone === zone && now - entry.time <= 1.6).length >= 2;
@@ -95,34 +98,45 @@ export class ReactionController {
     if (this.history.length > 8) this.history.shift();
     this.count++;
     this.lastAcceptedAt = now;
-    this.active = { zone, expression, started: now, special };
-    this.state = special ? STATES.SPECIAL_REACTION : STATES.TOUCH_REACTION;
-    return { zone, expression, special, count: this.count, label: ZONES_BY_ID[zone].label };
+    const variant = index % 3;
+    this.active = { zone, expression, started: now, special, variant };
+    this.state = this.retiring.length ? STATES.REACTION_TRANSITION
+      : special ? STATES.SPECIAL_REACTION : STATES.TOUCH_REACTION;
+    return { zone, expression, special, variant, count: this.count, label: ZONES_BY_ID[zone].label };
   }
 
   sample(now) {
     this.retiring = this.retiring.filter(part => now - part.started < RETIRE);
-    const contributions = this.retiring.map(part => ({
-      zone: part.zone,
-      amount: part.amount * (1 - smooth((now - part.started) / RETIRE)),
-    }));
+    const contributions = this.retiring.map(part => {
+      const fade = 1 - smooth((now - part.started) / RETIRE);
+      return { zone: part.zone, variant: part.variant, amount: part.amount * fade,
+        followAmount: part.followAmount * fade, lateAmount: part.lateAmount * fade };
+    });
     let expression = 'neutral';
     let zone = null;
     if (this.active) {
       const elapsed = Math.max(0, now - this.active.started);
-      if (elapsed >= END) {
+      const timing = variantFor(this.active.variant).timing;
+      const phase = elapsed / timing;
+      // Hair and clothing enter and return later, without timers or a queue.
+      if (phase >= END + 0.20) {
         this.active = null;
-        this.state = STATES.IDLE;
+        this.state = contributions.length ? STATES.RETURN_TO_IDLE : STATES.IDLE;
       } else {
         zone = this.active.zone;
-        const amount = envelope(elapsed);
-        if (amount > 0) contributions.push({ zone, amount });
-        expression = elapsed < HOLD_END + 0.40 ? this.active.expression : 'neutral';
-        this.state = elapsed >= HOLD_END ? STATES.RETURN_TO_IDLE
+        const amount = envelope(phase);
+        const followAmount = envelope(phase - 0.10);
+        const lateAmount = envelope(phase - 0.20);
+        if (amount > 0 || followAmount > 0 || lateAmount > 0) {
+          contributions.push({ zone, variant: this.active.variant, amount, followAmount, lateAmount });
+        }
+        expression = phase < HOLD_END + 0.40 ? this.active.expression : 'neutral';
+        this.state = phase >= HOLD_END ? STATES.RETURN_TO_IDLE
+          : this.retiring.length ? STATES.REACTION_TRANSITION
           : this.active.special ? STATES.SPECIAL_REACTION : STATES.TOUCH_REACTION;
       }
     } else {
-      this.state = STATES.IDLE;
+      this.state = contributions.length ? STATES.RETURN_TO_IDLE : STATES.IDLE;
     }
     return { state: this.state, expression, zone, contributions, count: this.count };
   }

@@ -58,7 +58,8 @@ test('cooldown suppresses duplicate input; repeated taps and fast combinations c
   const repeated = r.trigger('face', 10.4);
   assert.equal(repeated.special, true);
   assert.equal(repeated.expression, 'blushing');
-  assert.equal(r.sample(10.45).state, STATES.SPECIAL_REACTION);
+  assert.equal(r.sample(10.45).state, STATES.REACTION_TRANSITION);
+  assert.equal(r.sample(10.61).state, STATES.SPECIAL_REACTION);
   assert.equal(r.trigger('missing', 10.6), null);
   assert.equal(r.trigger('hair', 9), null);
   for (let i = 0; i < 100; i++) {
@@ -109,26 +110,15 @@ test('per-zone variation cycles and stale expressions are replaced, not queued',
   assert.equal(mixer.current, 'neutral'); assert.equal(mixer.amount, 0);
 });
 
-test('additive reactions remain small, smooth and keep V1 face and lower body fixed', () => {
+test('additive poses are bounded, intensity-zero is exact, and shoes remain anchored', () => {
   const parts = Object.keys(samples).map(zone => ({ zone, amount: 1 }));
   for (let y = 0; y <= SOURCE_H; y += 35) for (let x = 0; x <= SOURCE_W; x += 35) {
     const weights = buildReactionWeights(x, y);
-    const zero = reactionOffset(weights, parts, 0);
-    assert.equal(zero.x, 0); assert.equal(zero.y, 0);
+    assert.deepEqual(reactionOffset(weights, parts, 0), { x: 0, y: 0 });
     const offset = reactionOffset(weights, parts, 1.5);
-    assert.ok(Math.abs(offset.x) <= 12 && Math.abs(offset.y) <= 7.5);
-    if (y <= 610 || y >= 1950) assert.deepEqual(offset, { x: 0, y: 0 });
-  }
-  for (const zone of ['hair', 'shoulderLeft', 'shoulderRight', 'armLeft', 'armRight', 'upperTorso', 'waist']) {
-    let max = 0;
-    for (let y = 650; y < 1750; y += 50) for (let x = 100; x < 1100; x += 50) {
-      const d = reactionOffset(buildReactionWeights(x, y), [{ zone, amount: 1 }], 1.5);
-      max = Math.max(max, Math.hypot(d.x, d.y));
-    }
-    assert.ok(max > 0.5, zone);
-  }
-  for (const zone of ['head', 'face', 'handLeft', 'handRight', 'legLeft', 'legRight']) {
-    assert.deepEqual(reactionOffset(buildReactionWeights(590, 900), [{ zone, amount: 1 }]), { x: 0, y: 0 });
+    assert.ok(Number.isFinite(offset.x) && Number.isFinite(offset.y));
+    assert.ok(Math.abs(offset.x) < 45 && Math.abs(offset.y) < 25);
+    if (y >= 3300) assert.deepEqual(offset, { x: 0, y: 0 }, `anchored shoes at ${x},${y}`);
   }
 });
 

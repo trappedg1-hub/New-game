@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium, webkit, devices } from 'playwright-core';
 import { blinkEnvelope } from '../src/rig.js';
+import { EXPRESSIONS } from '../src/reactions.js';
 
 // Start V3 first. Optionally start untouched V1 and provide HERO_V1_TEST_URL to
 // run a real, same-browser pixel regression. No mock canvas or fake events.
@@ -35,6 +36,14 @@ const samples = {
   upperTorso: [600, 900], waist: [600, 1200],
   legLeft: [460, 2250], legRight: [700, 2200],
 };
+const physicalPoints = {
+  head: [550, 120], hair: [200, 1120], face: [560, 410],
+  shoulderLeft: [370, 700], shoulderRight: [835, 700],
+  armLeft: [330, 1000], armRight: [905, 1320],
+  handLeft: [500, 565], handRight: [1060, 1795],
+  upperTorso: [600, 900], waist: [600, 1200],
+  legLeft: [460, 2400], legRight: [685, 2400],
+};
 
 async function ready(target, targetUrl = url) {
   await target.goto(targetUrl.toString(), { waitUntil: 'networkidle', timeout: 90000 });
@@ -61,6 +70,7 @@ async function tapZone(zone, point) {
   const hit = await page.evaluate(({ x, y }) => window.__HERO_QA__.zoneAtClient(x, y), pos);
   assert.equal(hit, zone, `Pixi hit test at ${point} picked ${hit} instead of ${zone}`);
   const before = (await page.evaluate(() => window.__HERO_QA__.getState())).reaction.count;
+  const scrollBefore = await page.evaluate(() => scrollY);
   if (mobile) await page.touchscreen.tap(pos.x, pos.y);
   else await page.mouse.click(pos.x, pos.y);
   try {
@@ -80,6 +90,7 @@ async function tapZone(zone, point) {
   assert.equal(after.reaction.count, before + 1, `duplicate event or missing tap at ${zone}`);
   assert.equal(after.lastReaction.zone, zone);
   assert.equal(after.input, mobile ? 'touch' : 'mouse');
+  assert.ok(Math.abs((await page.evaluate(() => scrollY)) - scrollBefore) < 1, `tap scrolled the page at ${zone}`);
   assert.equal(await page.evaluate(() => window.__HERO_QA__.pendingPointers()), 0);
 }
 
@@ -169,7 +180,7 @@ try {
   });
   assert.equal(await page.locator('#layout-solo').getAttribute('aria-pressed'), 'true');
   assert.equal(await page.locator('#view-body').getAttribute('aria-pressed'), 'true');
-  assert.equal(await page.locator('#animated-view canvas').evaluate(node => node.style.touchAction), 'manipulation');
+  assert.equal(await page.locator('#animated-view canvas').evaluate(node => node.style.touchAction), 'pan-y');
   const size = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
   assert.ok(size.scroll <= size.width, `horizontal overflow: ${JSON.stringify(size)}`);
 
@@ -191,12 +202,38 @@ try {
     for (const time of [0, 1.2, 2.7, 5.0, 8.4]) {
       const stats = await page.evaluate(t => window.__HERO_QA__.frame({ time: t, strength: 1.5,
         contributions: [{ zone: 'hair', amount: 1 }, { zone: 'waist', amount: 1 }, { zone: 'upperTorso', amount: 1 }] }), time);
-      assert.equal(stats.maximumFaceDisplacement, 0); assert.equal(stats.maximumFeetDisplacement, 0);
+      assert.ok(stats.maximumFaceDisplacement > 0); assert.equal(stats.maximumShoeDisplacement, 0);
       minCross = Math.min(minCross, stats.minimumCellCross); maxDisplacement = Math.max(maxDisplacement, stats.maximumDisplacement);
     }
-    assert.ok(minCross > 300 && maxDisplacement < 32, `mesh: ${minCross}, ${maxDisplacement}`);
+    assert.ok(minCross > 300 && maxDisplacement < 48, `mesh: ${minCross}, ${maxDisplacement}`);
     console.log('Combined V1 + reaction geometry:', { minCross, maxDisplacement });
   }
+
+  // Check movement in the actual rendered buffer, not only controller values.
+  // Expression is neutral so it cannot masquerade as a physical response.
+  let smallestVisibleChange = Infinity, smallestPointShift = Infinity;
+  for (const [zone, [x, y]] of Object.entries(physicalPoints)) {
+    const result = await page.evaluate(({ zone, x, y, hitPoint }) => {
+      const qa = window.__HERO_QA__;
+      const neutral = { time: 0, strength: 1.5, blink: 0, contributions: [] };
+      const active = { ...neutral, contributions: [{ zone, amount: 1, followAmount: 1, lateAmount: 1, variant: 0 }] };
+      qa.frame(neutral); const a = qa.deformedSourcePoint(x, y);
+      const geometry = qa.frame(active); const b = qa.deformedSourcePoint(x, y);
+      const client = qa.sourceToClient(...hitPoint);
+      const hit = qa.zoneAtClient(client.x, client.y);
+      const difference = qa.compareFrames(neutral, active);
+      return { geometry, difference, hit, pointShift: Math.hypot(b.x - a.x, b.y - a.y) };
+    }, { zone, x, y, hitPoint: samples[zone] });
+    assert.equal(result.hit, zone, `${zone}: hitbox did not follow deformation`);
+    assert.ok(result.pointShift > 1, `${zone}: point did not move: ${JSON.stringify(result)}`);
+    assert.ok(result.difference.comparable && result.difference.maxDifference > 8 && result.difference.changedFraction > 0.00005,
+      `${zone}: no rendered physical change: ${JSON.stringify(result)}`);
+    assert.ok(result.geometry.minimumCellCross > 300 && result.geometry.maximumShoeDisplacement === 0,
+      `${zone}: geometry ${JSON.stringify(result.geometry)}`);
+    smallestVisibleChange = Math.min(smallestVisibleChange, result.difference.changedFraction);
+    smallestPointShift = Math.min(smallestPointShift, result.pointShift);
+  }
+  console.log('13 WebGL physical responses:', { smallestVisibleChange, smallestPointShift });
 
   await page.locator('#view-face').click();
   const expressions = ['happy', 'surprised', 'shy', 'blushing', 'playful', 'sleepy', 'sad'];
@@ -210,6 +247,17 @@ try {
       ? blink.maxDifference > 10 && blink.meanAbsoluteDifference > 0.005 && blink.changedFraction > 0.001
       : blink.maxDifference > 25;
     assert.ok(visibleBlink && blink.nonTransparentA === blink.nonTransparentB, `${name} blink: ${JSON.stringify(blink)}`);
+    const moving = { time: 0, strength: 1.5, blink: 0,
+      contributions: [{ zone: 'head', amount: 1, followAmount: 1, lateAmount: 1, variant: 2 }] };
+    const face = { name, amount: 1, ...EXPRESSIONS[name] };
+    const movingExpression = await page.evaluate(([a, b]) => window.__HERO_QA__.compareFrames(a, b),
+      [{ ...moving, expression: null }, { ...moving, expression: face }]);
+    assert.ok(movingExpression.maxDifference > 15 && movingExpression.meanAbsoluteDifference > 0.002,
+      `${name} on moving head: ${JSON.stringify(movingExpression)}`);
+    const movingBlink = await page.evaluate(([a, b]) => window.__HERO_QA__.compareFrames(a, b),
+      [{ ...moving, expression: face }, { ...moving, expression: face, blink: 1 }]);
+    assert.ok(movingBlink.maxDifference > 10 && movingBlink.meanAbsoluteDifference > 0.005,
+      `${name} blink on moving head: ${JSON.stringify(movingBlink)}`);
   }
   const distinctBlush = await page.evaluate(() => window.__HERO_QA__.compareExpressions({ name: 'shy' }, { name: 'blushing' }));
   assert.ok(distinctBlush.meanAbsoluteDifference > 0.002, 'blushing is distinct from shy');
@@ -263,6 +311,31 @@ try {
     second: stalledFrame.before + 2, zone: 'hair' }, `slow-frame cooldown: ${JSON.stringify(stalledFrame)}`);
   console.log('PASS: spaced Pixi input remains responsive between animation frames.');
 
+  // A synthetic multi-contact sequence checks bookkeeping in every engine;
+  // Chromium's native two-finger gesture is exercised separately below.
+  await page.waitForTimeout(200);
+  await scrollPointIntoView(...samples.head);
+  const multiContact = await page.evaluate(([x, y]) => {
+    const qa = window.__HERO_QA__, canvas = document.querySelector('#animated-view canvas');
+    const pos = qa.sourceToClient(x, y), before = qa.getState().reaction.count;
+    const pointer = type => canvas.dispatchEvent(new PointerEvent(type, { pointerId: 93, pointerType: 'touch', isPrimary: true,
+      clientX: pos.x, clientY: pos.y, bubbles: true, buttons: type === 'pointerdown' ? 1 : 0 }));
+    pointer('pointerdown');
+    const started = qa.pendingPointers();
+    const event = (type, touches) => {
+      const e = new Event(type, { bubbles: true });
+      Object.defineProperties(e, { touches: { value: touches }, changedTouches: { value: [] }, targetTouches: { value: touches } });
+      canvas.dispatchEvent(e);
+    };
+    event('touchstart', [{}, {}]);
+    const afterSecondContact = qa.pendingPointers();
+    pointer('pointerup'); event('touchend', []);
+    return { started, afterSecondContact, after: qa.getState().reaction.count, before, pending: qa.pendingPointers() };
+  }, samples.head);
+  assert.deepEqual(multiContact, { started: 1, afterSecondContact: 0, after: multiContact.before, before: multiContact.before, pending: 0 },
+    `multi-contact suppression: ${JSON.stringify(multiContact)}`);
+  console.log('PASS: synthetic multi-contact cancellation (not a native WebKit pinch test).');
+
   // A drag/swipe must not generate a tap. On mobile Chromium verify scrolling;
   // desktop verifies movement tolerance with real mouse events.
   const torso = await scrollPointIntoView(600, 1200);
@@ -282,6 +355,33 @@ try {
     assert.equal((await page.evaluate(() => window.__HERO_QA__.getState())).reaction.count, beforeDrag);
     assert.equal(await page.evaluate(() => window.__HERO_QA__.pendingPointers()), 0);
     assert.ok((await page.evaluate(() => scrollY)) > scrollBefore, 'native swipe should scroll');
+
+    const pinchCenter = await scrollPointIntoView(600, 1200);
+    const scaleBefore = await page.evaluate(() => visualViewport.scale);
+    const countBefore = (await page.evaluate(() => window.__HERO_QA__.getState())).reaction.count;
+    const points = spread => [
+      { x: pinchCenter.x - spread, y: pinchCenter.y, id: 1 },
+      { x: pinchCenter.x + spread, y: pinchCenter.y, id: 2 },
+    ];
+    await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: points(12) });
+    await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: points(55) });
+    await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await page.waitForTimeout(250);
+    assert.ok(Math.abs((await page.evaluate(() => visualViewport.scale)) - scaleBefore) < 0.01, 'pinch starting on canvas zoomed');
+    assert.equal((await page.evaluate(() => window.__HERO_QA__.getState())).reaction.count, countBefore, 'pinch generated a tap');
+    assert.equal(await page.evaluate(() => window.__HERO_QA__.pendingPointers()), 0);
+    await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: points(12) });
+    await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await page.waitForTimeout(200);
+    assert.equal((await page.evaluate(() => window.__HERO_QA__.getState())).reaction.count, countBefore, 'two-finger tap generated a reaction');
+    assert.equal(await page.evaluate(() => window.__HERO_QA__.pendingPointers()), 0);
+    const doubleTap = await scrollPointIntoView(...samples.head);
+    await page.touchscreen.tap(doubleTap.x, doubleTap.y);
+    await page.waitForTimeout(140);
+    await page.touchscreen.tap(doubleTap.x, doubleTap.y);
+    await page.waitForTimeout(400);
+    assert.ok(Math.abs((await page.evaluate(() => visualViewport.scale)) - scaleBefore) < 0.01, 'double-tap on canvas zoomed');
+    console.log('PASS: native Chromium swipe scrolls, while canvas pinch/double-tap do not zoom or create a pinch reaction.');
   }
 
   // Blink and interactions remain functional with V1 idle paused.

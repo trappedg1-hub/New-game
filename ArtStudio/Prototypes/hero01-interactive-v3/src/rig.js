@@ -1,62 +1,16 @@
 import * as PIXI from 'pixi.js';
-import { buildReactionWeights, reactionOffset } from './reaction-motion.js';
+import { buildReactionWeights, applyReactionPose } from './reaction-motion.js';
+import { composeReactionPose } from './animation/reaction-pose.js';
+import { HEAD_PIVOT } from './animation/head-controller.js';
 import { createHitboxes } from './pixi-hitboxes.js';
 import { createExpressionLayers, loadExpressions } from './pixi-expressions.js';
 
-export const SOURCE_WIDTH = 1184;
-export const SOURCE_HEIGHT = 3488;
+import { SOURCE_WIDTH, SOURCE_HEIGHT, smoothstep, motionWeights, motionPhases, motionOffset,
+  blinkEnvelope, automaticBlink } from './animation/idle-controller.js';
+export { SOURCE_WIDTH, SOURCE_HEIGHT, smoothstep, motionWeights, motionPhases, motionOffset,
+  blinkEnvelope, automaticBlink };
 const COLS = 51;
 const ROWS = 149;
-
-const clamp01 = value => Math.max(0, Math.min(1, value));
-export function smoothstep(a, b, value) {
-  const x = clamp01((value - a) / (b - a));
-  return x * x * (3 - 2 * x);
-}
-const bell = (value, center, width) => Math.exp(-0.5 * ((value - center) / width) ** 2);
-
-export function motionWeights(x, y) {
-  const edge = smoothstep(0, 90, x) * (1 - smoothstep(SOURCE_WIDTH - 90, SOURCE_WIDTH, x));
-  const torso = bell(y, 910, 230) * bell(x, 590, 390) * smoothstep(610, 760, y)
-    * (1 - smoothstep(1350, 1600, y)) * edge;
-  const side = smoothstep(245, 415, Math.abs(x - 592));
-  const hair = side * smoothstep(675, 900, y) * (1 - smoothstep(1430, 1600, y)) * edge;
-  const cloth = bell(y, 1650, 170) * bell(x, 590, 440)
-    * smoothstep(1260, 1420, y) * (1 - smoothstep(1810, 1950, y)) * edge;
-  return { x, y, torso, hair, cloth };
-}
-
-export function motionPhases(time) {
-  return {
-    breath: Math.sin(time * Math.PI * 2 / 4.8),
-    hair: Math.sin(time * Math.PI * 2 / 6.2),
-    cloth: Math.sin(time * Math.PI * 2 / 7.4),
-  };
-}
-
-export function motionOffset(weights, phases, strength, result = [0, 0]) {
-  const { x, torso, hair, cloth } = weights;
-  result[0] = ((x - 590) * 0.014 * torso * phases.breath + 10 * hair * phases.hair + 5 * cloth * phases.cloth) * strength;
-  result[1] = (-8 * torso * phases.breath + 2.8 * hair * phases.hair - 3.0 * cloth * phases.cloth) * strength;
-  return result;
-}
-
-// One blink is a continuous short close, hold and release. No full-frame swaps.
-export function blinkEnvelope(elapsed) {
-  const close = 0.16;
-  const hold = 0.055;
-  const open = 0.205;
-  if (elapsed < 0 || elapsed >= close + hold + open) return 0;
-  if (elapsed < close) return smoothstep(0, close, elapsed);
-  if (elapsed < close + hold) return 1;
-  return 1 - smoothstep(0, open, elapsed - close - hold);
-}
-
-export function automaticBlink(time) {
-  const cycle = time % 18.4;
-  // A long, gently irregular sequence, including one occasional double blink.
-  return Math.max(...[2.35, 6.95, 7.45, 13.2].map(start => blinkEnvelope(cycle - start)));
-}
 
 function makeApplication(host) {
   const app = new PIXI.Application({
@@ -70,17 +24,18 @@ function makeApplication(host) {
     powerPreference: 'high-performance',
   });
   app.stop();
-  // Pixi defaults to touch-action:none. Restore native scrolling/pinch and
-  // let a cancelled gesture clear the pending Pixi tap rather than firing it.
+  // Pixi defaults to touch-action:none. Permit deliberate vertical scrolling,
+  // but do not opt this canvas into pinch/double-tap zoom; cancelled gestures
+  // clear the pending Pixi tap instead of creating a reaction.
   app.renderer.events.autoPreventDefault = false;
-  app.view.style.touchAction = 'manipulation';
+  app.view.style.touchAction = 'pan-y';
   app.view.setAttribute('aria-hidden', 'true');
   host.appendChild(app.view);
   return app;
 }
 
-// The flat approved illustration is one mesh. Local, smoothly weighted fields
-// keep the face and feet immobile while gently moving the torso and silhouette.
+// The approved flat illustration remains one mesh. Precomputed smooth fields
+// add bounded reactions on top of the unchanged V1 idle deformation.
 function createMesh(texture) {
   const mesh = new PIXI.SimplePlane(texture, COLS, ROWS);
   const buffer = mesh.geometry.getBuffer('aVertexPosition');
@@ -94,7 +49,7 @@ function createMesh(texture) {
   return { mesh, buffer, base, weights, reactionWeights };
 }
 
-function updateMesh(rig, time, strength, contributions = []) {
+function updateMesh(rig, time, strength, pose = null) {
   const phases = motionPhases(time);
   const vertices = rig.buffer.data;
   const offset = [0, 0];
@@ -102,8 +57,9 @@ function updateMesh(rig, time, strength, contributions = []) {
   for (let i = 0; i < rig.weights.length; i++) {
     const weights = rig.weights[i];
     motionOffset(weights, phases, strength, offset);
-    // No-reaction branch uses the byte-for-byte V1 equations above.
-    if (contributions.length) reactionOffset(rig.reactionWeights[i], contributions, strength, extra);
+    // The idle equations remain the exact V1 equations; reaction poses are
+    // composed once per frame and added without stopping breathing or hair.
+    if (pose) applyReactionPose(rig.reactionWeights[i], pose, extra);
     vertices[i * 2] = weights.x + offset[0] + extra.x;
     vertices[i * 2 + 1] = weights.y + offset[1] + extra.y;
   }
@@ -214,8 +170,12 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
   animatedApp.stage.addChild(animatedRoot);
   const mesh = createMesh(texture);
   animatedRoot.addChild(mesh.mesh);
-  const expressions = createExpressionLayers(animatedRoot, expressionAssets, metadata.eyes);
-  const eyes = metadata.eyes.map(eye => createEye(animatedRoot, eye, eyeTextures));
+  // Existing V1 blink sprites and V3 expression sprites travel together with
+  // the rigid face area of the mesh. No art or textures are duplicated.
+  const faceRoot = new PIXI.Container();
+  animatedRoot.addChild(faceRoot);
+  const expressions = createExpressionLayers(faceRoot, expressionAssets, metadata.eyes);
+  const eyes = metadata.eyes.map(eye => createEye(faceRoot, eye, eyeTextures));
   expressions.attachForeground();
   const hitboxes = createHitboxes(animatedRoot, mesh, {
     cols: COLS, rows: ROWS, width: SOURCE_WIDTH, height: SOURCE_HEIGHT, debug, onTap,
@@ -237,8 +197,23 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
   observer.observe(animatedHost);
   resize();
 
+  let currentPose = null;
   function render(time, strength, blink, { contributions = [], expression = null } = {}) {
-    updateMesh(mesh, time, strength, contributions);
+    currentPose = contributions.length && strength > 0 ? composeReactionPose(contributions, strength) : null;
+    updateMesh(mesh, time, strength, currentPose);
+    const head = currentPose?.head;
+    if (head && (head.x || head.y || head.rotation || head.scaleDelta)) {
+      faceRoot.pivot.set(HEAD_PIVOT.x, HEAD_PIVOT.y);
+      faceRoot.position.set(HEAD_PIVOT.x + head.x, HEAD_PIVOT.y + head.y);
+      faceRoot.rotation = head.rotation;
+      faceRoot.scale.set(head.scale);
+    } else {
+      // Preserve the original neutral transform and V1 pixel parity.
+      faceRoot.pivot.set(0, 0);
+      faceRoot.position.set(0, 0);
+      faceRoot.rotation = 0;
+      faceRoot.scale.set(1);
+    }
     eyes.forEach(eye => updateEye(eye, blink));
     expressions.update(expression, blink);
     hitboxes.update();
@@ -267,7 +242,8 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
     const points = mesh.buffer.data;
     let maximumDisplacement = 0;
     let maximumFaceDisplacement = 0;
-    let maximumFeetDisplacement = 0;
+    let maximumFeetDisplacement = 0; // legacy QA name: all pixels at y >= 1950
+    let maximumShoeDisplacement = 0; // y >= 3300 stays anchored during leg shifts
     let minimumCellCross = Infinity;
     for (let i = 0; i < mesh.weights.length; i++) {
       const dx = points[i * 2] - mesh.base[i * 2];
@@ -276,6 +252,7 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
       maximumDisplacement = Math.max(maximumDisplacement, displacement);
       if (mesh.base[i * 2 + 1] <= 610) maximumFaceDisplacement = Math.max(maximumFaceDisplacement, displacement);
       if (mesh.base[i * 2 + 1] >= 1950) maximumFeetDisplacement = Math.max(maximumFeetDisplacement, displacement);
+      if (mesh.base[i * 2 + 1] >= 3300) maximumShoeDisplacement = Math.max(maximumShoeDisplacement, displacement);
       if (i % COLS < COLS - 1 && i < COLS * (ROWS - 1)) {
         const right = i + 1;
         const down = i + COLS;
@@ -287,7 +264,7 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
         minimumCellCross = Math.min(minimumCellCross, cross, cross2);
       }
     }
-    return { maximumDisplacement, maximumFaceDisplacement, maximumFeetDisplacement, minimumCellCross };
+    return { maximumDisplacement, maximumFaceDisplacement, maximumFeetDisplacement, maximumShoeDisplacement, minimumCellCross };
   }
   // Opt-in visual QA reads the actual WebGL output, not a mock of the rig.
   function readPixels(app) {
@@ -333,5 +310,7 @@ export async function createStage(originalHost, animatedHost, sourceUrl, assetsB
     return compareBuffers(a, b);
   }
 
-  return { render, setView, geometryStats, comparePixels, compareFrames, sourceToClient, zoneAtClient, hitboxes, metadata, originalApp, animatedApp };
+  return { render, setView, geometryStats, comparePixels, compareFrames, sourceToClient, zoneAtClient,
+    deformedSourcePoint: (x, y) => hitboxes.toLocal(x, y), pose: () => currentPose,
+    hitboxes, metadata, originalApp, animatedApp };
 }

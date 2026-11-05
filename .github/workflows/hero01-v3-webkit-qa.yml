@@ -1,0 +1,81 @@
+name: Temporary HERO-01 V3 full-body WebKit verification
+on:
+  push:
+    branches: [arena/680e6caa-new-game]
+    paths: [.github/workflows/hero01-v3-webkit-qa.yml]
+permissions:
+  contents: read
+jobs:
+  webkit-iphone-and-landscape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: ArtStudio/Prototypes/hero01-interactive-v3
+    env:
+      HERO_BROWSER: webkit
+      HERO_TEST_URL: http://127.0.0.1:4173/
+      HERO_V1_TEST_URL: http://127.0.0.1:5181/
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install, unit test and build V3
+        run: |
+          npm ci --no-audit --no-fund
+          npm test
+          npm run build
+      - name: Install Playwright WebKit and system libraries
+        run: npx playwright-core install --with-deps webkit
+      - name: Start V3 production build and untouched V1 reference
+        run: |
+          npm --prefix ../hero01-idle ci --no-audit --no-fund
+          npm run preview -- --port 4173 > /tmp/hero-v3-server.log 2>&1 &
+          npm --prefix ../hero01-idle run dev -- --port 5181 > /tmp/hero-v1-server.log 2>&1 &
+          node --input-type=module <<'JS'
+          const urls = ['http://127.0.0.1:4173/', 'http://127.0.0.1:5181/'];
+          const end = Date.now() + 45000;
+          for (const url of urls) {
+            while (true) {
+              try { if ((await fetch(url)).ok) break; } catch {}
+              if (Date.now() > end) throw new Error(`Server timeout: ${url}`);
+              await new Promise(resolve => setTimeout(resolve, 250));
+            }
+          }
+          JS
+      - name: Run iPhone-sized WebKit input, motion, expressions and V1 regression
+        id: mobile
+        continue-on-error: true
+        env:
+          HERO_DEVICE: mobile
+        run: |
+          if npm run test:ui > /tmp/hero-v3-mobile.log 2>&1; then
+            cat /tmp/hero-v3-mobile.log
+            node -e "const s=require('fs').readFileSync('/tmp/hero-v3-mobile.log','utf8').slice(-3500);console.log('::notice title=V3 mobile WebKit results::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          else
+            cat /tmp/hero-v3-mobile.log
+            node -e "const s=require('fs').readFileSync('/tmp/hero-v3-mobile.log','utf8').slice(-3500);console.log('::error title=V3 mobile WebKit::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+            exit 1
+          fi
+      - name: Run landscape WebKit input, motion and expression checks
+        id: landscape
+        continue-on-error: true
+        env:
+          HERO_DEVICE: landscape
+        run: |
+          if npm run test:ui > /tmp/hero-v3-landscape.log 2>&1; then
+            cat /tmp/hero-v3-landscape.log
+            node -e "const s=require('fs').readFileSync('/tmp/hero-v3-landscape.log','utf8').slice(-3500);console.log('::notice title=V3 landscape WebKit results::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+          else
+            cat /tmp/hero-v3-landscape.log
+            node -e "const s=require('fs').readFileSync('/tmp/hero-v3-landscape.log','utf8').slice(-3500);console.log('::error title=V3 landscape WebKit::'+s.replace(/%/g,'%25').replace(/\r/g,'%0D').replace(/\n/g,'%0A'))"
+            exit 1
+          fi
+      - name: Enforce both WebKit verification results
+        if: always()
+        run: |
+          for result in '${{ steps.mobile.outcome }}' '${{ steps.landscape.outcome }}'; do
+            if [ "$result" != "success" ]; then echo "::error::A V3 WebKit check failed or was skipped"; exit 1; fi
+          done

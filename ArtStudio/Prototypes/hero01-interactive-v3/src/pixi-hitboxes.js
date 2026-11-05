@@ -28,6 +28,7 @@ export function createHitboxes(parent, mesh, { cols, rows, width, height, debug,
   parent.addChild(container);
   const pending = new Map();
   let ignoreMouseUntil = 0;
+  let multiTouch = false;
   const hitAreas = [];
   const ordered = [...ZONES].sort((a, b) => a.priority - b.priority);
   for (const zone of ordered) {
@@ -44,6 +45,12 @@ export function createHitboxes(parent, mesh, { cols, rows, width, height, debug,
         const now = performance.now();
         if (event.pointerType === 'mouse' && now < ignoreMouseUntil) return;
         if (event.pointerType === 'touch') ignoreMouseUntil = now + 800;
+        // A multi-finger gesture is never a tap, even if the first finger
+        // stays still and is released over a valid zone.
+        if (event.pointerType === 'touch' && (multiTouch || pending.size > 0)) {
+          pending.clear();
+          return;
+        }
         if (pending.size > 0 || pending.has(event.pointerId)) return;
         pending.set(event.pointerId, { zone: zone.id, x: event.global.x, y: event.global.y, time: now });
         event.stopPropagation();
@@ -65,12 +72,17 @@ export function createHitboxes(parent, mesh, { cols, rows, width, height, debug,
   // These native listeners only release pointer bookkeeping when the browser
   // cancels or releases outside the canvas; they never generate reactions.
   const release = event => pending.delete(event.pointerId);
+  const startTouches = event => {
+    if (event.touches.length > 1) { multiTouch = true; pending.clear(); }
+  };
   const releaseTouches = event => {
     for (const touch of event.changedTouches || []) pending.delete(touch.identifier);
+    if (event.touches.length === 0) multiTouch = false;
   };
-  const clear = () => pending.clear();
+  const clear = () => { pending.clear(); multiTouch = false; };
   window.addEventListener('pointerup', release);
   window.addEventListener('pointercancel', release);
+  window.addEventListener('touchstart', startTouches, { passive: true });
   window.addEventListener('touchend', releaseTouches);
   window.addEventListener('touchcancel', releaseTouches);
   window.addEventListener('blur', clear);
@@ -99,6 +111,7 @@ export function createHitboxes(parent, mesh, { cols, rows, width, height, debug,
   function destroy() {
     window.removeEventListener('pointerup', release);
     window.removeEventListener('pointercancel', release);
+    window.removeEventListener('touchstart', startTouches);
     window.removeEventListener('touchend', releaseTouches);
     window.removeEventListener('touchcancel', releaseTouches);
     window.removeEventListener('blur', clear);

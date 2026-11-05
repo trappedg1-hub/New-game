@@ -133,6 +133,8 @@ async function initialize() {
         },
         getState() { return { ...state, reaction: reactions.sample(state.reactionTime), facial: { current: mixer.current, target: mixer.target, amount: mixer.amount }, sourceHash: stage.metadata.source_sha256 }; },
         geometry() { return stage.geometryStats(); },
+        pose() { return stage.pose(); },
+        deformedSourcePoint(x, y) { return stage.deformedSourcePoint(x, y); },
         comparePixels() { return stage.comparePixels(); },
         compareFrames(first, second) { state.testMode = true; return stage.compareFrames(first, second); },
         compareExpressions(first, second, blink = 0) {
