@@ -1,5 +1,5 @@
 name: Temporary HERO-01 V3 WebKit verification
-# Recheck the fixed reaction clock and sleepy-eye blink before V3 promotion.
+# Recheck the promoted V3 runtime and its public production alias in WebKit.
 on:
   push:
     branches: [arena/680e6caa-new-game]
@@ -75,7 +75,6 @@ jobs:
             exit 1
           fi
       - name: Check deployed V3 bundle matches checked-out build
-        if: ${{ false }} # re-enable after the fixed runtime is promoted
         id: bundle
         continue-on-error: true
         run: |
@@ -91,7 +90,6 @@ jobs:
           console.log(`Public V3 bundle: ${js(remote)}`);
           JS
       - name: Run iPhone-sized WebKit against public V3
-        if: ${{ false }} # re-enable after the fixed runtime is promoted
         id: public
         continue-on-error: true
         env:
@@ -110,6 +108,6 @@ jobs:
       - name: Enforce all verification results
         if: always()
         run: |
-          for result in '${{ steps.mobile.outcome }}' '${{ steps.landscape.outcome }}'; do
+          for result in '${{ steps.mobile.outcome }}' '${{ steps.landscape.outcome }}' '${{ steps.bundle.outcome }}' '${{ steps.public.outcome }}'; do
             if [ "$result" != "success" ]; then echo "::error::One or more V3 verification steps failed or were skipped"; exit 1; fi
           done
