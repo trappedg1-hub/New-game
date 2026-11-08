@@ -1,5 +1,10 @@
 name: HERO-01 gallery public QA
 on:
+  push:
+    branches: [arena/680e6caa-new-game]
+    paths:
+      - '.github/workflows/hero01-gallery-public-qa.yml'
+      - 'ArtStudio/Prototypes/hero01-costume-gallery/scripts/browser-qa.mjs'
   workflow_dispatch:
     inputs:
       gallery_url:
@@ -21,4 +26,4 @@ jobs:
       - name: Check the gallery and embedded previews
         run: node ArtStudio/Prototypes/hero01-costume-gallery/scripts/browser-qa.mjs
         env:
-          GALLERY_URL: ${{ inputs.gallery_url }}
+          GALLERY_URL: ${{ inputs.gallery_url || 'https://hero01-idle-prototype.vercel.app/collection/' }}
