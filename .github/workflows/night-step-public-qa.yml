@@ -1,0 +1,30 @@
+name: Night Step public preview QA
+on:
+  push:
+    branches: [arena/680e6caa-new-game]
+    paths:
+      - '.github/workflows/night-step-public-qa.yml'
+      - 'ArtStudio/Prototypes/hero01-night-step/scripts/public-qa.mjs'
+permissions:
+  contents: read
+jobs:
+  public-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ArtStudio/Prototypes/hero01-night-step
+    env:
+      NIGHT_STEP_PUBLIC_URL: https://hero01-idle-prototype.vercel.app/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build and test the isolated preview
+        run: |
+          npm ci --no-audit --no-fund
+          npm test
+          npm run build
+      - name: Verify public deployment and touch interaction
+        run: node scripts/public-qa.mjs
