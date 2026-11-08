@@ -46,7 +46,7 @@ try {
   assert.equal(await page.locator('#pending-grid [data-art-card]').count(), 3);
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'mobile home overflow');
   await page.locator('#tab-still').click();
-  assert.equal(await page.locator('#panel-still').isVisible(), true);
+  await page.locator('#panel-still').waitFor({ state: 'visible', timeout: 30000 });
   await page.locator('[data-art-card="goth"] [data-open-art]').first().click();
   await page.waitForFunction(() => document.querySelector('#art-full-image').naturalWidth === 768);
   assert.equal(await page.locator('#art-dialog-status').textContent(), 'Арт утверждён');
