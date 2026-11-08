@@ -1,6 +1,6 @@
 # HERO-01 · Night Step — интерактивный этюд
 
-Отдельный прототип для оценки движения, **не внедрён в игру и ещё не утверждён**. В качестве рабочей основы выбрана утверждённая поза ночного наряда с крупной стопой к зрителю: `ArtStudio/Generated/Approved/HERO-01_outfit10_night_lingerie_step_pose.png`. Это рабочее предположение о том, какую из поз пользователь имел в виду. Исходник не изменён; SHA-256: `bfa845260fdaecdb44d4e01fb57f608c193910d1db98f8ed7b6d3340262729f7`.
+Пользователь утвердил показанную анимацию Night Step. Это отдельный прототип, **в игру он не внедрён**. Основа — утверждённая поза ночного наряда с крупной стопой к зрителю: `ArtStudio/Generated/Approved/HERO-01_outfit10_night_lingerie_step_pose.png`. Исходник не изменён; SHA-256: `bfa845260fdaecdb44d4e01fb57f608c193910d1db98f8ed7b6d3340262729f7`.
 
 **Vercel:** [открыть Night Step](https://hero01-idle-prototype.vercel.app/). По выбору пользователя переиспользован существующий проект V1: его основной адрес теперь открывает Night Step, а исходники V1, Yoga и V3 не менялись. Production deployment `dpl_FjBLmkhUyjUXcrKugBJmCMpWWFjj`, runtime commit `aa4689b99dd081d9c59b9a85b236c43460775780`; GitHub Actions [42478596677](https://github.com/trappedg1-hub/New-game/actions/runs/42478596677) проверил публичные файлы, WebGL и пять зон касания в эмуляции Chromium. Физическое устройство не проверялось.
 

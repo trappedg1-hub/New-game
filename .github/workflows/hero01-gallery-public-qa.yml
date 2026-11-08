@@ -1,0 +1,24 @@
+name: HERO-01 gallery public QA
+on:
+  workflow_dispatch:
+    inputs:
+      gallery_url:
+        description: Public URL ending in /collection/
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  public-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm --prefix ArtStudio/Prototypes/hero01-night-step ci
+      - name: Check the gallery and embedded previews
+        run: node ArtStudio/Prototypes/hero01-costume-gallery/scripts/browser-qa.mjs
+        env:
+          GALLERY_URL: ${{ inputs.gallery_url }}

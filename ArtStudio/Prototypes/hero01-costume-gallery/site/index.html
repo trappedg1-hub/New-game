@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14121b">
+  <meta name="description" content="Все анимации и утверждённые образы HERO-01 в одной коллекции для просмотра и оценки.">
+  <title>HERO-01 — Архив образов</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Перейти к коллекции</a>
+  <header class="site-header">
+    <a class="brand" href="#animation" aria-label="HERO-01, к коллекции">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span class="brand-word">HERO<span>—</span>01<small>THE CHARACTER ARCHIVE</small></span>
+    </a>
+    <div class="header-right">
+      <span class="header-caption">Личная подборка для просмотра</span>
+      <button class="notes-trigger" id="open-summary" type="button"><span class="notes-icon" aria-hidden="true">✳</span> Мои заметки <span class="notes-count" id="notes-count">0</span></button>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div id="home">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> HERO-01 <span class="eyebrow-separator">/</span> CHARACTER COLLECTION</p>
+          <h1 id="hero-title">Весь её мир —<br><em>в одном месте.</em></h1>
+          <p class="hero-description">Анимации, утверждённые образы и оригиналы. Всё собрано, чтобы посмотреть, сравнить и решить, что делать дальше.</p>
+          <div class="hero-bottom"><span class="line"></span><span>ЛИСТАЙ, СМОТРИ, ОЦЕНИВАЙ</span><span aria-hidden="true">↓</span></div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-art-frame"><picture><source srcset="./thumb/night-step-art.webp" type="image/webp"><img src="./art/HERO-01_outfit10_night_lingerie_step_pose.png?v=bfa845260fda" alt="" decoding="async" fetchpriority="high"></picture></div>
+          <span class="hero-art-index">01 <i>/</i> HERO</span>
+          <span class="hero-art-stamp">THE<br>REVIEW<br>EDIT <b>✳</b></span>
+        </div>
+        <span class="hero-side-label" aria-hidden="true">HERO-01 &nbsp; ✳ &nbsp; CHARACTER ARCHIVE</span>
+      </section>
+
+      <section class="collection" aria-label="Коллекция образов">
+        <div class="collection-topline"><span>THE COLLECTION <i>✳</i></span><span>ИЗОЛИРОВАННЫЕ ПРОТОТИПЫ · НЕ ИГРА</span></div>
+        <div class="tab-bar" role="tablist" aria-label="Разделы коллекции">
+          <button type="button" role="tab" id="tab-animation" aria-controls="panel-animation" aria-selected="true" data-tab="animation"><span>Анимации</span><sup>03</sup></button>
+          <button type="button" role="tab" id="tab-still" aria-controls="panel-still" aria-selected="false" data-tab="still" tabindex="-1"><span>Без анимации</span><sup>05</sup></button>
+          <button type="button" role="tab" id="tab-pending" aria-controls="panel-pending" aria-selected="false" data-tab="pending" tabindex="-1"><span>На уточнении</span><sup>03</sup></button>
+        </div>
+
+        <section id="panel-animation" class="tab-panel" role="tabpanel" aria-labelledby="tab-animation">
+          <div class="section-heading"><div><p class="section-kicker">01 / В ДВИЖЕНИИ</p><h2>Анимации <em>образов.</em></h2></div><p>Три образа уже движутся. Горничную можно посмотреть в трёх версиях.</p></div>
+          <div id="motion-grid" class="card-grid motion-grid"></div>
+          <p class="section-footnote"><span>✳</span> Касайся изображения в интерактивных версиях. Внутри сохранены исходные интерфейсы прототипов.</p>
+        </section>
+
+        <section id="panel-still" class="tab-panel" role="tabpanel" aria-labelledby="tab-still" hidden>
+          <div class="section-heading"><div><p class="section-kicker">02 / УТВЕРЖДЁННЫЙ АРТ</p><h2>Пока без <em>анимации.</em></h2></div><p>Эти пять костюмов утверждены как статичные арты. Анимаций для них пока нет.</p></div>
+          <div id="still-grid" class="card-grid"></div>
+          <div class="originals-note"><div class="originals-icon" aria-hidden="true">✳</div><div><strong>Оригиналы остаются оригиналами</strong><p>Открывай любой арт целиком и в исходном разрешении. Никакой перерисовки или апскейла.</p></div></div>
+        </section>
+
+        <section id="panel-pending" class="tab-panel" role="tabpanel" aria-labelledby="tab-pending" hidden>
+          <div class="section-heading"><div><p class="section-kicker">03 / НУЖНО РЕШЕНИЕ</p><h2>Ещё <em>уточним.</em></h2></div><p>Медсестра: костюм одобрен, но конкретный файл не указан. Домашний образ ещё не оценён.</p></div>
+          <div id="pending-grid" class="card-grid"></div>
+          <p class="section-footnote"><span>✳</span> Эти изображения не выдаются за окончательно утверждённые арты.</p>
+        </section>
+      </section>
+      <footer class="site-footer"><span class="footer-brand">HERO—01 <i>✳</i></span><span>СОЗДАНО ДЛЯ ПРОСМОТРА И ОЦЕНКИ</span><span>АРТ И АНИМАЦИЯ НЕ ВНЕДРЕНЫ В ИГРУ</span></footer>
+    </div>
+
+    <div id="viewer" class="viewer" hidden>
+      <div class="viewer-top"><button class="back-link" id="back-to-collection" type="button"><span aria-hidden="true">←</span> В коллекцию</button><span id="viewer-index">HERO-01 / MOTION</span></div>
+      <div class="viewer-heading"><div><p class="section-kicker" id="viewer-kicker"></p><h1 id="viewer-title"></h1><p id="viewer-description"></p></div><span class="viewer-badge" id="viewer-badge"></span></div>
+      <div class="version-row" id="version-row" hidden><span>ВЕРСИЯ АНИМАЦИИ</span><div id="version-buttons" class="version-buttons" aria-label="Версии анимации"></div></div>
+      <div class="viewer-layout">
+        <div class="preview-shell"><div class="preview-top"><span><i></i> ИНТЕРАКТИВНЫЙ ПРОСМОТР</span><a id="open-direct" href="../" target="_blank" rel="noopener noreferrer">Открыть отдельно ↗</a></div><iframe id="preview-frame" title="Анимация HERO-01" allow="fullscreen" loading="eager"></iframe></div>
+        <aside class="viewer-aside">
+          <div class="aside-block"><span class="aside-label">О ВЕРСИИ</span><p id="variant-detail"></p><p class="aside-note" id="variant-note"></p></div>
+          <div class="aside-block"><span class="aside-label">ТВОЁ МНЕНИЕ</span><h2>Что скажешь?</h2><p>Отметь, оставить ли версию или что в ней изменить.</p><button class="button button-primary full" id="review-motion" type="button">Оценить анимацию <span>↗</span></button><p class="saved-marker" id="viewer-review-status"></p></div>
+          <div class="aside-block"><span class="aside-label">УТВЕРЖДЁННЫЙ ИСХОДНИК</span><div id="viewer-art-links" class="viewer-art-links"></div></div>
+          <p class="viewer-disclaimer">Это отдельный предпросмотр. Оценки и заметки сохраняются только в этом браузере.</p>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <dialog id="art-dialog" class="art-dialog" aria-labelledby="art-dialog-title">
+    <div class="dialog-header"><div><p class="section-kicker" id="art-dialog-kicker"></p><h2 id="art-dialog-title"></h2></div><button type="button" class="icon-button" data-close="art-dialog" aria-label="Закрыть просмотр">×</button></div>
+    <div id="art-switcher" class="art-switcher" hidden></div>
+    <div id="art-viewport" class="art-viewport"><img id="art-full-image" alt=""></div>
+    <div class="art-info"><div><span class="art-status" id="art-dialog-status"></span><p id="art-dialog-description"></p><small id="art-dialog-dimensions"></small></div><div class="art-actions"><button type="button" class="button button-secondary" id="toggle-zoom">Увеличить <span>＋</span></button><a id="open-original" class="button button-secondary" target="_blank" rel="noopener noreferrer">Открыть оригинал <span>↗</span></a><button type="button" class="button button-primary" id="review-art">Оценить <span>↗</span></button></div></div>
+  </dialog>
+
+  <dialog id="review-dialog" class="small-dialog" aria-labelledby="review-title">
+    <div class="dialog-header"><div><p class="section-kicker">ТВОЯ ОЦЕНКА</p><h2 id="review-title"></h2></div><button type="button" class="icon-button" data-close="review-dialog" aria-label="Закрыть оценку">×</button></div>
+    <p class="dialog-intro">Что сделать с этим вариантом?</p>
+    <div class="verdicts" role="group" aria-label="Решение">
+      <button type="button" data-verdict="keep" aria-pressed="false"><span>♡</span> Оставить</button>
+      <button type="button" data-verdict="improve" aria-pressed="false"><span>✳</span> Доработать</button>
+      <button type="button" data-verdict="redo" aria-pressed="false"><span>↻</span> Переделать</button>
+    </div>
+    <label class="field-label" for="review-note">Пожелания <span>необязательно</span></label>
+    <textarea id="review-note" rows="5" maxlength="3000" placeholder="Что понравилось или что хочется изменить?"></textarea>
+    <div class="review-actions"><button type="button" class="text-button" id="clear-review">Очистить оценку</button><button type="button" class="button button-primary" data-close="review-dialog">Готово <span>✓</span></button></div>
+    <p class="privacy-note" id="storage-notice">Заметка сохранится только в этом браузере. Чтобы я её увидел, скопируй и отправь мне.</p>
+  </dialog>
+
+  <dialog id="summary-dialog" class="small-dialog summary-dialog" aria-labelledby="summary-title">
+    <div class="dialog-header"><div><p class="section-kicker">ТВОЙ REVIEW</p><h2 id="summary-title">Мои заметки.</h2></div><button type="button" class="icon-button" data-close="summary-dialog" aria-label="Закрыть заметки">×</button></div>
+    <p class="dialog-intro">Оценки хранятся только в этом браузере. Скопируй их и отправь мне, чтобы мы вместе выбрали следующие правки.</p>
+    <div id="review-list" class="review-list"></div>
+    <div class="summary-actions"><button type="button" class="button button-secondary" id="download-reviews">Скачать .txt <span>↓</span></button><button type="button" class="button button-primary" id="copy-reviews">Скопировать <span>↗</span></button></div>
+    <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+  </dialog>
+  <noscript><p class="noscript">Для коллекции нужен JavaScript. Открыть <a href="../">Night Step</a>.</p></noscript>
+</body>
+</html>
