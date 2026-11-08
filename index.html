@@ -2,8 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d0d1a">
+<meta name="screen-orientation" content="portrait">
+<meta name="description" content="Dark Shy — a relationship clicker starring B.5 tiers, gacha costumes, prestige.">
 <title>Dark Shy — Relationship Clicker</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,7 +22,8 @@
 <!-- ================= TOP HUD ================= -->
 <header id="hud">
   <div class="hud-left">
-    <div class="avatar-ring"><img id="hud-avatar" src="assets/characters/tier1.png" alt="B"></div>
+    <div class="avatar-ring"><img id="hud-avatar" src="assets/characters/tier1.webp" alt="B"
+      onerror="window.imgFallback&&imgFallback(this,'assets/characters/tier1.png')"></div>
     <div class="hud-id">
       <div class="hud-name">B <span class="hud-title" id="hud-title">Stranger</span></div>
       <div class="hud-lv">Lv <span id="hud-level">1</span></div>
@@ -29,6 +39,7 @@
     <div class="chip chip-gems" title="Love Gems">💎 <span id="gems">0</span></div>
     <div class="chip chip-energy" title="Energy">⚡ <span id="energy">100</span><small id="energy-timer"></small></div>
   </div>
+  <div id="save-flash">saved ✓</div>
 </header>
 
 <!-- ================= STAGE ================= -->
@@ -37,8 +48,8 @@
   <div class="bg-layer" id="bg-b"></div>
   <div class="bg-vignette"></div>
 
-  <button class="rail-toggle" id="toggle-left">☰</button>
-  <button class="rail-toggle right" id="toggle-right">👗</button>
+  <button class="rail-toggle" id="toggle-left" aria-label="Menu">☰</button>
+  <button class="rail-toggle right" id="toggle-right" aria-label="Costumes">👗</button>
 
   <!-- left rail -->
   <nav id="left-rail">
@@ -56,16 +67,17 @@
     <div id="costume-list"></div>
   </aside>
 
-  <!-- character -->
-  <div id="character-wrap">
-    <img class="char show" id="char-a" src="assets/characters/tier1.png" alt="B">
-    <img class="char" id="char-b" src="assets/characters/tier1.png" alt="">
+  <!-- character (layered stack, crossfading A/B) -->
+  <div id="character-wrap" aria-label="Tap B">
+    <div class="character-stack" id="char-a"></div>
+    <div class="character-stack" id="char-b"></div>
     <div id="char-shadow"></div>
-    <div id="bubble"><div class="bubble-tail"></div><span id="bubble-text">…</span></div>
+    <div id="bubble" role="status"><div class="bubble-tail"></div><span id="bubble-text">…</span></div>
   </div>
 
   <!-- tier-up event -->
   <div id="tier-event" class="hidden">
+    <div class="event-flash"></div>
     <div class="te-card">
       <div class="te-kicker">RELATIONSHIP UP</div>
       <div class="te-tier" id="te-tier">FRIEND</div>
@@ -74,7 +86,7 @@
     </div>
   </div>
 
-  <div id="boost-pill" class="hidden">⚡ <span id="boost-text">x2</span> <small id="boost-time">30s</small></div>
+  <div id="boost-pill" class="hidden">⚡ <span id="boost-text">×2</span> <small id="boost-time">30s</small></div>
 </main>
 
 <!-- ================= BOTTOM BAR ================= -->
@@ -83,7 +95,7 @@
     <button class="bb-btn" id="btn-upgrades">⬆ Upgrades</button>
     <button class="bb-btn" id="btn-auto">🤖 Auto: <b id="auto-state">ON</b></button>
   </div>
-  <button id="tap-btn">TAP</button>
+  <button id="tap-btn" aria-label="Tap">TAP</button>
   <div class="bb-right">
     <div class="bb-stat"><small>COINS/S</small><b id="stat-cps">0</b></div>
     <div class="bb-stat"><small>TAP POWER</small><b id="stat-tap">+1</b></div>
@@ -93,7 +105,7 @@
 <!-- ================= MODALS ================= -->
 <div class="modal" id="modal-upgrades">
   <div class="modal-card">
-    <button class="modal-close">✕</button>
+    <button class="modal-close" aria-label="Close">✕</button>
     <h2>⬆ Upgrades</h2>
     <div class="modal-sub">Tap power & passive income</div>
     <div id="upgrade-list" class="up-list"></div>
@@ -106,18 +118,56 @@
   </div>
 </div>
 
+<div class="modal" id="modal-prestige">
+  <div class="modal-card">
+    <h2>💞 Confess?</h2>
+    <div class="prestige-preview" id="prestige-preview"></div>
+    <div class="modal-sub">This resets your run. Everything below is kept:</div>
+    <ul class="keep-list">
+      <li>💎 Love Gems & permanent multipliers</li>
+      <li>🎒 Owned costumes & equipped outfit</li>
+      <li>🔥 Login streak & daily missions</li>
+      <li>📈 Lifetime stats & prestige count</li>
+    </ul>
+    <div class="modal-btn-row">
+      <button class="btn-glass" id="prestige-cancel">Not yet</button>
+      <button class="btn-pink" id="prestige-confirm">CONFESS</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="modal-missions">
   <div class="modal-card">
-    <button class="modal-close">✕</button>
+    <button class="modal-close" aria-label="Close">✕</button>
     <h2>📜 Missions</h2>
-    <div class="streak-box">🔥 Login streak: <b id="streak-count">0</b> days <span id="streak-reward" class="pill">+200💰/day</span></div>
+    <div class="streak-box">🔥 Login streak: <b id="streak-count">0</b> days <span class="pill" id="streak-reward">+200💰/day</span></div>
     <div id="mission-list" class="mission-list"></div>
+  </div>
+</div>
+
+<div class="modal" id="modal-daily">
+  <div class="modal-card daily-card">
+    <div class="daily-icon">🎁</div>
+    <h2>Daily Reward!</h2>
+    <div class="daily-streak" id="daily-streak">Day 1 streak</div>
+    <div class="daily-rewards" id="daily-rewards"></div>
+    <button class="btn-pink" id="daily-claim">CLAIM</button>
+  </div>
+</div>
+
+<div class="modal" id="modal-offline">
+  <div class="modal-card offline-card">
+    <div class="daily-icon">🌙</div>
+    <h2>Welcome back!</h2>
+    <div class="offline-away" id="offline-away">You were away for a while.</div>
+    <div class="offline-gain" id="offline-gain">+0 💰</div>
+    <button class="btn-pink" id="offline-claim">COLLECT</button>
   </div>
 </div>
 
 <div class="modal" id="modal-shop">
   <div class="modal-card">
-    <button class="modal-close">✕</button>
+    <button class="modal-close" aria-label="Close">✕</button>
     <h2>🛒 Shop</h2>
     <div class="modal-sub">Boosts & permanent bonds</div>
     <div class="shop-sec">TIMED BOOSTS</div>
@@ -131,7 +181,7 @@
 
 <div class="modal" id="modal-gacha">
   <div class="modal-card wide">
-    <button class="modal-close">✕</button>
+    <button class="modal-close" aria-label="Close">✕</button>
     <h2>🎰 Costume Gacha</h2>
     <div class="gacha-banner">SSR <b>Midnight Bunny</b> &amp; <b>Silk Nightgown</b> — unique idle animations!</div>
     <div class="pity-row">
@@ -157,7 +207,7 @@
 
 <div class="modal" id="modal-inventory">
   <div class="modal-card">
-    <button class="modal-close">✕</button>
+    <button class="modal-close" aria-label="Close">✕</button>
     <h2>🎒 Inventory</h2>
     <div class="modal-sub">Owned costumes — tap to equip</div>
     <div id="inv-grid" class="inv-grid"></div>
@@ -166,7 +216,7 @@
 
 <div class="modal" id="modal-friends">
   <div class="modal-card">
-    <button class="modal-close">✕</button>
+    <button class="modal-close" aria-label="Close">✕</button>
     <h2>👥 Friends</h2>
     <div class="friend-code">Your code: <b id="friend-code">B-0000</b> <button class="btn-mini" id="copy-friend">COPY</button></div>
     <div class="stub-note">Friend list arrives in a future update — for now, share your code and send energy gifts soon 💝</div>
@@ -176,9 +226,20 @@
 
 <div class="modal" id="modal-settings">
   <div class="modal-card">
-    <button class="modal-close">✕</button>
+    <button class="modal-close" aria-label="Close">✕</button>
     <h2>⚙️ Settings</h2>
-    <div class="set-row"><span>Reduced motion</span><button class="toggle" id="set-motion"><i></i></button></div>
+    <div class="set-row"><span>Reduced motion</span><button class="toggle" id="set-motion" role="switch" aria-checked="true"><i></i></button></div>
+    <div class="set-row"><span>SFX volume <small class="set-val" id="sfx-val">70%</small></span>
+      <input type="range" id="set-sfx" min="0" max="100" value="70" class="slider" aria-label="SFX volume"></div>
+    <div class="set-row"><span>Music volume <small class="set-val" id="music-val">40%</small></span>
+      <input type="range" id="set-music" min="0" max="100" value="40" class="slider" aria-label="Music volume"></div>
+    <div class="set-row"><span>Theme</span>
+      <div class="theme-row" id="theme-row">
+        <button class="swatch" data-theme="pink" style="--sw:#ff6b9d" aria-label="Pink theme"></button>
+        <button class="swatch" data-theme="purple" style="--sw:#c44dff" aria-label="Purple theme"></button>
+        <button class="swatch" data-theme="gold" style="--sw:#ffb347" aria-label="Gold theme"></button>
+      </div>
+    </div>
     <div class="set-row"><span>Export save</span><button class="btn-mini" id="set-export">COPY JSON</button></div>
     <div class="set-row"><span>Import save</span><button class="btn-mini" id="set-import">PASTE & LOAD</button></div>
     <div class="set-row danger"><span>Hard reset</span><button class="btn-mini red" id="set-reset">WIPE SAVE</button></div>
@@ -186,9 +247,24 @@
   </div>
 </div>
 
+<!-- rotate gate (mobile landscape) -->
+<div id="rotate-overlay">
+  <div class="rot-phone"></div>
+  <div class="rot-text">Rotate your device<br><small>Portrait mode works best</small></div>
+</div>
+
+<!-- install PWA prompt -->
+<div id="install-bar" class="hidden">
+  <span>Install <b>Dark Shy</b> for offline play</span>
+  <button id="install-btn">INSTALL</button>
+  <button id="install-dismiss" aria-label="Dismiss">✕</button>
+</div>
+
 <div id="toast"></div>
 <div id="level-fx" class="hidden">LEVEL UP!</div>
 
+<script src="data/content.js"></script>
+<script src="data/dialogue.js"></script>
 <script src="js/game.js"></script>
 </body>
 </html>

@@ -3,77 +3,13 @@
 'use strict';
 
 /* ---------------- Config ---------------- */
-const SAVE_KEY = 'waifuB_save_v1';
-
-const TIERS = [
-  { id:1, min:1,  max:10, name:'Stranger', art:'assets/characters/tier1.png', bg:'assets/backgrounds/bg1_classroom.png',
-    place:'Classroom',
-    lines:["Please don't stare...","I'm only here because it's quiet.","We're not close enough for that.","You came again...?","Don't read into this.","Stand over there, please."] },
-  { id:2, min:11, max:25, name:'Friend', art:'assets/characters/tier2.png', bg:'assets/backgrounds/bg2_cafe.png',
-    place:'Café',
-    lines:["You're back again~","I saved you a seat, dummy.","Your hair's messy. Here—hold still.","Today felt less boring with you around.","Don't tell anyone I smile this much.","Want to walk home together?"] },
-  { id:3, min:26, max:50, name:'Close', art:'assets/characters/tier3.png', bg:'assets/backgrounds/bg3_bedroom.png',
-    place:'Bedroom',
-    lines:["I wore this for you~","Does it look good? Be honest.","You're blushing. Cute.","Closer. I don't bite... much.","I picked this out just for tonight.","My heart's going fast. Because of you."] },
-  { id:4, min:51, max:75, name:'Intimate', art:'assets/characters/tier4.png', bg:'assets/backgrounds/bg4_rooftop.png',
-    place:'Rooftop · Night',
-    lines:["Come closer...","The night's still young, you know.","Touch my hand — it's warm, right?","Stay until the city goes quiet.","You can look. I don't mind anymore.","Sleep here tonight... please?"] },
-  { id:5, min:76, max:100, name:'Devoted', art:'assets/characters/tier5.png', bg:'assets/backgrounds/bg5_beach.png',
-    place:'Private Beach · Sunset',
-    lines:["I'm yours forever.","Every version of me chooses you.","Say it again — I love hearing it.","No more hiding. I'm all yours.","Where you go, I go.","Promise you'll never let go."] },
-];
-
-const COSTUMES = [
-  { id:'base',     name:'Tier Outfit',   rarity:'N',  img:null },
-  { id:'cardigan', name:'Cozy Cardigan', rarity:'N',  img:'assets/characters/costume_cardigan.png' },
-  { id:'track',    name:'Track Star',    rarity:'R',  img:'assets/characters/costume_track.png', ssrAnim:false,
-    line:"Warm-up first! No slacking~" },
-  { id:'apron',    name:'Café Apron',    rarity:'R',  img:'assets/characters/costume_apron.png',
-    line:"One cocoa, extra marshmallows. For you." },
-  { id:'maid',     name:'French Maid',   rarity:'SR', img:'assets/characters/costume_maid.png',
-    line:"Welcome home, Master... f-fine, I'll stop teasing." },
-  { id:'pool',     name:'Poolside',      rarity:'SR', img:'assets/characters/costume_pool.png',
-    line:"Sunscreen. Now. Don't make me ask twice." },
-  { id:'gown',     name:'Silk Nightgown',rarity:'SSR',img:'assets/characters/costume_gown.png', ssrAnim:true,
-    line:"Do you like the silk better than me? ...Kidding. Mostly." },
-  { id:'bunny',    name:'Midnight Bunny',rarity:'SSR',img:'assets/characters/costume_bunny.png', ssrAnim:true,
-    line:"D-don't stare at the ears! ...You may stare a little." },
-];
-const RARITY_RATE = { N:.60, R:.30, SR:.09, SSR:.01 };
-const DUP_COINS  = { N:50, R:200, SR:1000, SSR:5000 };
-
-const UPGRADES = [
-  { id:'tap1', name:'+1 Power',    kind:'tap', base:100,     rate:1.5, eff:1,  unlock:()=>true,             desc:'+1 coin per tap' },
-  { id:'tap2', name:'+2 Charm',    kind:'tap', base:800,     rate:1.5, eff:2,  unlock:s=>s.up.tap1>=5,      desc:'+2 coins per tap' },
-  { id:'tap3', name:'+5 Passion',  kind:'tap', base:6000,    rate:1.5, eff:5,  unlock:s=>s.up.tap2>=5,      desc:'+5 coins per tap' },
-  { id:'tap4', name:'+10 Devotion',kind:'tap', base:50000,   rate:1.5, eff:10, unlock:s=>s.up.tap3>=5,      desc:'+10 coins per tap' },
-  { id:'fan',  name:'Fan Club',    kind:'auto',base:100,     rate:1.4, eff:1,  unlock:()=>true,             desc:'+1 coin /s' },
-  { id:'pap',  name:'Paparazzi',   kind:'auto',base:900,     rate:1.4, eff:5,  unlock:s=>s.up.fan>=3,       desc:'+5 coins /s' },
-  { id:'mgr',  name:'Manager',     kind:'auto',base:12000,   rate:1.4, eff:20, unlock:s=>s.up.pap>=3,       desc:'+20 coins /s' },
-  { id:'agy',  name:'Agency',      kind:'auto',base:150000,  rate:1.4, eff:100,unlock:s=>s.up.mgr>=3,       desc:'+100 coins /s' },
-  { id:'emp',  name:'Empire',      kind:'auto',base:2000000, rate:1.4, eff:500,unlock:s=>s.up.agy>=3,       desc:'+500 coins /s' },
-];
-
-const BOOSTS = [
-  { id:'x2', mult:2,  secs:30, cost:1000,   label:'×2 for 30s' },
-  { id:'x5', mult:5,  secs:15, cost:8000,   label:'×5 for 15s' },
-  { id:'x10',mult:10, secs:5,  cost:40000,  label:'×10 for 5s' },
-];
-const PERMS = [
-  { id:'perm2', need:null, gems:5,  mult:2, label:'Eternal Bond ×2', desc:'Permanent ×2 coin multiplier' },
-  { id:'perm3', need:'perm2', gems:20, mult:3, label:'Eternal Bond ×3', desc:'Permanent ×3 coin multiplier' },
-  { id:'perm5', need:'perm3', gems:50, mult:5, label:'Eternal Bond ×5', desc:'Permanent ×5 coin multiplier' },
-];
-
-const MISSIONS = [
-  { id:'taps',  label:'Tap B1,000 times',  goal:1000, reward:{coins:500},  key:'d_taps' },
-  { id:'earned',label:'Earn 5,000 coins',   goal:5000, reward:{coins:1500}, key:'d_earned' },
-  { id:'pull',  label:'Do 1 gacha pull',    goal:1,    reward:{gems:1},     key:'d_pulls' },
-];
-
-const ENERGY_MAX = 100, ENERGY_MS = 30000, FREE_PULL_MS = 24*3600e3;
-const xpNeed = l => 20 + l*7;
-
+const {CONFIG, TIERS, COSTUMES, UPGRADES, BOOSTS, PERMS, MISSIONS, RARITY_RATE, DUP_COINS, THEMES} = window.CONTENT;
+const {SAVE_KEY, ENERGY_MAX, ENERGY_MS, FREE_PULL_MS, xpNeed} = CONFIG;
+TIERS.forEach(t=>{t.art+='.webp'; t.bg+='.webp'; t.lines=DIALOGUE.lines(t.id);});
+COSTUMES.forEach(c=>{if(c.img)c.img+='.webp'; c.line=DIALOGUE.COSTUME_LINES[c.id];});
+const mobile = () => matchMedia('(max-width:767px)').matches;
+window.imgFallback = (img, png) => { if(!img.dataset.failed){img.dataset.failed='1';img.src=png;}else{img.onerror=null;img.src='assets/icons/silhouette.svg';} };
+document.addEventListener('error',e=>{if(e.target.tagName==='IMG')imgFallback(e.target,e.target.src.replace(/\.webp$/,'.png'));},true);
 /* ---------------- State ---------------- */
 const today = () => new Date().toISOString().slice(0,10);
 const yesterday = () => new Date(Date.now()-86400e3).toISOString().slice(0,10);
@@ -111,14 +47,9 @@ function load(){
     if(S.daily.date !== today()) S.daily = {date:today(),d_taps:0,d_earned:0,d_pulls:0,claimed:{}};
   }catch(e){ console.warn('save broken', e); }
 }
-let saveT = null;
-function save(){
-  S.lastSeen = Date.now();
-  clearTimeout(saveT);
-  saveT = setTimeout(()=>{ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} },250);
-}
-function saveNow(){ S.lastSeen=Date.now(); try{ localStorage.setItem(SAVE_KEY, JSON.stringify(S)); }catch(e){} }
-
+let lastSave=0,saveT;
+function save(){ if(!saveT) saveT=setTimeout(()=>{saveT=null;saveNow();},Math.max(0,CONFIG.SAVE_MS-(Date.now()-lastSave))); }
+function saveNow(){ S.lastSeen=Date.now(); try{localStorage.setItem(SAVE_KEY,JSON.stringify(S));lastSave=Date.now();$('save-flash').classList.add('show');setTimeout(()=>$('save-flash').classList.remove('show'),700);}catch(e){} }
 /* ---------------- Derived ---------------- */
 const $ = id => document.getElementById(id);
 function fmt(n){
@@ -127,7 +58,7 @@ function fmt(n){
   const u = ['K','M','B','T','Qa'];
   let i = -1; let x = n;
   while(x >= 1000 && i < u.length-1){ x/=1000; i++; }
-  return (x>=100?x.toFixed(0):x>=10?x.toFixed(1):x.toFixed(2))+u[i];
+  return (x>=100?x.toFixed(0):x>=10?x.toFixed(1):x.toFixed(1))+u[i];
 }
 function permMult(){ return S.perm5?5 : S.perm3?3 : S.perm2?2 : 1; }
 function boostMult(){
@@ -158,7 +89,8 @@ function floatText(x,y,txt,cls){
   $('fx-layer').appendChild(el); setTimeout(()=>el.remove(), 950);
 }
 function burst(x,y){
-  for(let i=0;i<8;i++){
+  for(let i=0;i<(mobile()?2:8);i++){
+    if($('fx-layer').querySelectorAll('.spark').length >= (mobile()?2:16))break;
     const s = document.createElement('div');
     s.className='spark';
     const a = (Math.PI*2*i)/8 + Math.random()*.5;
@@ -187,7 +119,7 @@ function addXp(n){
     S.xp -= xpNeed(S.level); S.level++; leveled = true;
   }
   if(S.level >= 100) S.xp = Math.min(S.xp, xpNeed(100)-1);
-  if(leveled){ levelFx(); checkTier(); }
+  if(leveled){ $('heart-fill').animate([{filter:'brightness(2)'},{filter:'brightness(1)'}],700);levelFx(); checkTier(); }
 }
 function checkTier(){
   const t = tierOf(S.level);
@@ -206,7 +138,7 @@ function showArt(src, ssr){
   const a = $('char-a'), b = $('char-b');
   const inc = artFlip ? a : b, out = artFlip ? b : a;
   artFlip = !artFlip;
-  inc.src = src;
+  mountArt(inc,src);
   inc.classList.toggle('ssr-anim', !!ssr);
   requestAnimationFrame(()=>{ inc.classList.add('show'); out.classList.remove('show'); });
 }
@@ -228,7 +160,7 @@ function currentArt(){
 }
 function refreshArt(){ const a = currentArt(); showArt(a.src, a.ssr); }
 
-function showTierEvent(t){
+function showTierEvent(t){ navigator.vibrate?.(50);
   $('te-tier').textContent = t.name;
   $('te-line').textContent = '“'+t.lines[0]+'”';
   $('te-place').textContent = t.place;
@@ -243,7 +175,7 @@ function crossfade(t){
 
 /* ---------------- Dialogue ---------------- */
 let bubbleT;
-function say(text, ms=3800){
+function say(text, ms=4000){
   $('bubble-text').textContent = text;
   $('bubble').classList.add('show');
   clearTimeout(bubbleT);
@@ -255,7 +187,12 @@ function idleTalk(){
 }
 
 /* ---------------- Tapping ---------------- */
+let lastTap=-Infinity;
 function tap(x, y){
+  if(performance.now()-lastTap<CONFIG.TAP_MIN_MS)return; lastTap=performance.now();
+  navigator.vibrate?.(10); $('bubble').classList.remove('show');
+  const wrap=$('character-wrap'); wrap.classList.remove('char-tap');void wrap.offsetWidth;wrap.classList.add('char-tap');setTimeout(()=>wrap.classList.remove('char-tap'),300);
+  $('coins').animate([{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:180});
   const gain = coinsPerTap();
   addCoins(gain);
   addXp(1 + Math.floor(tapPower()/2));
@@ -274,7 +211,7 @@ function tap(x, y){
     const t = tierOf(S.level);
     say(t.lines[Math.floor(Math.random()*t.lines.length)], 2600);
   }
-  renderHUD();
+  save();
 }
 
 /* ---------------- Energy / regen tick ---------------- */
@@ -290,8 +227,8 @@ function tickEnergy(){
 
 /* ---------------- Gacha ---------------- */
 function rollRarity(){
-  if(S.pity.ssr >= 50){ S.pity.ssr = 0; S.pity.sr = 0; return 'SSR'; }
-  if(S.pity.sr >= 10){ S.pity.sr = 0; S.pity.ssr++; return 'SR'; }
+  if(S.pity.ssr >= 49){ S.pity.ssr = 0; S.pity.sr = 0; return 'SSR'; }
+  if(S.pity.sr >= 9){ S.pity.sr = 0; S.pity.ssr++; return 'SR'; }
   const r = Math.random();
   let acc = 0, hit = 'N';
   for(const k of ['N','R','SR','SSR']){ acc += RARITY_RATE[k]; if(r<acc){ hit=k; break; } }
@@ -338,7 +275,7 @@ function showReveal(results){
       </div>`;
     if(r.dup) addCoins(DUP_COINS[r.c.rarity]);
     grid.appendChild(card);
-    setTimeout(()=>card.classList.add('flipped'), 260 + i*180);
+    setTimeout(()=>{card.classList.add('flipped');if(r.c.rarity==='SSR')burst(innerWidth/2,innerHeight/3);},1000+i*300);
   });
   $('modal-gacha').classList.remove('open');
   $('modal-reveal').classList.add('open');
@@ -350,14 +287,14 @@ const prestigeGain = () => S.level>=50 ? Math.floor((S.level-50)/5)+1 : 0;
 function doPrestige(){
   const g = prestigeGain();
   if(g<=0) return;
-  if(!confirm(`Confess and reset?\n\nYou'll lose coins, upgrades and relationship level, and gain ${g} Love Gems.`)) return;
+  $('modal-prestige').classList.remove('open');
   const keep = { gems:S.gems+g, perm2:S.perm2, perm3:S.perm3, perm5:S.perm5,
     owned:S.owned, equip:S.equip, streak:S.streak, daily:S.daily, freePull:S.freePull,
     pity:S.pity, stats:S.stats, prestige:S.prestige+1, settings:S.settings,
     friend:S.friend, energy:S.energy, energyTs:S.energyTs, lastSeen:Date.now() };
   S = Object.assign(def(), keep);
   S.tier = 1;
-  showArt(TIERS[0].art, false); showBg(TIERS[0].bg);
+  refreshArt(); showBg(TIERS[0].bg);
   say("It's... really okay? Then — from the start. But closer this time.", 5000);
   toast(`💞 Confession complete! <b>+${g} 💎</b>`);
   renderAll(); saveNow();
@@ -372,7 +309,7 @@ function claimMission(id){
   S.daily.claimed[id] = true;
   if(m.reward.coins) addCoins(m.reward.coins);
   if(m.reward.gems) S.gems += m.reward.gems;
-  toast(`📜 Mission complete: <b>${m.label}</b>`);
+  toast(`📜 Mission complete: <b>${m.label}</b>`); addXp(25);levelFx();
   renderAll(); save();
 }
 function newDayCheck(){
@@ -385,7 +322,7 @@ function newDayCheck(){
     addCoins(bonus);
     let extra = '';
     if(S.streak.count % 7 === 0){ S.gems += 1; extra = ' +1 💎'; }
-    toast(`🔥 Streak ${S.streak.count} day${S.streak.count>1?'s':''}! <b>+${bonus}💰${extra}</b>`);
+    $('daily-streak').textContent=`Day ${S.streak.count} streak`; $('daily-rewards').textContent=`+${fmt(bonus)} 💰${extra}`; setTimeout(()=>openModal('daily'),500);
   }
   if(S.daily.date !== t){
     S.daily = {date:t,d_taps:0,d_earned:0,d_pulls:0,claimed:{}};
@@ -404,7 +341,7 @@ function renderHUD(){
   $('hud-title').textContent = t.name;
   const need = xpNeed(S.level);
   const pct = S.level>=100 ? 100 : Math.min(100, S.xp/need*100);
-  $('heart-fill').style.width = pct+'%';
+  $('heart-fill').style.transform = `scaleX(${pct/100})`;
   $('heart-xp').textContent = S.level>=100 ? 'MAX' : `${Math.floor(S.xp)} / ${need} XP`;
   $('stat-cps').textContent = fmt(cps());
   $('stat-tap').textContent = '+'+fmt(coinsPerTap());
@@ -426,10 +363,10 @@ function renderUpgrades(){
     row.className = 'up-item'+(ok?'':' locked');
     row.innerHTML = `
       <div class="up-name">${u.name}<span class="lv">Lv ${lvl}</span></div>
-      <button class="up-buy" ${S.coins<cost?'disabled':''}>${fmt(cost)} 💰</button>
+      <button class="up-buy" ${S.coins<cost||!ok?'disabled':''}>${fmt(cost)} 💰</button>
       <div class="up-eff">${u.desc} · next: ${u.kind==='tap'?('+'+(u.eff*(lvl+1))+' base/tap'):('+'+fmt(u.eff*(lvl+1))+'/s')} ${!ok?'· 🔒':''}</div>`;
     row.querySelector('.up-buy').onclick = ()=>{
-      if(S.coins < cost) return;
+      if(S.coins < cost || !ok) return;
       S.coins -= cost; S.up[u.id]++;
       renderAll(); save();
     };
@@ -518,7 +455,7 @@ function costumeThumb(c, small){
   const el = document.createElement('div');
   el.className = 'costume-thumb'+(owned?'':' locked')+(equipped?' equipped':'');
   const src = c.id==='base' ? tierOf(S.level).art : c.img;
-  el.innerHTML = `<img src="${src}" alt="${c.name}" loading="lazy">
+  el.innerHTML = `<img src="${src}" alt="${c.name}" loading="lazy" decoding="async">
     ${owned?'':'<div class="lock">🔒</div>'}
     <div class="rar ${c.rarity}">${c.rarity}</div>`;
   el.title = c.name + (owned?'':' (locked)');
@@ -534,7 +471,7 @@ function renderRails(){
     const el = document.createElement('div');
     el.className = 'inv-item'+(owned?'':' locked')+(S.equip===c.id?' equipped':'');
     const src = c.id==='base' ? tierOf(S.level).art : c.img;
-    el.innerHTML = `<div class="inv-img"><img src="${src}" alt="${c.name}" loading="lazy"></div>
+    el.innerHTML = `<div class="inv-img"><img src="${src}" alt="${c.name}" loading="lazy" decoding="async"></div>
       <div class="inv-name">${owned?c.name:'🔒 ???'}<br><small class="rar ${c.rarity}" style="color:${c.rarity==='SSR'?'#ffd700':c.rarity==='SR'?'#c44dff':c.rarity==='R'?'#6bb6ff':'#c9c9d6'}">${c.rarity}</small></div>`;
     el.onclick = ()=>equip(c, owned);
     inv.appendChild(el);
@@ -547,7 +484,7 @@ function equip(c, owned){
   if(c.line) say(c.line, 4200);
   renderAll(); save();
 }
-function renderSettings(){
+function renderSettings(){ applyTheme();
   $('set-motion').classList.toggle('on', !!S.settings.motion);
   document.body.classList.toggle('no-motion', !S.settings.motion);
 }
@@ -556,7 +493,7 @@ function renderAll(){ renderHUD(); renderUpgrades(); renderMissions(); renderSho
 /* ---------------- Main loop ---------------- */
 let acc = 0, last = Date.now();
 function loop(){
-  const now = Date.now(), dt = now-last; last = now;
+  const now = Date.now(), dt = Math.min(CONFIG.OFFLINE_CAP_MS,now-last); last = now;
   tickEnergy();
   if(autoOn() && baseCps()>0){
     const gain = cps()*dt/1000;
@@ -586,6 +523,18 @@ function bind(){
     const r = $('tap-btn').getBoundingClientRect();
     tap(r.left+r.width/2, r.top+r.height/2-10);
   };
+  for(const id of ['character-wrap','tap-btn']){
+    $(id).addEventListener('touchstart',e=>{e.preventDefault();const t=e.changedTouches[0];tap(t.clientX,t.clientY);},{passive:false});
+    $(id).addEventListener('contextmenu',e=>e.preventDefault());
+  }
+  for(const kind of ['sfx','music']){
+    $('set-'+kind).value=S.settings[kind]??(kind==='sfx'?70:40);
+    $('set-'+kind).oninput=e=>{S.settings[kind]=+e.target.value;$(kind+'-val').textContent=e.target.value+'%';save();};
+  }
+  document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{S.settings.theme=b.dataset.theme;applyTheme();save();});
+  let edge=null;
+  document.addEventListener('touchstart',e=>{edge={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});
+  document.addEventListener('touchend',e=>{if(!edge)return;const dx=e.changedTouches[0].clientX-edge.x;if(Math.abs(e.changedTouches[0].clientY-edge.y)<80){if(edge.x<28&&dx>60)$('left-rail').classList.add('open');if(edge.x>innerWidth-28&&dx< -60)$('right-rail').classList.add('open');}edge=null;},{passive:true});
   // rails
   document.querySelectorAll('.rail-btn').forEach(b=>{
     b.onclick = ()=>{ openModal(b.dataset.modal); $('left-rail').classList.remove('open'); };
@@ -610,7 +559,10 @@ function bind(){
   $('pull-x1').onclick = ()=>pull(1);
   $('pull-x10').onclick = ()=>pull(10);
   $('reveal-close').onclick = ()=>{ $('modal-reveal').classList.remove('open'); openModal('gacha'); };
-  $('btn-prestige').onclick = doPrestige;
+  $('btn-prestige').onclick = ()=>{ $('prestige-preview').textContent=`Lv ${S.level} · ${fmt(S.coins)} coins → +${prestigeGain()} 💎`;openModal('prestige');};
+  $('prestige-confirm').onclick=doPrestige; $('prestige-cancel').onclick=()=>$('modal-prestige').classList.remove('open');
+  $('offline-claim').onclick=()=>$('modal-offline').classList.remove('open');
+  $('daily-claim').onclick=()=>$('modal-daily').classList.remove('open');
   $('copy-friend').onclick = ()=>{
     navigator.clipboard?.writeText(S.friend).then(()=>toast('Friend code copied!'));
   };
@@ -624,7 +576,7 @@ function bind(){
   $('set-import').onclick = ()=>{
     const txt = prompt('Paste your save JSON:');
     if(!txt) return;
-    try{ localStorage.setItem(SAVE_KEY, txt); location.reload(); }
+    try{const d=JSON.parse(txt);if(d.v!==1||!Number.isFinite(d.coins)||!Number.isInteger(d.level)||d.level<1||d.level>100)throw Error();localStorage.setItem(SAVE_KEY,txt);location.reload();}
     catch(e){ toast('Invalid save JSON'); }
   };
   $('set-reset').onclick = ()=>{
@@ -635,7 +587,7 @@ function bind(){
   // parallax
   const stage = $('stage');
   stage.addEventListener('pointermove', e=>{
-    if(!S.settings.motion) return;
+    if(!S.settings.motion || mobile() || navigator.hardwareConcurrency<4) return;
     const r = stage.getBoundingClientRect();
     const x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5;
     $('bg-a').style.transform = `translate(${-x*14}px,${-y*10}px) scale(1.03)`;
@@ -658,8 +610,22 @@ function openModal(name){
   m.classList.add('open');
   if(name==='gacha') renderGacha();
   if(name==='missions') renderMissions();
+  if(name==='upgrades')renderUpgrades();if(name==='shop')renderShop();
 }
 
+function applyTheme(){ const t=THEMES.find(t=>t.id===S.settings.theme)||THEMES[0];document.documentElement.style.setProperty('--pink',t.pink);document.documentElement.style.setProperty('--pink-soft',t.soft); }
+function mountArt(el,src){
+  // Flat paintings have no recoverable occluded pixels: use the safe whole-art
+  // fallback instead of moving rectangular slices and exposing seams.
+  el.innerHTML=''; const img=new Image();img.className='layer character-single';img.alt='B';img.src=src;el.appendChild(img);
+}
+let installEvent;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;$('install-bar').classList.remove('hidden');});
+window.addEventListener('load',()=>{
+ if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+ $('install-btn').onclick=async()=>{await installEvent?.prompt();$('install-bar').classList.add('hidden');};
+ $('install-dismiss').onclick=()=>$('install-bar').classList.add('hidden');
+});
 /* ---------------- Boot ---------------- */
 function boot(){
   load();
@@ -670,24 +636,24 @@ function boot(){
   if(away > 60000 && baseCps()>0){
     const gain = cps()*away/1000;
     addCoins(gain);
-    toast(`While you were away... <b>+${fmt(gain)} 💰</b>`);
+    $('offline-gain').textContent=`+${fmt(gain)} 💰`;$('offline-away').textContent=`Away ${Math.floor(away/60000)} minutes`;setTimeout(()=>openModal('offline'),800);
   }
   // art & bg
   const t = tierOf(S.level);
   const a = currentArt();
-  $('char-a').src = a.src; $('char-a').classList.toggle('ssr-anim', !!a.ssr);
-  $('char-b').src = a.src;
+  mountArt($('char-a'),a.src); $('char-a').classList.add('show'); $('char-a').classList.toggle('ssr-anim', !!a.ssr);
+  mountArt($('char-b'),a.src);
   $('bg-a').style.backgroundImage = `url('${t.bg}')`;
   $('bg-a').classList.add('show');
   $('auto-state').textContent = autoOn()?'ON':'OFF';
   $('btn-auto').classList.toggle('on', autoOn());
   $('friend-code').textContent = S.friend;
   // preload
-  [...TIERS.map(t=>t.art), ...TIERS.map(t=>t.bg), ...COSTUMES.filter(c=>c.img).map(c=>c.img)]
+  [...TIERS.map(t=>t.art), ...TIERS.map(t=>t.bg)]
     .forEach(src=>{ const i=new Image(); i.src=src; });
   renderAll();
   setTimeout(()=>say(`...you came back. Don't just stand there.`, 4500), 700);
-  setInterval(()=>{ renderHUD(); save(); }, 5000);
+  setInterval(save, CONFIG.SAVE_MS);
   setInterval(newDayCheck, 60000);
   requestAnimationFrame(loop);
 }

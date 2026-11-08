@@ -1,0 +1,314 @@
+{
+ "tier1": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/tier1/head.webp",
+    "top": 0.0,
+    "height": 0.16856,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/tier1/torso.webp",
+    "top": 0.12925,
+    "height": 0.41421,
+    "anim": "breathe"
+   },
+   {
+    "file": "assets/layers/tier1/lower.webp",
+    "top": 0.50416,
+    "height": 0.49584,
+    "anim": "flutter"
+   }
+  ],
+  "w": 420,
+  "h": 1323,
+  "neck": 197,
+  "waist": 693
+ },
+ "tier2": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/tier2/head.webp",
+    "top": 0.0,
+    "height": 0.16118,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/tier2/torso.webp",
+    "top": 0.1173,
+    "height": 0.56371,
+    "anim": "breathe"
+   },
+   {
+    "file": "assets/layers/tier2/lower.webp",
+    "top": 0.63713,
+    "height": 0.36287,
+    "anim": "flutter"
+   }
+  ],
+  "w": 421,
+  "h": 1185,
+  "neck": 165,
+  "waist": 781
+ },
+ "tier3": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/tier3/head.webp",
+    "top": 0.0,
+    "height": 0.17364,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/tier3/torso.webp",
+    "top": 0.13333,
+    "height": 0.28682,
+    "anim": "breathe"
+   },
+   {
+    "file": "assets/layers/tier3/lower.webp",
+    "top": 0.37984,
+    "height": 0.62016,
+    "anim": "flutter"
+   }
+  ],
+  "w": 411,
+  "h": 1290,
+  "neck": 198,
+  "waist": 516
+ },
+ "tier4": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/tier4/head.webp",
+    "top": 0.0,
+    "height": 0.16129,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/tier4/body.webp",
+    "top": 0.11715,
+    "height": 0.88285,
+    "anim": "breathe"
+   }
+  ],
+  "w": 701,
+  "h": 1178,
+  "neck": 164,
+  "waist": null
+ },
+ "tier5": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/tier5/head.webp",
+    "top": 0.0,
+    "height": 0.18141,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/tier5/torso.webp",
+    "top": 0.1421,
+    "height": 0.28723,
+    "anim": "breathe"
+   },
+   {
+    "file": "assets/layers/tier5/lower.webp",
+    "top": 0.39002,
+    "height": 0.60998,
+    "anim": "flutter"
+   }
+  ],
+  "w": 403,
+  "h": 1323,
+  "neck": 214,
+  "waist": 542
+ },
+ "costume_cardigan": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/costume_cardigan/head.webp",
+    "top": 0.0,
+    "height": 0.16439,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/costume_cardigan/torso.webp",
+    "top": 0.125,
+    "height": 0.5447,
+    "anim": "breathe"
+   },
+   {
+    "file": "assets/layers/costume_cardigan/lower.webp",
+    "top": 0.6303,
+    "height": 0.3697,
+    "anim": "flutter"
+   }
+  ],
+  "w": 395,
+  "h": 1320,
+  "neck": 191,
+  "waist": 858
+ },
+ "costume_track": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/costume_track/head.webp",
+    "top": 0.0,
+    "height": 0.42771,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/costume_track/body.webp",
+    "top": 0.38834,
+    "height": 0.61166,
+    "anim": "breathe"
+   }
+  ],
+  "w": 584,
+  "h": 1321,
+  "neck": 539,
+  "waist": null
+ },
+ "costume_apron": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/costume_apron/head.webp",
+    "top": 0.0,
+    "height": 0.15881,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/costume_apron/torso.webp",
+    "top": 0.1211,
+    "height": 0.55693,
+    "anim": "breathe"
+   },
+   {
+    "file": "assets/layers/costume_apron/lower.webp",
+    "top": 0.64032,
+    "height": 0.35968,
+    "anim": "flutter"
+   }
+  ],
+  "w": 500,
+  "h": 1379,
+  "neck": 193,
+  "waist": 909
+ },
+ "costume_maid": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/costume_maid/head.webp",
+    "top": 0.0,
+    "height": 0.17162,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/costume_maid/torso.webp",
+    "top": 0.12744,
+    "height": 0.5531,
+    "anim": "breathe"
+   },
+   {
+    "file": "assets/layers/costume_maid/lower.webp",
+    "top": 0.63636,
+    "height": 0.36364,
+    "anim": "flutter"
+   }
+  ],
+  "w": 396,
+  "h": 1177,
+  "neck": 176,
+  "waist": 775
+ },
+ "costume_pool": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/costume_pool/head.webp",
+    "top": 0.0,
+    "height": 0.17105,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/costume_pool/torso.webp",
+    "top": 0.12829,
+    "height": 0.55181,
+    "anim": "breathe"
+   },
+   {
+    "file": "assets/layers/costume_pool/lower.webp",
+    "top": 0.63734,
+    "height": 0.36266,
+    "anim": "flutter"
+   }
+  ],
+  "w": 360,
+  "h": 1216,
+  "neck": 182,
+  "waist": 801
+ },
+ "costume_gown": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/costume_gown/head.webp",
+    "top": 0.0,
+    "height": 0.16022,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/costume_gown/torso.webp",
+    "top": 0.11997,
+    "height": 0.55882,
+    "anim": "breathe"
+   },
+   {
+    "file": "assets/layers/costume_gown/lower.webp",
+    "top": 0.63854,
+    "height": 0.36146,
+    "anim": "flutter"
+   }
+  ],
+  "w": 393,
+  "h": 1292,
+  "neck": 181,
+  "waist": 851
+ },
+ "costume_bunny": {
+  "fallback": false,
+  "bands": [
+   {
+    "file": "assets/layers/costume_bunny/head.webp",
+    "top": 0.0,
+    "height": 0.15879,
+    "anim": "hair"
+   },
+   {
+    "file": "assets/layers/costume_bunny/torso.webp",
+    "top": 0.12038,
+    "height": 0.55761,
+    "anim": "breathe"
+   },
+   {
+    "file": "assets/layers/costume_bunny/lower.webp",
+    "top": 0.63959,
+    "height": 0.36041,
+    "anim": "flutter"
+   }
+  ],
+  "w": 341,
+  "h": 1354,
+  "neck": 189,
+  "waist": 892
+ }
+}
