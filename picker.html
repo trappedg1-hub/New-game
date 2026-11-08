@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHOOSE YOUR WAIFU</title>
+<style>
+  :root{
+    --bg:#0d0d1a; --bg2:#1a1a2e; --panel:#15152aee;
+    --pink:#ff6b9d; --pink-soft:#ff9ec4; --gold:#ffd700; --purple:#c44dff;
+    --text:#f2e9f2; --muted:#9a8fae;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:
+      radial-gradient(1200px 600px at 50% -10%, #2a1535 0%, transparent 60%),
+      radial-gradient(900px 500px at 10% 110%, #1b1030 0%, transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh; overflow-x:hidden;
+  }
+  header{padding:44px 20px 10px; text-align:center; position:relative}
+  .kicker{
+    display:inline-block; letter-spacing:.45em; font-size:12px; color:var(--pink);
+    text-transform:uppercase; border:1px solid #ff6b9d55; border-radius:999px;
+    padding:7px 18px 7px 22px; background:#ff6b9d12; margin-bottom:18px;
+  }
+  h1{
+    font-size:clamp(34px,6vw,72px); font-weight:900; letter-spacing:.06em;
+    background:linear-gradient(92deg,#ff6b9d 5%,#ff9ec4 35%,#ffd700 70%,#ff6b9d 100%);
+    background-size:220% auto;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:shine 6s linear infinite;
+    text-transform:uppercase;
+  }
+  @keyframes shine{to{background-position:220% center}}
+  .sub{color:var(--muted); margin-top:12px; font-size:15px}
+  .sub b{color:var(--pink-soft); font-weight:600}
+
+  .grid{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:22px;
+    padding:34px clamp(14px,3vw,40px) 70px; max-width:1560px; margin:0 auto;
+  }
+  .card{
+    background:linear-gradient(180deg,#1b1b33f2,#121226f6);
+    border:1px solid #ffffff14; border-radius:18px;
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    overflow:hidden; position:relative;
+    transition:transform .35s cubic-bezier(.22,1,.36,1), border-color .35s, box-shadow .35s;
+    box-shadow:0 18px 44px #00000066;
+  }
+  .card:hover{
+    transform:translateY(-8px);
+    border-color:#ff6b9d88;
+    box-shadow:0 24px 60px #ff6b9d33, 0 0 0 1px #ff6b9d44 inset;
+  }
+  .badge{
+    position:absolute; top:14px; left:14px; z-index:3;
+    width:44px; height:44px; border-radius:12px; display:grid; place-items:center;
+    font-weight:900; font-size:20px; color:#0d0d1a;
+    background:linear-gradient(140deg,var(--pink),var(--pink-soft));
+    box-shadow:0 6px 18px #ff6b9d66;
+  }
+  .stage{
+    position:relative; height:470px; display:flex; align-items:flex-end; justify-content:center;
+    background:
+      radial-gradient(60% 46% at 50% 96%, #ff6b9d2e 0%, transparent 70%),
+      radial-gradient(90% 70% at 50% 20%, #26264a 0%, transparent 75%),
+      linear-gradient(180deg,#171732,#101022);
+    overflow:hidden;
+  }
+  .stage::after{ /* ground shadow */
+    content:""; position:absolute; bottom:14px; left:50%; transform:translateX(-50%);
+    width:62%; height:26px; border-radius:50%;
+    background:radial-gradient(ellipse,#000000aa 0%,transparent 70%);
+  }
+  .stage img{
+    max-height:446px; max-width:88%; object-fit:contain; position:relative; z-index:2;
+    filter:drop-shadow(0 14px 22px #000000aa);
+    transition:transform .45s cubic-bezier(.22,1,.36,1);
+  }
+  .card:hover .stage img{transform:scale(1.045) translateY(-4px)}
+  .ribbon{
+    position:absolute; top:14px; right:-38px; transform:rotate(38deg); z-index:4;
+    background:linear-gradient(90deg,var(--purple),var(--pink));
+    color:#fff; font-size:11px; font-weight:800; letter-spacing:.14em;
+    padding:6px 44px; text-transform:uppercase; box-shadow:0 4px 14px #00000066;
+  }
+  .body{padding:18px 18px 22px}
+  .name{font-size:22px; font-weight:800; letter-spacing:.04em}
+  .name span{color:var(--pink)}
+  .vibe{
+    display:inline-block; margin-top:8px; font-size:11px; font-weight:700;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--gold);
+    border:1px solid #ffd70044; background:#ffd70012;
+    padding:5px 12px; border-radius:999px;
+  }
+  .desc{margin-top:12px; font-size:13.5px; line-height:1.65; color:#cfc4dd}
+  .desc b{color:var(--pink-soft)}
+
+  .details{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px}
+  .detail{
+    background:#0e0e1e; border:1px solid #ffffff14; border-radius:12px;
+    overflow:hidden; position:relative; aspect-ratio:3/4;
+    transition:border-color .3s, box-shadow .3s;
+  }
+  .detail:hover{border-color:#ff6b9daa; box-shadow:0 0 16px #ff6b9d44}
+  .detail img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block}
+  .detail .lbl{
+    position:absolute; left:0; right:0; bottom:0; font-size:9.5px; font-weight:800;
+    letter-spacing:.18em; text-transform:uppercase; text-align:center;
+    padding:6px 2px; color:#fff; background:linear-gradient(transparent,#000000cc);
+  }
+  .pick{
+    width:100%; margin-top:16px; border:none; cursor:pointer;
+    font-size:15px; font-weight:900; letter-spacing:.12em; text-transform:uppercase;
+    color:#0d0d1a; padding:14px; border-radius:14px;
+    background:linear-gradient(135deg,var(--pink),var(--pink-soft) 55%,var(--gold));
+    box-shadow:0 10px 26px #ff6b9d55;
+    transition:transform .2s cubic-bezier(.22,1,.36,1), box-shadow .2s, filter .2s;
+    position:relative; overflow:hidden;
+  }
+  .pick:hover{transform:translateY(-2px); filter:brightness(1.08); box-shadow:0 16px 34px #ff6b9d77}
+  .pick:active{transform:scale(.97)}
+  .pick::after{ /* ripple */
+    content:""; position:absolute; inset:0; background:#ffffff66;
+    transform:scale(0); border-radius:50%; opacity:0;
+  }
+  .pick.rippling::after{animation:rip .55s ease-out}
+  @keyframes rip{0%{transform:scale(0);opacity:.7}100%{transform:scale(4);opacity:0}}
+
+  footer{text-align:center; padding:0 20px 46px; color:var(--muted); font-size:13px}
+  footer b{color:var(--pink)}
+
+  #toast{
+    position:fixed; left:50%; bottom:34px; transform:translate(-50%,140%);
+    background:linear-gradient(135deg,#22224a,#171733);
+    border:1px solid #ff6b9d99; color:var(--text);
+    padding:15px 26px; border-radius:14px; font-size:14.5px; font-weight:600;
+    box-shadow:0 18px 50px #000000cc, 0 0 30px #ff6b9d33;
+    transition:transform .45s cubic-bezier(.22,1,.36,1); z-index:99; max-width:92vw; text-align:center;
+  }
+  #toast.show{transform:translate(-50%,0)}
+  #toast b{color:var(--gold)}
+
+  @media (max-width:1180px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr; gap:18px}
+    .stage{height:420px} .stage img{max-height:396px}
+    header{padding-top:30px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">Phase 1 · Concept Select</div>
+  <h1>Choose Your Waifu</h1>
+  <div class="sub">Four concepts. One becomes canon. <b>Reply A / B / C / D</b> to lock her in and start the game.</div>
+</header>
+
+<main class="grid">
+
+  <!-- GIRL A -->
+  <section class="card" id="girl-a">
+    <div class="badge">A</div>
+    <div class="ribbon">Soft Pastel</div>
+    <div class="stage"><img src="assets/concepts/girl_A/girl_a_full.png" alt="Girl A full body"></div>
+    <div class="body">
+      <div class="name">Girl A · <span>Soft Pastel</span></div>
+      <div class="vibe">Innocent · Fragile</div>
+      <p class="desc">Long straight <b>light pink hime-cut</b> hair and soft blue eyes on a petite slim frame. Oversized pastel sweater worn off one shoulder, short pleated skirt, <b>full-length white thigh-highs</b>, barefoot. She hugs herself, looks down shyly, and points one foot inward — pure innocent energy.</p>
+      <div class="details">
+        <div class="detail"><img src="assets/concepts/girl_A/girl_a_face.png" alt="A face"><div class="lbl">Face</div></div>
+        <div class="detail"><img src="assets/concepts/girl_A/girl_a_outfit.png" alt="A outfit"><div class="lbl">Outfit</div></div>
+        <div class="detail"><img src="assets/concepts/girl_A/girl_a_legs.png" alt="A legs"><div class="lbl">Legs · Feet</div></div>
+      </div>
+      <button class="pick" data-girl="A">Pick A</button>
+    </div>
+  </section>
+
+  <!-- GIRL B -->
+  <section class="card" id="girl-b">
+    <div class="badge">B</div>
+    <div class="ribbon">Dark Shy</div>
+    <div class="stage"><img src="assets/concepts/girl_B/girl_b_full.png" alt="Girl B full body"></div>
+    <div class="body">
+      <div class="name">Girl B · <span>Dark Shy</span></div>
+      <div class="vibe">Kuudere · Antisocial</div>
+      <p class="desc">Long wavy <b>dark purple hair covering one eye</b>, a peeking amber eye, tall lean legs. Black oversized hoodie unzipped over a crop top, short shorts, <b>black lace-top thigh-highs</b> full length, barefoot. Leaning against the wall, leg crossed, face buried in her sleeve — maximum kuudere.</p>
+      <div class="details">
+        <div class="detail"><img src="assets/concepts/girl_B/girl_b_face.png" alt="B face"><div class="lbl">Face</div></div>
+        <div class="detail"><img src="assets/concepts/girl_B/girl_b_outfit.png" alt="B outfit"><div class="lbl">Outfit</div></div>
+        <div class="detail"><img src="assets/concepts/girl_B/girl_b_legs.png" alt="B legs"><div class="lbl">Legs · Feet</div></div>
+      </div>
+      <button class="pick" data-girl="B">Pick B</button>
+    </div>
+  </section>
+
+  <!-- GIRL C -->
+  <section class="card" id="girl-c">
+    <div class="badge">C</div>
+    <div class="ribbon">Warm Classic</div>
+    <div class="stage"><img src="assets/concepts/girl_C/girl_c_full.png" alt="Girl C full body"></div>
+    <div class="body">
+      <div class="name">Girl C · <span>Warm Classic</span></div>
+      <div class="vibe">Class Rep · Girl-next-door</div>
+      <p class="desc">Medium brown <b>low twin tails</b>, warm green eyes, balanced soft curves. White blouse with the top buttons undone, <b>red plaid mini skirt</b>, knee-high socks and loafers. Hands behind her back, a slight bow, looking up through her lashes on tiptoe — your wholesome class representative.</p>
+      <div class="details">
+        <div class="detail"><img src="assets/concepts/girl_C/girl_c_face.png" alt="C face"><div class="lbl">Face</div></div>
+        <div class="detail"><img src="assets/concepts/girl_C/girl_c_outfit.png" alt="C outfit"><div class="lbl">Outfit</div></div>
+        <div class="detail"><img src="assets/concepts/girl_C/girl_c_legs.png" alt="C legs"><div class="lbl">Legs · Feet</div></div>
+      </div>
+      <button class="pick" data-girl="C">Pick C</button>
+    </div>
+  </section>
+
+  <!-- GIRL D -->
+  <section class="card" id="girl-d">
+    <div class="badge">D</div>
+    <div class="ribbon">Bold Shy</div>
+    <div class="stage"><img src="assets/concepts/girl_D/girl_d_full.png" alt="Girl D full body"></div>
+    <div class="body">
+      <div class="name">Girl D · <span>Bold Shy</span></div>
+      <div class="vibe">Tsundere · Athlete</div>
+      <p class="desc">Short <b>silver bob</b> and crimson eyes on a compact toned gymnast frame. Red sports bra, high-waisted black leggings with <b>sheer thigh panels</b>, untied sneakers. Sitting knees-to-chest, arms wrapped, face half hidden while she peeks sideways — tsundere athlete who definitely wasn't waiting for you.</p>
+      <div class="details">
+        <div class="detail"><img src="assets/concepts/girl_D/girl_d_face.png" alt="D face"><div class="lbl">Face</div></div>
+        <div class="detail"><img src="assets/concepts/girl_D/girl_d_outfit.png" alt="D outfit"><div class="lbl">Outfit</div></div>
+        <div class="detail"><img src="assets/concepts/girl_D/girl_d_legs.png" alt="D legs"><div class="lbl">Legs · Feet</div></div>
+      </div>
+      <button class="pick" data-girl="D">Pick D</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>Premium gacha-tier concepts · Shift Up / Nikke styling · <b>one girl becomes canon</b> for the full relationship clicker</footer>
+
+<div id="toast"></div>
+
+<script>
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  function showToast(html){
+    toast.innerHTML = html;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3400);
+  }
+  document.querySelectorAll('.pick').forEach(btn => {
+    btn.addEventListener('click', e => {
+      btn.classList.remove('rippling'); void btn.offsetWidth; btn.classList.add('rippling');
+      const g = btn.dataset.girl;
+      showToast('Girl <b>' + g + '</b> selected! Reply <b>' + g + '</b> in chat to lock her in as canon ✦');
+      document.querySelectorAll('.card').forEach(c => c.style.opacity = .45);
+      btn.closest('.card').style.opacity = 1;
+    });
+  });
+</script>
+</body>
+</html>
