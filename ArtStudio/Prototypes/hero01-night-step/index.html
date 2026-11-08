@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#111015" />
+  <meta name="description" content="Изолированный интерактивный тест движения HERO-01 в утверждённом ночном наряде." />
+  <title>Night Step — Motion Study</title>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="ArtStudio Motion Lab"><span class="brand-mark">✳</span><span>ARTSTUDIO <span class="brand-divider">/</span> MOTION LAB</span></a>
+    <div class="topbar-meta"><span>CHARACTER STUDY</span><i></i><span>HERO-01</span></div>
+  </header>
+  <main class="page">
+    <section class="heading">
+      <div><div class="eyebrow"><span class="rule"></span> INTERACTIVE MOTION STUDY <span class="eyebrow-index">/ 010</span></div><h1>Night <em>Step.</em></h1></div>
+      <div class="intro"><span class="intro-tag"><i></i> ОТДЕЛЬНЫЙ ПРОТОТИП</span><p>Та же утверждённая поза. Более живой ответ на каждое прикосновение.</p></div>
+    </section>
+    <section class="workspace" aria-label="Интерактивный просмотр персонажа">
+      <div class="canvas-panel">
+        <div class="panel-header"><div><span class="panel-index">01 / MOTION</span><strong>В движении</strong></div><span class="status-pill"><i></i><span id="scene-status">ЗАГРУЗКА</span></span></div>
+        <div class="stage-shell" id="stage-shell">
+          <div class="stage" id="animated-view" role="application" tabindex="0" aria-label="Интерактивный персонаж. Коснитесь ног, ступней, рук или лица. Клавиши 1–6 также запускают реакции."></div>
+          <div class="stage-loading" id="loading"><span class="loader"></span><span>Готовим движение...</span></div>
+          <div class="stage-error" id="error-message" role="alert" hidden></div>
+          <div class="stage-stamp" aria-hidden="true"><span>HERO-01</span><span>✳</span><span>NIGHT STEP</span></div>
+        </div>
+        <div class="panel-footer"><span><b>✳</b> <span id="touch-status" aria-live="polite">Коснись ступни, руки или лица</span></span><span>PIXIJS <i>·</i> 2D</span></div>
+        <div class="quick-access" role="group" aria-label="Быстрые реакции"><span class="quick-label">ПОПРОБУЙ</span><button type="button" data-zone="footNear" disabled>Ближняя стопа</button><button type="button" data-zone="legRight" disabled>Опорная нога</button><button type="button" data-zone="handLeft" disabled>Рука слева</button><button type="button" data-zone="handRight" disabled>Рука справа</button></div>
+      </div>
+      <aside class="sidebar">
+        <div class="side-intro"><div class="side-title"><span class="side-icon">↗</span><span>НАСТРОЙКИ<br><b>ДВИЖЕНИЯ</b></span></div><span class="side-count">01 — 04</span></div>
+        <div class="setting"><div class="setting-top"><div><span class="setting-index">01 / РЕАКЦИЯ</span><h2>Почувствуй разницу.</h2></div></div><p>Нажми на персонажа: руки и ноги реагируют быстрее и заметнее, затем плавно возвращаются.</p><button type="button" class="primary-button" id="demo-button" disabled><span>Показать реакцию</span><span aria-hidden="true">↗</span></button></div>
+        <div class="setting"><div class="setting-line"><label for="intensity"><span class="setting-index">02 / ИНТЕНСИВНОСТЬ</span><strong>Сила движения</strong></label><output id="intensity-value" for="intensity">100%</output></div><input id="intensity" type="range" min="40" max="135" value="100" step="5" disabled /><div class="range-ends"><span>ДЕЛИКАТНО</span><span>ВЫРАЗИТЕЛЬНО</span></div></div>
+        <div class="setting"><span class="setting-index">03 / ВОСПРОИЗВЕДЕНИЕ</span><div class="switch-row"><button type="button" class="control-button" id="play-toggle" aria-pressed="false" disabled><span id="play-icon">Ⅱ</span><span id="play-label">Пауза</span></button><button type="button" class="control-button" id="blink-button" disabled><span>◉</span><span>Моргание</span></button></div><p class="small-copy" id="play-hint">Дыхание и волосы движутся мягко.</p></div>
+        <div class="setting last-setting"><span class="setting-index">04 / ВИД</span><div class="switch-row view-buttons" role="group" aria-label="Масштаб"><button class="view-button is-active" id="view-body" type="button" aria-pressed="true">ПОЛНЫЙ РОСТ</button><button class="view-button" id="view-face" type="button" aria-pressed="false">ЛИЦО</button></div><button type="button" class="reference-toggle" id="compare-toggle" aria-expanded="false"><span>Сравнить с оригиналом</span><span aria-hidden="true" id="compare-symbol">+</span></button></div>
+        <div class="side-note"><span>✳</span><p>Реакции на касания — новый вариант и требуют твоей оценки. Утверждённый арт и прежние версии не менялись.<small>Исходник: 1024 × 1024, не 4K. Скрытые участки восстановлены приблизительно.</small></p></div>
+      </aside>
+    </section>
+    <section class="reference-section" id="reference-section" hidden aria-labelledby="reference-title"><div><span class="setting-index">STATIC / APPROVED</span><h2 id="reference-title">Исходный арт.</h2><p>Сравнение с утверждённым оригиналом без перерисовки.</p></div><img id="source-image" alt="Утверждённый статичный арт HERO-01 в ночном наряде" /></section>
+    <footer class="footer"><span>ARTSTUDIO / CHARACTER MOTION LAB</span><span>PREVIEW ONLY <i>·</i> NOT IN GAME</span></footer>
+  </main>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

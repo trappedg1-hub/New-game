@@ -1,0 +1,29 @@
+{
+  "source_sha256": "bfa845260fdaecdb44d4e01fb57f608c193910d1db98f8ed7b6d3340262729f7",
+  "size": [
+    1024,
+    1024
+  ],
+  "eyes": [
+    {
+      "name": "left",
+      "file": "eye_left_closed.png",
+      "box": [
+        461,
+        86,
+        494,
+        109
+      ]
+    },
+    {
+      "name": "right",
+      "file": "eye_right_closed.png",
+      "box": [
+        503,
+        72,
+        541,
+        95
+      ]
+    }
+  ]
+}
