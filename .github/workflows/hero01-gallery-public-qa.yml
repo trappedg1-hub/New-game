@@ -24,6 +24,13 @@ jobs:
           node-version: '22'
       - run: npm --prefix ArtStudio/Prototypes/hero01-night-step ci
       - name: Check the gallery and embedded previews
-        run: node ArtStudio/Prototypes/hero01-costume-gallery/scripts/browser-qa.mjs
+        run: |
+          set -o pipefail
+          node ArtStudio/Prototypes/hero01-costume-gallery/scripts/browser-qa.mjs 2>&1 | tee /tmp/hero01-gallery-qa.log
         env:
           GALLERY_URL: ${{ inputs.gallery_url || 'https://hero01-idle-prototype.vercel.app/collection/' }}
+      - name: Report public QA failure details
+        if: failure()
+        run: |
+          details=$(tail -c 5000 /tmp/hero01-gallery-qa.log | sed ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g')
+          echo "::error title=Public gallery QA::$details"
