@@ -818,11 +818,16 @@
             .forEach((card) => {
               if (card.dataset.celebrated) return;
               card.dataset.celebrated = "true";
+              $("modal-reveal").classList.add("ssr-shake");
+              setTimeout(
+                () => $("modal-reveal").classList.remove("ssr-shake"),
+                220,
+              );
               const fx = document.createElement("div");
               fx.className = "reveal-confetti";
-              for (let i = 0; i < 16; i++) {
+              for (let i = 0; i < 24; i++) {
                 const bit = document.createElement("i");
-                const a = (i * Math.PI) / 8;
+                const a = (i * Math.PI) / 12;
                 bit.style.setProperty(
                   "--cx",
                   Math.cos(a) * (90 + Math.random() * 50) + "px",
@@ -905,6 +910,232 @@
         });
         decorateCostumes();
         syncPanels();
+      })();
+    </script>
+    <script>
+      /* Presentation-only adapter: preserve existing IDs, handlers and save data. */
+      (() => {
+        const $ = (id) => document.getElementById(id);
+        // Semantic dialog regions retain the original interactive nodes and listeners.
+        document.querySelectorAll(".modal-card").forEach((card) => {
+          const header = document.createElement("header");
+          header.className = "dialog-header";
+          const body = document.createElement("div");
+          body.className = "dialog-body";
+          const footer = document.createElement("footer");
+          footer.className = "dialog-footer";
+          [...card.children].forEach((el) => {
+            if (el.matches("h2,.modal-close,.daily-icon")) header.append(el);
+            else if (
+              el.matches(
+                ".modal-btn-row,#daily-claim,#offline-claim,#reveal-close",
+              )
+            )
+              footer.append(el);
+            else body.append(el);
+          });
+          card.append(header, body);
+          if (footer.children.length) card.append(footer);
+        });
+        const pity = document.createElement("div");
+        pity.className = "pity-remaining";
+        $("gacha-owned").before(pity);
+        const syncPity = () => {
+          const remaining = Math.max(1, 50 - Number($("pity-ssr").textContent));
+          pity.textContent = `SSR guaranteed in ${remaining} pull${remaining === 1 ? "" : "s"}`;
+        };
+        new MutationObserver(syncPity).observe($("pity-ssr"), {
+          childList: true,
+        });
+        syncPity();
+        const warning = document.createElement("p");
+        warning.className = "prestige-warning";
+        warning.textContent =
+          "All run progress will be reset. Your permanent bonds remain.";
+        const gem = document.createElement("div");
+        gem.className = "prestige-gem";
+        gem.setAttribute("aria-hidden", "true");
+        gem.innerHTML =
+          '<svg class="ui-icon" aria-hidden="true"><use href="#i-gem"/></svg>';
+        const compare = document.createElement("div");
+        compare.className = "prestige-comparison";
+        $("prestige-preview").before(gem);
+        $("prestige-preview").after(compare, warning);
+        const syncPrestige = () => {
+          const text = $("prestige-preview").textContent;
+          const [before, after] = text.split("→");
+          compare.replaceChildren();
+          const col = (name, value, cls) => {
+            const e = document.createElement("div");
+            e.className = "prestige-column " + cls;
+            const label = document.createElement("small");
+            label.textContent = name;
+            const v = document.createElement("strong");
+            v.textContent = value;
+            e.append(label, v);
+            return e;
+          };
+          const arrow = document.createElement("span");
+          arrow.className = "prestige-arrow";
+          arrow.textContent = "→";
+          compare.append(
+            col("Before", before?.trim() || "Current run", "before"),
+            arrow,
+            col("After", (after?.trim() || "Love Gems") + " · Lv.1", "after"),
+          );
+        };
+        new MutationObserver(syncPrestige).observe($("prestige-preview"), {
+          childList: true,
+        });
+        syncPrestige();
+        // Require an uninterrupted two-second hold before invoking the existing click handler.
+        const confirm = $("prestige-confirm");
+        confirm.innerHTML =
+          "<span>I’M SURE</span><small class='hold-caption'>HOLD FOR 2 SECONDS</small>";
+        confirm.setAttribute(
+          "aria-label",
+          "Hold for two seconds to confirm confession",
+        );
+        let timer = null,
+          armed = false;
+        const cancel = () => {
+          clearTimeout(timer);
+          timer = null;
+          confirm.classList.remove("holding");
+        };
+        const start = () => {
+          if (timer || !$("modal-prestige").classList.contains("open")) return;
+          confirm.classList.add("holding");
+          timer = setTimeout(() => {
+            armed = true;
+            cancel();
+            confirm.click();
+            armed = false;
+          }, 2000);
+        };
+        confirm.addEventListener(
+          "click",
+          (e) => {
+            if (!armed) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+            }
+          },
+          true,
+        );
+        confirm.addEventListener("pointerdown", (e) => {
+          if (e.button !== 0) return;
+          confirm.setPointerCapture?.(e.pointerId);
+          start();
+        });
+        [
+          "pointerup",
+          "pointercancel",
+          "lostpointercapture",
+          "pointerleave",
+          "blur",
+        ].forEach((type) => confirm.addEventListener(type, cancel));
+        confirm.addEventListener("keydown", (e) => {
+          if (e.code === "Space" || e.code === "Enter") {
+            e.preventDefault();
+            if (!e.repeat) start();
+          }
+        });
+        confirm.addEventListener("keyup", (e) => {
+          if (e.code === "Space" || e.code === "Enter") {
+            e.preventDefault();
+            cancel();
+          }
+        });
+        new MutationObserver(() => {
+          if (!$("modal-prestige").classList.contains("open")) cancel();
+        }).observe($("modal-prestige"), {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) cancel();
+        });
+        // Theme state is reflected from computed color, never from private game state.
+        const themes = [...document.querySelectorAll(".swatch")];
+        function syncTheme() {
+          const accent = getComputedStyle(document.documentElement)
+            .getPropertyValue("--pink")
+            .trim();
+          themes.forEach((b) => {
+            b.setAttribute("aria-label", b.dataset.theme);
+            b.setAttribute(
+              "aria-pressed",
+              getComputedStyle(b).getPropertyValue("--sw").trim() === accent,
+            );
+          });
+        }
+        themes.forEach((b) =>
+          b.addEventListener("click", () => requestAnimationFrame(syncTheme)),
+        );
+        syncTheme();
+        const version = document.createElement("p");
+        version.className = "version-label";
+        version.textContent = "DARK SHY / ATELIER EDITION · 1.3";
+        $("modal-settings").querySelector(".dialog-body").append(version);
+        const daily = () => {
+          document.querySelectorAll(".calendar-day").forEach((c, i, all) => {
+            const current = [...all].findIndex((x) =>
+              x.classList.contains("current"),
+            );
+            c.classList.toggle("claimed", i < current);
+            c.classList.toggle("future", i > current);
+            if (i < current) c.querySelector("span").textContent = "✓";
+          });
+        };
+        new MutationObserver(daily).observe(
+          document.querySelector(".calendar-preview"),
+          { childList: true },
+        );
+        daily();
+        $("daily-streak").classList.add("streak-value");
+        const flame = document.createElement("span");
+        flame.className = "streak-flame";
+        flame.textContent = "♨ ";
+        flame.setAttribute("aria-hidden", "true");
+        $("daily-streak").before(flame);
+        // Digit-only pulses keep unchanged digits still; no mutation feedback loop.
+        const values = ["coins", "gems", "energy", "stat-cps", "stat-tap"];
+        values.forEach((id) => {
+          const el = $(id);
+          let prev = el.textContent;
+          new MutationObserver(() => {
+            const next = el.textContent;
+            if (next === prev) return;
+            const old = prev;
+            prev = next;
+            const previous = old.padStart(next.length, " ");
+            queueMicrotask(() => {
+              if (el.textContent !== next) return;
+              el.replaceChildren(
+                ...[...next].map((ch, i) => {
+                  const digit = document.createElement("span");
+                  digit.className = "number-value";
+                  digit.textContent = ch;
+                  if (
+                    previous[i] !== ch &&
+                    !document.body.classList.contains("no-motion") &&
+                    !matchMedia("(prefers-reduced-motion:reduce)").matches
+                  )
+                    digit.animate(
+                      [
+                        { transform: "scale(1)" },
+                        { transform: "scale(1.15)" },
+                        { transform: "scale(1)" },
+                      ],
+                      { duration: 200 },
+                    );
+                  return digit;
+                }),
+              );
+            });
+          }).observe(el, { childList: true });
+        });
       })();
     </script>
   </body>
