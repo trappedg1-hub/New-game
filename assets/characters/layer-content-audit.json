@@ -4,31 +4,51 @@
   "tiers": {
     "1": {
       "bodyHeadPixelsRepainted": 37067,
-      "sampledSkinTone": [246.0, 211.0, 192.0],
+      "sampledSkinTone": [
+        246.0,
+        211.0,
+        192.0
+      ],
       "hair_frontRemovedPixels": 36,
       "hair_backRemovedPixels": 8
     },
     "2": {
       "bodyHeadPixelsRepainted": 28938,
-      "sampledSkinTone": [253.0, 227.0, 206.0],
+      "sampledSkinTone": [
+        253.0,
+        227.0,
+        206.0
+      ],
       "hair_frontRemovedPixels": 5,
       "hair_backRemovedPixels": 0
     },
     "3": {
       "bodyHeadPixelsRepainted": 28438,
-      "sampledSkinTone": [252.0, 220.0, 202.0],
+      "sampledSkinTone": [
+        252.0,
+        220.0,
+        202.0
+      ],
       "hair_frontRemovedPixels": 1,
       "hair_backRemovedPixels": 0
     },
     "4": {
       "bodyHeadPixelsRepainted": 16826,
-      "sampledSkinTone": [253.0, 227.0, 212.0],
+      "sampledSkinTone": [
+        253.0,
+        227.0,
+        212.0
+      ],
       "hair_frontRemovedPixels": 4,
       "hair_backRemovedPixels": 0
     },
     "5": {
       "bodyHeadPixelsRepainted": 26913,
-      "sampledSkinTone": [252.0, 225.0, 208.0],
+      "sampledSkinTone": [
+        252.0,
+        225.0,
+        208.0
+      ],
       "hair_frontRemovedPixels": 21,
       "hair_backRemovedPixels": 0
     }

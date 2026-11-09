@@ -28,4 +28,9 @@ for source in sorted(folder.glob('*.png')):
     contexts={'cardigan':'classroom','track':'classroom','apron':'cafe','maid':'cafe','pool':'pool','gown':'bedroom','bunny':'beach','1':'classroom','2':'cafe','3':'pool','4':'bedroom','5':'beach'}
     entry.update(environment=contexts[key],proceduralLandmarks='data/character-presentation.js')
     manifest[group][key]=entry
-(folder/'animation-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+runtime=folder/'animation-manifest.json'
+existing=json.loads(runtime.read_text()) if runtime.exists() else {}
+if existing.get('version',0)<9:
+    runtime.write_text(json.dumps(manifest,indent=2)+'\n')
+else:
+    print('Whole PNGs rebuilt; preserving the validated layered runtime manifest.')

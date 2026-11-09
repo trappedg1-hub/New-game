@@ -233,10 +233,9 @@
         <div class="character-wrapper" id="char-container">
           <div class="character-surface" id="character-surface">
             <img id="character-art" src="assets/characters/single/tier1.png" class="char-single-img" alt="Character" draggable="false" />
-            <div id="eyelids" aria-hidden="true"></div>
           </div>
         </div>
-        <div id="char-shadow" class="char-shadow" aria-hidden="true"></div>
+        <div id="char-shadow" class="char-ground-shadow" aria-hidden="true"></div>
         <div id="contact-shadows" aria-hidden="true"></div>
         <div id="bubble" role="status">
           <div class="bubble-tail"></div>
@@ -633,25 +632,6 @@
       </div>
     </section>
 
-    <svg width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="procedural-sway" x="-3%" y="-3%" width="106%" height="106%" color-interpolation-filters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.015 0.006" numOctaves="1" seed="7" result="noise" />
-          <feOffset id="hair-wind" in="noise" dx="0" dy="0" result="windNoise" />
-          <feImage id="hair-region-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="region" />
-          <feComposite in="windNoise" in2="region" operator="in" result="localNoise" />
-          <feFlood flood-color="#808080" result="neutral" />
-          <feMerge result="localizedMap"><feMergeNode in="neutral"/><feMergeNode in="localNoise"/></feMerge>
-          <feDisplacementMap id="hair-displacement" in="SourceGraphic" in2="localizedMap" scale="10" xChannelSelector="R" yChannelSelector="G" result="hairMotion" />
-          <feImage id="chest-motion-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="chestMap" />
-          <feDisplacementMap id="chest-displacement" in="hairMotion" in2="chestMap" scale="0" xChannelSelector="R" yChannelSelector="G" result="chestMotion" />
-          <feImage id="hip-motion-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="hipMap" />
-          <feDisplacementMap id="hip-displacement" in="chestMotion" in2="hipMap" scale="0" xChannelSelector="R" yChannelSelector="G" result="hipMotion" />
-          <feImage id="cloth-motion-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="clothMap" />
-          <feDisplacementMap id="cloth-displacement" in="hipMotion" in2="clothMap" scale="0" xChannelSelector="R" yChannelSelector="G" />
-        </filter>
-      </defs>
-    </svg>
     <!-- rotate gate (mobile landscape) -->
     <div id="rotate-overlay">
       <div class="rot-phone"></div>
@@ -675,6 +655,7 @@
     <script src="data/character-presentation.js"></script>
     <script src="js/character-animation.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/ambient-audio.js"></script>
     <script>
       /* Visual adapter only: decorates regenerated markup; never reads/writes game state. */
       (() => {

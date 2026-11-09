@@ -1,3 +1,17 @@
+# CURRENT: true registered layers; no SVG warping
+
+- Removed all displacement/turbulence SVG primitives, motion fields, procedural skin-oval eyelids and warp/tap-jump controllers from the runtime.
+- All FIVE base tiers now use five independently generated registered PNG components: body_base, hair_back, face_open, face_closed, hair_front. Tier 2 was re-reviewed in isolated component and full-composite contact sheets after cleanup; its existing clean parts are now enabled. This supersedes its earlier quarantine, not a blind manifest status flip.
+- `tools/prepare_layered_runtime.py` reruns the immutable-source PIL cleanup, publishes named open/closed face aliases and reconstructs the runtime manifest. Manual head polygons cover Tier 4's kneeling head at y625+, NOT an unsafe generic top-15% rectangle. Body alpha/outside-head pixels are preserved. All body cores are smooth gradients; isolated bodies/hair and complete composites were visually inspected. Pixel/color heuristics are not general semantic certification or a mathematical guarantee for future assets.
+- Face pair non-eye RGB/alpha are identical. Exclusive step-end opacity swaps close for 150ms every 4.5 seconds: exactly one visible complete face, never crossfaded. Both share the body's breathing parent and registration. Hair groups use 5.5s ±0.4deg back / 4.2s ±0.8deg and ±1.5px front transforms; accepted taps react only on their isolated wrappers. No pixel distortion, skew, body jumping or artificial local chest/hip warping.
+- Full-art fallback retained for ALL SEVEN non-base costumes: complete independently generated body/hair/two-face sets do not exist. They do NOT pretend to have independent hair/cloth/blinking. The incomplete Nightgown components are not activated. This is deliberate safe partial asset coverage, not a claim of fully layered costumes.
+- Ground: 2% stage-floor padding, alpha-derived contact points, 200px-max/16px radial shadow + tiny contact spots; resize preserves each rig's aspect, including Tier 4 viewport. Scene grading remains CSS color correction only.
+- Scene matrix kept: classroom/cafe/private pool/bedroom/private sunset beach; costume selections change background, lighting and contextual dialogue. Track uses resort in Tier 3. Outfit ownership enables selection at any level; it changes scene context, not XP. Nightgown always selects bedroom. No added fictional Lingerie or Event Dress inventory entry.
+- Ambient audio: quiet synthesized noise profiles per environment, Music volume control, starts only after a user gesture; muted in hidden tabs. These are synthetic beds, not recorded cafe/wave soundtracks.
+- Tests: `tests/layer-pixels.py`, `tests/true-layers.cjs` (mobile/desktop true rigs, 2-frame blink, 0px shared registration, hair transforms, 2% ground, safe costume swaps, scene matching, cancellation, reduced motion), smoke/gacha/admin. Native device performance not certified.
+- Cache v16. Historical notes below are superseded.
+
+---
 # Local secondary motion replaces whole-character jumping
 
 - Removed the parent WAAPI tap bounce entirely. Accepted taps now excite bounded damped local fields for hair, chest, hips and fabric. Hair/hips/fabric have different delays and frequencies; the character root never jumps.

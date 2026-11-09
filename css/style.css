@@ -4276,7 +4276,7 @@ button:active:not(:disabled),
   letter-spacing: 1.5px;
   margin-top: 16px;
 }
-.image-ready:not(.char-single-img) {
+.image-ready:not(.char-single-img):not(.rig-part) {
   animation: imageFade 0.3s var(--ease) both;
 }
 .mission {
@@ -4906,7 +4906,7 @@ button:active:not(:disabled),
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .image-ready:not(.char-single-img) {
+  .image-ready:not(.char-single-img):not(.rig-part) {
     animation: none;
   }
   .ssr-shake .modal-card {

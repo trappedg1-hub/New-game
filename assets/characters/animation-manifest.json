@@ -1,97 +1,213 @@
 {
-  "version": 8,
-  "renderer": "single",
+  "version": 9,
+  "renderer": "validated-layered-with-single-fallback",
   "tiers": {
     "1": {
-      "type": "single",
-      "status": "single",
-      "source": "assets/characters/single/tier1.png",
+      "status": "layered",
       "canvas": [
-        1300,
-        4096
-      ],
-      "original": "assets/characters/tier1.png",
-      "nativeCanvas": [
         420,
         1323
       ],
-      "upscaled": true,
+      "source": "assets/characters/single/tier1.png",
+      "layers": {
+        "body_base": "assets/characters/tier1/body_base.png",
+        "hair_back": "assets/characters/tier1/hair_back.png",
+        "hair_front": "assets/characters/tier1/hair_front.png",
+        "face_open": "assets/characters/tier1/face_open.png",
+        "face_closed": "assets/characters/tier1/face_closed.png"
+      },
+      "registration": "Shared breath transform; body/head repainted; hair-only PNGs and complete composite inspected. Open/closed pairs have identical non-eye pixels.",
+      "hairBackReveal": [
+        156,
+        210
+      ],
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/layer-content-audit.json"
+      },
+      "type": "layered",
       "environment": "classroom",
-      "proceduralLandmarks": "data/character-presentation.js"
+      "ground": {
+        "size": [
+          420,
+          1323
+        ],
+        "floor": 0.9969765684051398,
+        "contacts": [
+          {
+            "x": 0.3773809523809524,
+            "width": 0.15476190476190477
+          }
+        ]
+      }
     },
     "2": {
-      "type": "single",
-      "status": "single",
-      "source": "assets/characters/single/tier2.png",
+      "status": "layered",
       "canvas": [
-        1455,
-        4096
-      ],
-      "original": "assets/characters/tier2.png",
-      "nativeCanvas": [
-        421,
-        1185
-      ],
-      "upscaled": true,
-      "environment": "cafe",
-      "proceduralLandmarks": "data/character-presentation.js"
-    },
-    "3": {
-      "type": "single",
-      "status": "single",
-      "source": "assets/characters/single/tier3.png",
-      "canvas": [
-        1305,
-        4096
-      ],
-      "original": "assets/characters/tier3.png",
-      "nativeCanvas": [
-        411,
-        1290
-      ],
-      "upscaled": true,
-      "environment": "pool",
-      "proceduralLandmarks": "data/character-presentation.js"
-    },
-    "4": {
-      "type": "single",
-      "status": "single",
-      "source": "assets/characters/single/tier4.png",
-      "canvas": [
-        2437,
-        4096
-      ],
-      "original": "assets/characters/tier4.png",
-      "nativeCanvas": [
-        701,
-        1178
-      ],
-      "upscaled": true,
-      "environment": "bedroom",
-      "proceduralLandmarks": "data/character-presentation.js"
-    },
-    "5": {
-      "type": "single",
-      "status": "single",
-      "source": "assets/characters/single/tier5.png",
-      "canvas": [
-        1248,
-        4096
-      ],
-      "original": "assets/characters/tier5.png",
-      "nativeCanvas": [
-        403,
+        420,
         1323
       ],
-      "upscaled": true,
+      "source": "assets/characters/single/tier2.png",
+      "layers": {
+        "body_base": "assets/characters/tier2/body_base.png",
+        "hair_back": "assets/characters/tier2/hair_back.png",
+        "hair_front": "assets/characters/tier2/hair_front.png",
+        "face_open": "assets/characters/tier2/face_open.png",
+        "face_closed": "assets/characters/tier2/face_closed.png"
+      },
+      "hairBackReveal": [
+        150,
+        200
+      ],
+      "registration": "Shared breath transform; body/head repainted; hair-only PNGs and complete composite inspected. Open/closed pairs have identical non-eye pixels.",
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/layer-content-audit.json"
+      },
+      "type": "layered",
+      "environment": "cafe",
+      "ground": {
+        "size": [
+          420,
+          1323
+        ],
+        "floor": 0.9939531368102796,
+        "contacts": [
+          {
+            "x": 0.7892857142857143,
+            "width": 0.1261904761904762
+          }
+        ]
+      }
+    },
+    "3": {
+      "status": "layered",
+      "canvas": [
+        420,
+        1323
+      ],
+      "source": "assets/characters/single/tier3.png",
+      "layers": {
+        "body_base": "assets/characters/tier3/body_base.png",
+        "hair_back": "assets/characters/tier3/hair_back.png",
+        "hair_front": "assets/characters/tier3/hair_front.png",
+        "face_open": "assets/characters/tier3/face_open.png",
+        "face_closed": "assets/characters/tier3/face_closed.png"
+      },
+      "registration": "Shared breath transform; body/head repainted; hair-only PNGs and complete composite inspected. Open/closed pairs have identical non-eye pixels.",
+      "hairBackReveal": [
+        151,
+        197
+      ],
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/layer-content-audit.json"
+      },
+      "type": "layered",
+      "environment": "pool",
+      "ground": {
+        "size": [
+          420,
+          1323
+        ],
+        "floor": 0.9947089947089947,
+        "contacts": [
+          {
+            "x": 0.46904761904761905,
+            "width": 0.1761904761904762
+          }
+        ]
+      }
+    },
+    "4": {
+      "status": "layered",
+      "canvas": [
+        420,
+        1323
+      ],
+      "source": "assets/characters/single/tier4.png",
+      "layers": {
+        "body_base": "assets/characters/tier4/body_base.png",
+        "hair_back": "assets/characters/tier4/hair_back.png",
+        "hair_front": "assets/characters/tier4/hair_front.png",
+        "face_open": "assets/characters/tier4/face_open.png",
+        "face_closed": "assets/characters/tier4/face_closed.png"
+      },
+      "registration": "Shared breath transform; body/head repainted; hair-only PNGs and complete composite inspected. Open/closed pairs have identical non-eye pixels.",
+      "viewport": [
+        0,
+        617,
+        420,
+        706
+      ],
+      "hairBackReveal": [
+        723,
+        759
+      ],
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/layer-content-audit.json"
+      },
+      "type": "layered",
+      "environment": "bedroom",
+      "ground": {
+        "size": [
+          420,
+          706
+        ],
+        "floor": 0.9929178470254958,
+        "contacts": [
+          {
+            "x": 0.3892857142857143,
+            "width": 0.09285714285714286
+          }
+        ]
+      }
+    },
+    "5": {
+      "status": "layered",
+      "canvas": [
+        420,
+        1323
+      ],
+      "source": "assets/characters/single/tier5.png",
+      "layers": {
+        "body_base": "assets/characters/tier5/body_base.png",
+        "hair_back": "assets/characters/tier5/hair_back.png",
+        "hair_front": "assets/characters/tier5/hair_front.png",
+        "face_open": "assets/characters/tier5/face_open.png",
+        "face_closed": "assets/characters/tier5/face_closed.png"
+      },
+      "hairBackReveal": [
+        145,
+        195
+      ],
+      "registration": "Shared breath transform; body/head repainted; hair-only PNGs and complete composite inspected. Open/closed pairs have identical non-eye pixels.",
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/layer-content-audit.json"
+      },
+      "type": "layered",
       "environment": "beach",
-      "proceduralLandmarks": "data/character-presentation.js"
+      "ground": {
+        "size": [
+          420,
+          1323
+        ],
+        "floor": 0.9969765684051398,
+        "contacts": [
+          {
+            "x": 0.2761904761904762,
+            "width": 0.14285714285714285
+          }
+        ]
+      }
     }
   },
   "costumes": {
     "apron": {
       "type": "single",
-      "status": "single",
+      "status": "fallback",
       "source": "assets/characters/single/costume_apron.png",
       "canvas": [
         1485,
@@ -104,11 +220,12 @@
       ],
       "upscaled": true,
       "environment": "cafe",
-      "proceduralLandmarks": "data/character-presentation.js"
+      "proceduralLandmarks": "data/character-presentation.js",
+      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
     },
     "bunny": {
       "type": "single",
-      "status": "single",
+      "status": "fallback",
       "source": "assets/characters/single/costume_bunny.png",
       "canvas": [
         1032,
@@ -121,11 +238,12 @@
       ],
       "upscaled": true,
       "environment": "beach",
-      "proceduralLandmarks": "data/character-presentation.js"
+      "proceduralLandmarks": "data/character-presentation.js",
+      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
     },
     "cardigan": {
       "type": "single",
-      "status": "single",
+      "status": "fallback",
       "source": "assets/characters/single/costume_cardigan.png",
       "canvas": [
         1226,
@@ -138,11 +256,12 @@
       ],
       "upscaled": true,
       "environment": "classroom",
-      "proceduralLandmarks": "data/character-presentation.js"
+      "proceduralLandmarks": "data/character-presentation.js",
+      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
     },
     "gown": {
       "type": "single",
-      "status": "single",
+      "status": "fallback",
       "source": "assets/characters/single/costume_gown.png",
       "canvas": [
         1246,
@@ -155,11 +274,12 @@
       ],
       "upscaled": true,
       "environment": "bedroom",
-      "proceduralLandmarks": "data/character-presentation.js"
+      "proceduralLandmarks": "data/character-presentation.js",
+      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
     },
     "maid": {
       "type": "single",
-      "status": "single",
+      "status": "fallback",
       "source": "assets/characters/single/costume_maid.png",
       "canvas": [
         1378,
@@ -172,11 +292,12 @@
       ],
       "upscaled": true,
       "environment": "cafe",
-      "proceduralLandmarks": "data/character-presentation.js"
+      "proceduralLandmarks": "data/character-presentation.js",
+      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
     },
     "pool": {
       "type": "single",
-      "status": "single",
+      "status": "fallback",
       "source": "assets/characters/single/costume_pool.png",
       "canvas": [
         1213,
@@ -189,11 +310,12 @@
       ],
       "upscaled": true,
       "environment": "pool",
-      "proceduralLandmarks": "data/character-presentation.js"
+      "proceduralLandmarks": "data/character-presentation.js",
+      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
     },
     "track": {
       "type": "single",
-      "status": "single",
+      "status": "fallback",
       "source": "assets/characters/single/costume_track.png",
       "canvas": [
         1811,
@@ -206,8 +328,9 @@
       ],
       "upscaled": true,
       "environment": "classroom",
-      "proceduralLandmarks": "data/character-presentation.js"
+      "proceduralLandmarks": "data/character-presentation.js",
+      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
     }
   },
-  "notes": "Whole original illustrations only. 4096px-high PNGs are Lanczos upscales of native originals, not newly generated native 4K detail."
+  "notes": "No displacement/warp filters. Five cleaned tier rigs visually reviewed; seven costume rigs incomplete and remain single images, not simulated parts."
 }
