@@ -106,6 +106,16 @@
     }
     canvas.append(scene);
     root.dataset.animationMode = "layered";
+    if (config.hairBackReveal) {
+      root.style.setProperty(
+        "--back-hair-hidden",
+        (config.hairBackReveal[0] / config.canvas[1]) * 100 + "%",
+      );
+      root.style.setProperty(
+        "--back-hair-visible",
+        (config.hairBackReveal[1] / config.canvas[1]) * 100 + "%",
+      );
+    }
     const backReact = document.createElement("div");
     backReact.className = "rig-back-react";
     const backSway = document.createElement("div");
@@ -231,26 +241,25 @@
       );
       // Low-end mode retains the body bounce but omits hair and face effects.
       if (lowEnd()) continue;
-      for (const [selector, direction, duration] of [
-        [".rig-front-react", -1, 600],
-        [".rig-back-react", 1, 650],
-      ])
-        animateReaction(
-          root.querySelector(selector),
-          [
-            { transform: "rotate(0) translateY(0)" },
-            {
-              transform: `rotate(${direction * 3}deg) translateY(3px)`,
-              offset: 0.3,
-            },
-            {
-              transform: `rotate(${direction * -2}deg) translateY(-1px)`,
-              offset: 0.6,
-            },
-            { transform: "rotate(0) translateY(0)" },
-          ],
-          duration,
-        );
+      animateReaction(
+        root.querySelector(".rig-front-react"),
+        [
+          { transform: "rotate(0) translateY(0)" },
+          { transform: "rotate(-4deg) translateY(4px)", offset: 0.3 },
+          { transform: "rotate(2deg) translateY(0)", offset: 0.6 },
+          { transform: "rotate(0) translateY(0)" },
+        ],
+        600,
+      );
+      animateReaction(
+        root.querySelector(".rig-back-react"),
+        [
+          { transform: "rotate(0)" },
+          { transform: "rotate(-1deg)", offset: 0.4 },
+          { transform: "rotate(0)" },
+        ],
+        700,
+      );
       animateReaction(
         root.querySelector(".rig-face"),
         [

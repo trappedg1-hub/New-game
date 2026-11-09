@@ -102,11 +102,11 @@ body.tier-5 {
 }
 .rig-hair-back {
   transform-origin: var(--rig-hair-origin, center top);
-  animation: rigHairBack 4.2s ease-in-out infinite;
+  animation: rigHairBack 5.5s ease-in-out 0s infinite normal;
 }
 .rig-hair-front {
   transform-origin: var(--rig-hair-origin, center top);
-  animation: rigHairFront 4.5s ease-in-out infinite;
+  animation: rigHairFront 4s ease-in-out 0.8s infinite reverse;
 }
 .rig-face {
   transform-origin: 61% 10%;
@@ -186,23 +186,19 @@ body.tier-5 {
 @keyframes rigHairBack {
   0%,
   100% {
-    transform: rotate(calc(var(--hair-angle, 0.8deg) * -0.625))
-      translateX(calc(var(--hair-x, 1px) * -1));
+    transform: rotate(-0.3deg) translateX(-0.5px);
   }
   50% {
-    transform: rotate(var(--hair-angle, 0.8deg)) translateX(var(--hair-x, 1px))
-      translateY(-1px);
+    transform: rotate(0.3deg) translateX(0.5px);
   }
 }
 @keyframes rigHairFront {
   0%,
   100% {
-    transform: rotate(calc(var(--hair-angle, 0.8deg) * 0.5))
-      translateX(var(--hair-x, 1px));
+    transform: rotate(0.8deg) translateX(1px);
   }
   50% {
-    transform: rotate(calc(var(--hair-angle, 0.8deg) * -0.75))
-      translateX(calc(var(--hair-x, 1px) * -1)) translateY(-1px);
+    transform: rotate(-1deg) translateX(-1.5px);
   }
 }
 @keyframes rigCloth {
@@ -368,4 +364,38 @@ body.tier-5 {
 .character-stack:not(.show) .character-rig *:before,
 .character-stack:not(.show) .character-rig *:after {
   animation-play-state: paused !important;
+}
+
+/* Explicit stacking contexts: the body always occludes the back curtain. */
+.rig-back-react {
+  z-index: 1;
+}
+.rig-reactor {
+  z-index: 2;
+}
+.layer-body {
+  z-index: 2;
+}
+.rig-cloth {
+  z-index: 3;
+}
+.rig-face {
+  z-index: 4;
+}
+.rig-front-react {
+  z-index: 5;
+}
+/* Generated back components include a redundant crown. Keep the lower curtain,
+   while the front component alone owns the crown, bangs and face-framing locks. */
+.layer-hair-back {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent var(--back-hair-hidden, 0%),
+    black var(--back-hair-visible, 0%)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent var(--back-hair-hidden, 0%),
+    black var(--back-hair-visible, 0%)
+  );
 }
