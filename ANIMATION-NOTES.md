@@ -1,3 +1,17 @@
+## Latest safety status: asset-content cleanup and Tier 2 quarantine
+
+**Tier 2 is now a clean whole-image fallback**, not a layered rig. Its candidate paths are moved out of runtime `layers` into `candidateLayers`; the original 421×1185 whole-image canvas is restored. `contentAudit.status: quarantined` prevents the renderer from mounting candidates even if someone accidentally toggles status back to layered. All required part paths must also be present before any rig mounts. Tiers 1/3/4/5 remain layered after cleanup and visual review; costumes retain their previous whole-art fallbacks.
+
+`tools/clean_layer_content.py` reproducibly reads the pre-cleanup assets from revision `ee756bd`, samples forehead skin tone, and repaints the body-head regions with a smooth featureless gradient while retaining the original alpha silhouette. It checks both hair images within a head-region margin and clears conservative warm skin/amber/red residue pixels, preserving purple/pink hair highlights rather than broadly deleting every non-purple edge. All five tiers' body/back/front PNGs were processed. `assets/characters/layer-content-audit.json` records the source revision, sampled tones and removal counts. No new AI images were generated.
+
+Inspection of the current assets did not conclusively identify a second complete baked eye/mouth set; body nose/highlight remnants and warm edge residues were present. A color heuristic is **not semantic certification** of a clean face separation. Because the reported Tier 2 defect is unresolved at that level, it stays quarantined instead of claiming that opacity tests or color cleanup prove its layered rig safe. Its original whole image was separately inspected and is what players receive. Full body/hair sheets, head composites and real-browser runtime screenshots for all five tiers were reviewed after cleanup.
+
+Tests: `tests/layer_content.py` verifies smooth repainted head cores, unchanged body alpha, untouched pixels outside cleanup regions, no remaining warm-color detections in checked hair zones, and Tier 2's empty runtime layers/quarantine. Renderer unit tests explicitly try to bypass quarantine by changing status to layered and confirm that it still mounts only the fallback. Single-face/browser registration suites now explicitly check the Tier 2 fallback has one image and zero face overlays, rather than skipping it or incorrectly expecting five layered tiers. Pixel blink, hair-depth, rapid-tap/touch/low-end, gem-gacha and smoke suites pass. Browser screenshots confirm one face in each current runtime tier; native-device QA remains unverified.
+
+Run the content cleanup after any earlier registration scripts, which otherwise restore pre-cleanup candidate assets. Do not re-enable Tier 2 without a new visual separation/registration review. Earlier delivery notes below are historical and superseded by this safety status.
+
+---
+
 ## Latest bugfix: exclusive face visibility
 
 The current renderer supersedes the earlier masked-eyelid overlay: it uses **one full open face OR one full closed face**, never both. `.layer-face-blink` defaults to opacity 0. Complementary five-second step-end animations close for 150ms (94–97% of the cycle) with no overlapping crossfade frames. Both PNGs retain identical registration, alpha silhouette and non-eye pixels; the shared body/breath/tap chain stays unchanged. A discrete eye-state switch is deliberate: a linear crossfade necessarily renders both sets of eye features at once.

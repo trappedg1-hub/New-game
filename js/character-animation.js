@@ -174,7 +174,22 @@
     el.replaceChildren(fallback(src));
     ready.then(async () => {
       const config = configFor(src);
-      if (!config || config.status !== "layered") {
+      const required = [
+        "body_base",
+        "hair_back",
+        "hair_front",
+        "face",
+        "face_blink",
+      ];
+      const quarantined = config?.contentAudit?.status === "quarantined";
+      const complete = required.every(
+        (name) =>
+          typeof config?.layers?.[name] === "string" &&
+          config.layers[name].length > 0,
+      );
+      if (!config || config.status !== "layered" || quarantined || !complete) {
+        if (quarantined && renderTokens.get(el) === token)
+          el.firstElementChild.dataset.safetyFallback = "content-audit";
         const ratio = config?.canvas;
         if (ratio && renderTokens.get(el) === token)
           el.querySelector(".rig-canvas").style.aspectRatio =

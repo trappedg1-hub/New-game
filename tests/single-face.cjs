@@ -51,6 +51,27 @@ const assert = require("node:assert/strict");
           `assets/characters/tier${t}.webp`,
         );
       }, tier);
+      if (tier === 2) {
+        await page.waitForSelector(
+          '.character-stack.show [data-animation-mode="fallback"]',
+        );
+        assert.equal(
+          await page.locator(".character-stack.show img").count(),
+          1,
+        );
+        assert.equal(
+          await page
+            .locator(
+              ".character-stack .layer-face,.character-stack .layer-face-blink",
+            )
+            .count(),
+          0,
+        );
+        console.log(
+          "PASS Tier 2 safety quarantine: one clean whole image, zero face overlays",
+        );
+        continue;
+      }
       await page.waitForSelector(".character-stack.show .face-closed");
       const result = await page.evaluate(() => {
         const root = document.querySelector(

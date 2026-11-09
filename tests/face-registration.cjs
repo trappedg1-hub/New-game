@@ -36,6 +36,23 @@ const assert = require("node:assert/strict");
         );
       }, tier);
       await p.waitForTimeout(400);
+      if (tier === 2) {
+        assert.equal(
+          await p
+            .locator('.character-stack.show [data-animation-mode="fallback"]')
+            .count(),
+          1,
+        );
+        assert.equal(await p.locator(".character-stack.show img").count(), 1);
+        assert.equal(
+          await p.locator(".character-stack.show .rig-face").count(),
+          0,
+        );
+        console.log(
+          "PASS Tier 2 fallback contains no layered faces to misregister",
+        );
+        continue;
+      }
       const result = await p.evaluate(() => {
         const root = document.querySelector(
             ".character-stack.show .character-rig",

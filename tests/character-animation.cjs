@@ -70,6 +70,19 @@ const fs = require("node:fs");
     el.firstElementChild.dataset.animationMode,
     manifest.tiers[5].status,
   );
+  // A manifest status toggle alone must never bypass the content quarantine.
+  const safetyConfig = manifest.tiers[2];
+  const savedStatus = safetyConfig.status,
+    savedLayers = safetyConfig.layers;
+  safetyConfig.status = "layered";
+  safetyConfig.layers = safetyConfig.candidateLayers;
+  w.CharacterAnimation.mount(el, "assets/characters/tier2.webp");
+  await new Promise((r) => setTimeout(r, 20));
+  assert.equal(el.firstElementChild.dataset.animationMode, "fallback");
+  assert.equal(el.firstElementChild.dataset.safetyFallback, "content-audit");
+  assert.equal(el.querySelectorAll(".layer-face,.layer-face-blink").length, 0);
+  safetyConfig.status = savedStatus;
+  safetyConfig.layers = savedLayers;
   w.CharacterAnimation.mount(el, "assets/characters/tier3.webp");
   w.CharacterAnimation.unmount(el);
   await new Promise((r) => setTimeout(r, 20));

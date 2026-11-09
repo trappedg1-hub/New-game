@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "generatorLimit": 10,
   "tiers": {
     "1": {
@@ -23,25 +23,36 @@
       "blinkRegions": [
         [195, 118, 250, 159],
         [278, 119, 330, 156]
-      ]
+      ],
+      "contentAudit": {
+        "status": "cleaned-and-reviewed",
+        "report": "assets/characters/layer-content-audit.json"
+      }
     },
     "2": {
-      "status": "layered",
-      "canvas": [420, 1323],
+      "status": "fallback",
+      "canvas": [421, 1185],
       "source": "assets/characters/tier2.webp",
-      "layers": {
+      "layers": {},
+      "hairBackReveal": [150, 200],
+      "registration": "Independent AI parts keyed and registered. Generated closed eyelids composited over open-face silhouette. Optional cloth omitted.",
+      "blinkRegions": [
+        [166, 117, 212, 149],
+        [234, 110, 282, 143]
+      ],
+      "reason": "Safety quarantine after reported duplicate facial features. Clean whole-image art is used; candidate separation/registration is not visually certified.",
+      "candidateLayers": {
         "body_base": "assets/characters/tier2/body_base.png",
         "hair_back": "assets/characters/tier2/hair_back.png",
         "hair_front": "assets/characters/tier2/hair_front.png",
         "face": "assets/characters/tier2/face.png",
         "face_blink": "assets/characters/tier2/face_blink.png"
       },
-      "hairBackReveal": [150, 200],
-      "registration": "Independent AI parts keyed and registered. Generated closed eyelids composited over open-face silhouette. Optional cloth omitted.",
-      "blinkRegions": [
-        [166, 117, 212, 149],
-        [234, 110, 282, 143]
-      ]
+      "candidateCanvas": [420, 1323],
+      "contentAudit": {
+        "status": "quarantined",
+        "report": "assets/characters/layer-content-audit.json"
+      }
     },
     "3": {
       "status": "layered",
@@ -63,7 +74,11 @@
       "blinkRegions": [
         [113, 138, 156, 165],
         [171, 122, 223, 154]
-      ]
+      ],
+      "contentAudit": {
+        "status": "cleaned-and-reviewed",
+        "report": "assets/characters/layer-content-audit.json"
+      }
     },
     "4": {
       "status": "layered",
@@ -86,7 +101,11 @@
       "blinkRegions": [
         [153, 703, 184, 730],
         [190, 690, 235, 721]
-      ]
+      ],
+      "contentAudit": {
+        "status": "cleaned-and-reviewed",
+        "report": "assets/characters/layer-content-audit.json"
+      }
     },
     "5": {
       "status": "layered",
@@ -104,7 +123,11 @@
       "blinkRegions": [
         [112, 128, 153, 156],
         [169, 116, 216, 147]
-      ]
+      ],
+      "contentAudit": {
+        "status": "cleaned-and-reviewed",
+        "report": "assets/characters/layer-content-audit.json"
+      }
     }
   },
   "costumes": {
