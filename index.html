@@ -664,7 +664,11 @@
       /* Visual adapter only: decorates regenerated markup; never reads/writes game state. */
       (() => {
         const $ = (id) => document.getElementById(id);
-        let previousFocus;
+        let previousFocus, activeModal = null, syncModalQueued = false, modalStack = [];
+        function modalControls(m) {
+          return [...m.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),summary,a[href],[tabindex="0"]')]
+            .filter(el => !el.closest('[inert]') && el.getClientRects().length);
+        }
         const open = (id) => {
           const m = $("modal-" + id);
           if (m) m.classList.add("open");
@@ -737,45 +741,69 @@
             $("tap-btn").click();
           if (e.key === "Escape") backdrop.click();
           if (e.key === "Tab") {
-            const m = [...document.querySelectorAll(".modal.open")].at(-1);
+            const m = activeModal;
             if (!m) return;
-            const items = [
-              ...m.querySelectorAll(
-                'button:not(:disabled),input,[tabindex="0"]',
-              ),
-            ].filter((x) => x.getClientRects().length);
+            const items = modalControls(m);
             const first = items[0],
               last = items.at(-1);
-            if (e.shiftKey && document.activeElement === first) {
+            if (e.shiftKey && (document.activeElement === first || !m.contains(document.activeElement))) {
               e.preventDefault();
               last?.focus();
-            } else if (!e.shiftKey && document.activeElement === last) {
+            } else if (!e.shiftKey && (document.activeElement === last || !m.contains(document.activeElement))) {
               e.preventDefault();
               first?.focus();
             }
           }
         });
-        document.querySelectorAll(".modal").forEach((m) =>
-          new MutationObserver(() => {
-            const active = m.classList.contains("open");
-            m.setAttribute("aria-hidden", !active);
-            m.inert = !active;
-            if (active) {
-              previousFocus = document.activeElement;
-              setTimeout(
-                () =>
-                  m
-                    .querySelector("button:not(:disabled),input")
-                    ?.focus({ preventScroll: true }),
-                50,
-              );
-            } else previousFocus?.focus?.({ preventScroll: true });
-            const any = !!document.querySelector(".modal.open");
-            $("hud").inert = any;
-            $("stage").inert = any;
-            $("bottom-bar").inert = any;
-          }).observe(m, { attributes: true, attributeFilter: ["class"] }),
+        function syncModalFocus() {
+          syncModalQueued = false;
+          const modals = [...document.querySelectorAll('.modal')];
+          modalStack = modalStack.filter(m => m.classList.contains('open'));
+          modals.forEach(m => {if (m.classList.contains('open') && !modalStack.includes(m)) modalStack.push(m);});
+          const next = modalStack.at(-1) || null;
+          if (next && !activeModal) previousFocus = document.activeElement;
+          modals.forEach(m => {
+            const visible = m.classList.contains('open');
+            m.setAttribute('aria-hidden', String(!visible));
+            // Only the top dialog is interactive, even if another stays open.
+            m.inert = m !== next;
+          });
+          ['hud', 'stage', 'bottom-bar'].forEach(id => $(id).inert = !!next);
+          const changed = next !== activeModal;
+          activeModal = next;
+          if (next && changed) {
+            const focusVisibleDialog = () => {
+              if (activeModal !== next || !next.classList.contains('open')) return;
+              if (getComputedStyle(next).visibility !== 'visible') {
+                requestAnimationFrame(focusVisibleDialog);
+                return;
+              }
+              if (!next.contains(document.activeElement))
+                (modalControls(next)[0] || next.querySelector('.modal-card'))?.focus({preventScroll:true});
+            };
+            requestAnimationFrame(focusVisibleDialog);
+          } else if (!next && changed) {
+            let target = previousFocus;
+            // Menu actions close their drawer before showing a dialog. Restore
+            // to the menu toggle rather than an invisible button in that drawer.
+            const rect = target?.getBoundingClientRect();
+            const offscreen = !rect?.width || rect.right <= 0 || rect.left >= innerWidth;
+            if (target?.closest('#left-rail') && !$('left-rail').classList.contains('open') && (matchMedia('(max-width:767px)').matches || offscreen)) target = $('toggle-left');
+            if (target?.closest('#right-rail') && !$('right-rail').classList.contains('open')) target = $('toggle-right');
+            if (!target?.isConnected || target.closest('[inert]')) target = $('tap-btn');
+            target.focus({preventScroll:true});
+            previousFocus = null;
+          }
+        }
+        function queueModalFocus() {
+          if (syncModalQueued) return;
+          syncModalQueued = true;
+          queueMicrotask(syncModalFocus);
+        }
+        document.querySelectorAll('.modal').forEach(m =>
+          new MutationObserver(queueModalFocus).observe(m, {attributes:true, attributeFilter:['class']})
         );
+        syncModalFocus();
         $("tap-btn").addEventListener("pointerdown", (e) => {
           const b = e.currentTarget,
             r = b.getBoundingClientRect(),
