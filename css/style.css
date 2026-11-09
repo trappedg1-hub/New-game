@@ -4320,7 +4320,7 @@ button:active:not(:disabled),
   letter-spacing: 1.5px;
   margin-top: 16px;
 }
-.image-ready {
+.image-ready:not(.layer) {
   animation: imageFade 0.3s var(--ease) both;
 }
 .mission {
@@ -4950,7 +4950,7 @@ button:active:not(:disabled),
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .image-ready {
+  .image-ready:not(.layer) {
     animation: none;
   }
   .ssr-shake .modal-card {
