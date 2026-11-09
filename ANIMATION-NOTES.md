@@ -7,11 +7,12 @@
 - All SEVEN non-base costumes now have registered independently generated body/back-hair/front-hair/two-face sets. Original full images remain only as load-safe source assets, not normal costume rendering. Generated faces/hairstyles may differ from original art. No independent cloth/chest deformation is claimed.
 - Costume registration scripts (`tools/register_{cardigan,track,apron,maid,pool,gown,bunny}.py`) align independently generated parts; remove duplicate blank skull/accessories, preserve neck and lock finite eye-only patches. Per-outfit JSON records canvas and blink support. Original candidate PNGs and keyed intermediates stay in the workspace, excluded from Git/deploy; only 35 final PNGs, registration reports and generators are shipped. Rebuilding requires retained candidate inputs.
 
+- Hair attachment pivots are measured from each registered face in canvas coordinates (`tools/update_hair_pivots.py`), shared by idle and tap wrappers. Bunny ears and Tier 4 viewport no longer cause rotation around the canvas edge. `tests/rig-controls.cjs` covers all 12 pivots, quick swaps, Motion OFF/reduced motion and failed layer loads preserving the previous complete rig. No new art generated for this refinement.
 - Ground: 2% stage-floor padding, alpha-derived contact points, 200px-max/16px radial shadow + tiny contact spots; resize preserves each rig's aspect, including Tier 4 viewport. Scene grading remains CSS color correction only.
 - Scene matrix kept: classroom/cafe/private pool/bedroom/private sunset beach; costume selections change background, lighting and contextual dialogue. Track uses resort in Tier 3. Outfit ownership enables selection at any level; it changes scene context, not XP. Nightgown always selects bedroom. No added fictional Lingerie or Event Dress inventory entry.
 - Ambient audio: quiet synthesized noise profiles per environment, Music volume control, starts only after a user gesture; muted in hidden tabs. These are synthetic beds, not recorded cafe/wave soundtracks.
 - Tests: `tests/layer-pixels.py`, `tests/true-layers.cjs` (mobile/desktop true rigs, 2-frame blink, 0px shared registration, hair transforms, 2% ground, safe costume swaps, scene matching, cancellation, reduced motion), smoke/gacha/admin. Native device performance not certified.
-- Cache v23. Historical notes below are superseded.
+- Cache v24. Historical notes below are superseded.
 
 ---
 # Local secondary motion replaces whole-character jumping

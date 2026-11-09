@@ -26,6 +26,12 @@
   const scene=document.createElement('div');scene.className='rig-scene';
   const view=config.viewport;
   if(view){scene.style.cssText=`left:${-view[0]/view[2]*100}%;top:${-view[1]/view[3]*100}%;width:${config.canvas[0]/view[2]*100}%;height:${config.canvas[1]/view[3]*100}%;--hair-pivot:50% ${view[1]/config.canvas[1]*100}%`;}
+  // Both idle sway and tap wrappers rotate around the registered head, not
+  // the canvas top (which can contain ears or empty space for kneeling rigs).
+  if(config.hairPivot){
+   const [x,y]=config.hairPivot,[w,h]=config.canvas;
+   scene.style.setProperty('--hair-pivot',`${x/w*100}% ${y/h*100}%`);
+  }
   const breath=document.createElement('div');breath.className='rig-breath';scene.append(breath);
   const group=(cls,src,part)=>{const react=document.createElement('div');react.className='rig-react '+cls+'-react';const idle=document.createElement('div');idle.className=cls;idle.append(image(src,part));react.append(idle);return react;};
   breath.append(group('rig-hair-back',config.layers.hair_back,'hair-back'));
