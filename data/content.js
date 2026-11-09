@@ -20,6 +20,7 @@ window.CONTENT = (() => {
     { id:'apron',    name:'Café Apron',     rarity:'N',  img:'assets/characters/costume_apron' },
     { id:'maid',     name:'French Maid',    rarity:'R', img:'assets/characters/costume_maid' },
     { id:'pool',     name:'Poolside',       rarity:'R', img:'assets/characters/costume_pool' },
+    { id:'barefoot', name:'Barefoot Sundress', rarity:'R', img:'assets/characters/costume_barefoot' },
     { id:'gown',     name:'Silk Nightgown', rarity:'SSR',img:'assets/characters/costume_gown', ssrAnim:true },
     { id:'bunny',    name:'Midnight Bunny', rarity:'SSR',img:'assets/characters/costume_bunny', ssrAnim:true },
     { id:'ribbon',   name:'Ribbon Sandals', rarity:'SSR',img:'assets/characters/costume_ribbon', ssrAnim:true },
@@ -85,7 +86,7 @@ window.CONTENT = (() => {
   ];
 
   // Every owned outfit selects a coherent scene, without changing relationship XP.
-  const COSTUME_CONTEXT = {cardigan:1,track:1,apron:2,maid:2,pool:3,gown:4,bunny:5,ribbon:2};
+  const COSTUME_CONTEXT = {cardigan:1,track:1,apron:2,maid:2,pool:3,gown:4,bunny:5,ribbon:2,barefoot:5};
   const ENVIRONMENTS = {1:'classroom',2:'cafe',3:'pool',4:'bedroom',5:'beach'};
   return { COSTUME_CONTEXT, ENVIRONMENTS, TIERS, COSTUMES, UPGRADES, BOOSTS, PERMS, MISSIONS, RARITY_RATE, DUP_COINS, CONFIG, THEMES };
 })();

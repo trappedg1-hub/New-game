@@ -1,5 +1,5 @@
 {
-  "version": 19,
+  "version": 20,
   "renderer": "canonical-420x1323-registered-png",
   "tiers": {
     "1": {
@@ -624,6 +624,52 @@
           {
             "x": 0.45161,
             "width": 0.11559
+          }
+        ]
+      },
+      "hairPivot": [
+        210.0,
+        42
+      ]
+    },
+    "barefoot": {
+      "status": "layered",
+      "canvas": [
+        420,
+        1323
+      ],
+      "source": "assets/characters/single/costume_barefoot.png",
+      "original": "assets/characters/costume_barefoot.png",
+      "layers": {
+        "body_base": "assets/characters/costume_barefoot/body_base.png",
+        "hair_back": "assets/characters/costume_barefoot/hair_back.png",
+        "face_open": "assets/characters/costume_barefoot/face_open.png",
+        "face_closed": "assets/characters/costume_barefoot/face_closed.png",
+        "hair_front": "assets/characters/costume_barefoot/hair_front.png"
+      },
+      "registration": "Independent generated components placed once on the shared 420x1323 canvas; front-facing barefoot body, eye-locked blink; measured ground/viewport/pivot.",
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/costume_barefoot/registration.json"
+      },
+      "type": "layered",
+      "environment": "beach",
+      "viewport": [
+        44,
+        10,
+        334,
+        925
+      ],
+      "ground": {
+        "size": [
+          334,
+          925
+        ],
+        "floor": 1.0,
+        "contacts": [
+          {
+            "x": 0.47156,
+            "width": 0.13772
           }
         ]
       },
