@@ -1,270 +1,905 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0d0d1a">
-<meta name="screen-orientation" content="portrait">
-<meta name="description" content="Dark Shy — a relationship clicker starring B.5 tiers, gacha costumes, prestige.">
-<title>Dark Shy — Relationship Clicker</title>
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="assets/icons/icon-192.png">
-<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="theme-color" content="#0d0d1a" />
+    <meta name="screen-orientation" content="portrait" />
+    <meta
+      name="description"
+      content="Dark Shy — a relationship clicker starring B.5 tiers, gacha costumes, prestige."
+    />
+    <title>Dark Shy — Relationship Clicker</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="assets/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="icon-sprite"
+      aria-hidden="true"
+    >
+      <defs>
+        <symbol id="i-coin" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="8" />
+          <path d="M12 7v10m3-8h-4a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4H9" />
+        </symbol>
+        <symbol id="i-gem" viewBox="0 0 24 24">
+          <path d="m3 9 4-5h10l4 5-9 12L3 9Zm0 0h18M7 4l5 17 5-17" />
+        </symbol>
+        <symbol id="i-energy" viewBox="0 0 24 24">
+          <path d="m13 2-9 12h7l-1 8 10-13h-8l1-7Z" />
+        </symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24">
+          <path d="M5 7h14M5 12h14M5 17h9" />
+        </symbol>
+        <symbol id="i-dress" viewBox="0 0 24 24">
+          <path d="m8 3-2 5 4 3-5 10h14l-5-10 4-3-2-5-4 3-4-3Z" />
+        </symbol>
+        <symbol id="i-missions" viewBox="0 0 24 24">
+          <path d="M8 4H5v17h14V4h-3M9 2h6v4H9zM8 11h8m-8 4h6" />
+        </symbol>
+        <symbol id="i-shop" viewBox="0 0 24 24">
+          <path d="M5 8h14l1 13H4L5 8Zm3 0V6a4 4 0 0 1 8 0v2" />
+        </symbol>
+        <symbol id="i-gacha" viewBox="0 0 24 24">
+          <path
+            d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"
+          />
+        </symbol>
+        <symbol id="i-inventory" viewBox="0 0 24 24">
+          <path d="m3 7 9-4 9 4-9 4-9-4Zm0 0v11l9 4 9-4V7M12 11v11M7 5l10 4" />
+        </symbol>
+        <symbol id="i-friends" viewBox="0 0 24 24">
+          <circle cx="9" cy="8" r="3" />
+          <path
+            d="M3 21v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 5"
+          />
+        </symbol>
+        <symbol id="i-settings" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="m9 3 6 0 1 3 3 1 2 5-2 5-3 1-1 3H9l-1-3-3-1-2-5 2-5 3-1 1-3Z"
+          />
+        </symbol>
+        <symbol id="i-bell" viewBox="0 0 24 24">
+          <path d="M4 17h16l-2-3V9A6 6 0 0 0 6 9v5l-2 3Zm6 3h4" />
+        </symbol>
+      </defs>
+    </svg>
+    <div id="fx-layer" aria-hidden="true"></div>
 
-<div id="fx-layer" aria-hidden="true"></div>
+    <!-- ================= TOP HUD ================= -->
+    <header id="hud">
+      <div class="hud-left">
+        <div class="avatar-ring">
+          <img
+            id="hud-avatar"
+            src="assets/characters/tier1.webp"
+            alt="B"
+            onerror="
+              window.imgFallback &&
+                imgFallback(this, 'assets/characters/tier1.png')
+            "
+          />
+          <div class="hud-lv" aria-label="Player level">
+            <span id="hud-level">1</span>
+          </div>
+        </div>
+        <div class="hud-id">
+          <div class="hud-caption">PERSONAL ARCHIVE / 01</div>
+          <div class="hud-name">
+            DARK SHY <span class="hud-title" id="hud-title">Stranger</span>
+          </div>
+        </div>
+      </div>
+      <div class="hud-center">
+        <div class="heart-label">
+          <span id="tier-name">Stranger</span
+          ><span class="dim">RELATIONSHIP</span>
+        </div>
+        <div class="heart-bar">
+          <div id="heart-fill"></div>
+          <span class="bar-level">Lv.<span id="rel-level">1</span></span>
+        </div>
+        <div class="heart-xp" id="heart-xp">0 / 27 XP</div>
+      </div>
+      <div class="hud-right">
+        <div class="chip chip-coins" title="Coins">
+          <svg class="ui-icon" aria-hidden="true"><use href="#i-coin" /></svg>
+          <span id="coins">0</span>
+        </div>
+        <div class="chip chip-gems" title="Love Gems">
+          <svg class="ui-icon" aria-hidden="true"><use href="#i-gem" /></svg>
+          <span id="gems">0</span>
+        </div>
+        <div class="chip chip-energy" title="Energy">
+          <svg class="ui-icon" aria-hidden="true"><use href="#i-energy" /></svg>
+          <span id="energy">100</span><small id="energy-timer"></small>
+        </div>
+      </div>
+      <div class="hud-actions">
+        <button
+          class="circle-btn"
+          data-visual-modal="missions"
+          aria-label="Notifications"
+        >
+          <svg class="ui-icon" aria-hidden="true"><use href="#i-bell" /></svg
+          ><span class="notification-dot"></span></button
+        ><button
+          class="circle-btn"
+          data-visual-modal="settings"
+          aria-label="Settings"
+        >
+          <svg class="ui-icon" aria-hidden="true">
+            <use href="#i-settings" />
+          </svg>
+        </button>
+      </div>
+      <div id="save-flash">saved ✓</div>
+    </header>
 
-<!-- ================= TOP HUD ================= -->
-<header id="hud">
-  <div class="hud-left">
-    <div class="avatar-ring"><img id="hud-avatar" src="assets/characters/tier1.webp" alt="B"
-      onerror="window.imgFallback&&imgFallback(this,'assets/characters/tier1.png')"></div>
-    <div class="hud-id">
-      <div class="hud-name">B <span class="hud-title" id="hud-title">Stranger</span></div>
-      <div class="hud-lv">Lv <span id="hud-level">1</span></div>
-    </div>
-  </div>
-  <div class="hud-center">
-    <div class="heart-label">💞 <span id="tier-name">Stranger</span> · Lv <span id="rel-level">1</span><span class="dim">/100</span></div>
-    <div class="heart-bar"><div id="heart-fill"></div></div>
-    <div class="heart-xp" id="heart-xp">0 / 27 XP</div>
-  </div>
-  <div class="hud-right">
-    <div class="chip chip-coins" title="Coins">💰 <span id="coins">0</span></div>
-    <div class="chip chip-gems" title="Love Gems">💎 <span id="gems">0</span></div>
-    <div class="chip chip-energy" title="Energy">⚡ <span id="energy">100</span><small id="energy-timer"></small></div>
-  </div>
-  <div id="save-flash">saved ✓</div>
-</header>
+    <!-- ================= STAGE ================= -->
+    <main id="stage">
+      <div class="bg-layer" id="bg-a"></div>
+      <div class="bg-layer" id="bg-b"></div>
+      <div class="bg-vignette"></div>
+      <div class="stage-caption">
+        A LITTLE CLOSER, EVERY DAY<b>YOUR STORY · HER WORLD</b>
+      </div>
+      <div class="stage-corner">
+        DARK SHY / RELATIONSHIP ARCHIVE<span
+          >Small moments. Lasting bonds.</span
+        >
+      </div>
+      <div class="rail-backdrop" id="rail-backdrop" aria-hidden="true"></div>
 
-<!-- ================= STAGE ================= -->
-<main id="stage">
-  <div class="bg-layer" id="bg-a"></div>
-  <div class="bg-layer" id="bg-b"></div>
-  <div class="bg-vignette"></div>
+      <button class="rail-toggle" id="toggle-left" aria-label="Menu">
+        <svg class="ui-icon" aria-hidden="true"><use href="#i-menu" /></svg>
+      </button>
+      <button class="rail-toggle right" id="toggle-right" aria-label="Costumes">
+        <svg class="ui-icon" aria-hidden="true"><use href="#i-dress" /></svg>
+      </button>
 
-  <button class="rail-toggle" id="toggle-left" aria-label="Menu">☰</button>
-  <button class="rail-toggle right" id="toggle-right" aria-label="Costumes">👗</button>
+      <!-- left rail -->
+      <nav id="left-rail" aria-label="Main navigation">
+        <div class="rail-heading">YOUR SANCTUARY<b>Lobby</b></div>
+        <button class="rail-btn" data-modal="missions">
+          <span class="ico"
+            ><svg class="ui-icon" aria-hidden="true">
+              <use href="#i-missions" /></svg></span
+          >Missions
+        </button>
+        <button class="rail-btn" data-modal="shop">
+          <span class="ico"
+            ><svg class="ui-icon" aria-hidden="true">
+              <use href="#i-shop" /></svg></span
+          >Shop
+        </button>
+        <button class="rail-btn" data-modal="gacha">
+          <span class="ico"
+            ><svg class="ui-icon" aria-hidden="true">
+              <use href="#i-gacha" /></svg></span
+          >Gacha
+        </button>
+        <button class="rail-btn" data-modal="inventory">
+          <span class="ico"
+            ><svg class="ui-icon" aria-hidden="true">
+              <use href="#i-inventory" /></svg></span
+          >Inventory
+        </button>
+        <button class="rail-btn" data-modal="friends">
+          <span class="ico"
+            ><svg class="ui-icon" aria-hidden="true">
+              <use href="#i-friends" /></svg></span
+          >Friends
+        </button>
+        <button class="rail-btn" data-modal="settings">
+          <span class="ico"
+            ><svg class="ui-icon" aria-hidden="true">
+              <use href="#i-settings" /></svg></span
+          >Settings
+        </button>
+        <div class="rail-foot">
+          <span>●</span> PRIVATE CONNECTION<br />EST. WITH YOU
+        </div>
+      </nav>
 
-  <!-- left rail -->
-  <nav id="left-rail">
-    <button class="rail-btn" data-modal="missions"><span class="ico">📜</span>Missions</button>
-    <button class="rail-btn" data-modal="shop"><span class="ico">🛒</span>Shop</button>
-    <button class="rail-btn" data-modal="gacha"><span class="ico">🎰</span>Gacha</button>
-    <button class="rail-btn" data-modal="inventory"><span class="ico">🎒</span>Inventory</button>
-    <button class="rail-btn" data-modal="friends"><span class="ico">👥</span>Friends</button>
-    <button class="rail-btn" data-modal="settings"><span class="ico">⚙️</span>Settings</button>
-  </nav>
+      <!-- right rail: costumes -->
+      <aside id="right-rail">
+        <div class="rail-head">WARDROBE<small>EVERY SIDE OF HER</small></div>
+        <div id="costume-list"></div>
+      </aside>
 
-  <!-- right rail: costumes -->
-  <aside id="right-rail">
-    <div class="rail-head">COSTUMES</div>
-    <div id="costume-list"></div>
-  </aside>
+      <!-- character (layered stack, crossfading A/B) -->
+      <div
+        id="character-wrap"
+        role="button"
+        tabindex="0"
+        aria-label="Tap B to earn coins"
+      >
+        <div class="character-stack" id="char-a"></div>
+        <div class="character-stack" id="char-b"></div>
+        <div id="char-shadow"></div>
+        <div id="bubble" role="status">
+          <div class="bubble-tail"></div>
+          <span id="bubble-text">…</span>
+        </div>
+      </div>
 
-  <!-- character (layered stack, crossfading A/B) -->
-  <div id="character-wrap" aria-label="Tap B">
-    <div class="character-stack" id="char-a"></div>
-    <div class="character-stack" id="char-b"></div>
-    <div id="char-shadow"></div>
-    <div id="bubble" role="status"><div class="bubble-tail"></div><span id="bubble-text">…</span></div>
-  </div>
+      <!-- tier-up event -->
+      <div id="tier-event" class="hidden">
+        <div class="event-flash"></div>
+        <div class="te-card">
+          <div class="te-kicker">RELATIONSHIP UP</div>
+          <div class="te-tier" id="te-tier">FRIEND</div>
+          <div class="te-line" id="te-line">“You're back again~”</div>
+          <div class="te-place" id="te-place">New location · Café</div>
+        </div>
+      </div>
 
-  <!-- tier-up event -->
-  <div id="tier-event" class="hidden">
-    <div class="event-flash"></div>
-    <div class="te-card">
-      <div class="te-kicker">RELATIONSHIP UP</div>
-      <div class="te-tier" id="te-tier">FRIEND</div>
-      <div class="te-line" id="te-line">“You're back again~”</div>
-      <div class="te-place" id="te-place">New location · Café</div>
-    </div>
-  </div>
+      <div id="boost-pill" class="hidden">
+        ⚡ <span id="boost-text">×2</span> <small id="boost-time">30s</small>
+      </div>
+    </main>
 
-  <div id="boost-pill" class="hidden">⚡ <span id="boost-text">×2</span> <small id="boost-time">30s</small></div>
-</main>
+    <!-- ================= BOTTOM BAR ================= -->
+    <footer id="bottom-bar">
+      <div class="bb-left">
+        <button class="bb-btn" id="btn-upgrades" aria-label="Upgrades">
+          ↗<span class="button-caption">UPGRADES</span>
+        </button>
+        <button class="bb-btn" id="btn-auto" aria-label="Toggle auto earnings">
+          ◈ <b id="auto-state">ON</b
+          ><span class="button-caption">AUTO EARN</span>
+        </button>
+      </div>
+      <button id="tap-btn" aria-label="Tap to earn coins">
+        TAP<small>MAKE A LITTLE MOMENT</small>
+      </button>
+      <div class="bb-right">
+        <div class="bb-stat">
+          <small>◈ COINS / SEC</small><b id="stat-cps">0</b>
+        </div>
+        <div class="bb-stat">
+          <small>✧ TAP POWER</small><b id="stat-tap">+1</b>
+        </div>
+      </div>
+    </footer>
 
-<!-- ================= BOTTOM BAR ================= -->
-<footer id="bottom-bar">
-  <div class="bb-left">
-    <button class="bb-btn" id="btn-upgrades">⬆ Upgrades</button>
-    <button class="bb-btn" id="btn-auto">🤖 Auto: <b id="auto-state">ON</b></button>
-  </div>
-  <button id="tap-btn" aria-label="Tap">TAP</button>
-  <div class="bb-right">
-    <div class="bb-stat"><small>COINS/S</small><b id="stat-cps">0</b></div>
-    <div class="bb-stat"><small>TAP POWER</small><b id="stat-tap">+1</b></div>
-  </div>
-</footer>
+    <!-- ================= MODALS ================= -->
+    <section
+      class="modal"
+      id="modal-upgrades"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-upgrades"
+      aria-hidden="true"
+    >
+      <div class="modal-card">
+        <button class="modal-close" aria-label="Close">✕</button>
+        <h2>Upgrades</h2>
+        <div class="modal-sub">Tap power & passive income</div>
+        <div id="upgrade-list" class="up-list"></div>
+        <div class="prestige-box">
+          <div class="pb-title">
+            ✦ CONFESSION
+            <span class="pb-req" id="prestige-req">Unlocks at Lv 50</span>
+          </div>
+          <div class="pb-desc">
+            Reset coins, upgrades & relationship to gain <b>Love Gems</b> for
+            permanent multipliers and cosmetics.
+          </div>
+          <div class="pb-gain">Gain: <b id="prestige-gems">0</b> 💎</div>
+          <button class="btn-pink" id="btn-prestige" disabled>CONFESS</button>
+        </div>
+      </div>
+    </section>
 
-<!-- ================= MODALS ================= -->
-<div class="modal" id="modal-upgrades">
-  <div class="modal-card">
-    <button class="modal-close" aria-label="Close">✕</button>
-    <h2>⬆ Upgrades</h2>
-    <div class="modal-sub">Tap power & passive income</div>
-    <div id="upgrade-list" class="up-list"></div>
-    <div class="prestige-box">
-      <div class="pb-title">💞 CONFESSION <span class="pb-req" id="prestige-req">Unlocks at Lv 50</span></div>
-      <div class="pb-desc">Reset coins, upgrades & relationship to gain <b>Love Gems</b> for permanent multipliers and cosmetics.</div>
-      <div class="pb-gain">Gain: <b id="prestige-gems">0</b> 💎</div>
-      <button class="btn-pink" id="btn-prestige" disabled>CONFESS</button>
-    </div>
-  </div>
-</div>
+    <section
+      class="modal"
+      id="modal-prestige"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-prestige"
+      aria-hidden="true"
+    >
+      <div class="modal-card">
+        <h2>The Confession</h2>
+        <div class="prestige-preview" id="prestige-preview"></div>
+        <div class="modal-sub">
+          This resets your run. Everything below is kept:
+        </div>
+        <ul class="keep-list">
+          <li>💎 Love Gems & permanent multipliers</li>
+          <li>🎒 Owned costumes & equipped outfit</li>
+          <li>🔥 Login streak & daily missions</li>
+          <li>📈 Lifetime stats & prestige count</li>
+        </ul>
+        <div class="modal-btn-row">
+          <button class="btn-glass" id="prestige-cancel">Not yet</button>
+          <button class="btn-pink" id="prestige-confirm">CONFESS</button>
+        </div>
+      </div>
+    </section>
 
-<div class="modal" id="modal-prestige">
-  <div class="modal-card">
-    <h2>💞 Confess?</h2>
-    <div class="prestige-preview" id="prestige-preview"></div>
-    <div class="modal-sub">This resets your run. Everything below is kept:</div>
-    <ul class="keep-list">
-      <li>💎 Love Gems & permanent multipliers</li>
-      <li>🎒 Owned costumes & equipped outfit</li>
-      <li>🔥 Login streak & daily missions</li>
-      <li>📈 Lifetime stats & prestige count</li>
-    </ul>
-    <div class="modal-btn-row">
-      <button class="btn-glass" id="prestige-cancel">Not yet</button>
-      <button class="btn-pink" id="prestige-confirm">CONFESS</button>
-    </div>
-  </div>
-</div>
+    <section
+      class="modal"
+      id="modal-missions"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-missions"
+      aria-hidden="true"
+    >
+      <div class="modal-card">
+        <button class="modal-close" aria-label="Close">✕</button>
+        <h2>Daily Missions</h2>
+        <div class="streak-box">
+          🔥 Login streak: <b id="streak-count">0</b> days
+          <span class="pill" id="streak-reward">+200💰/day</span>
+        </div>
+        <div id="mission-list" class="mission-list"></div>
+      </div>
+    </section>
 
-<div class="modal" id="modal-missions">
-  <div class="modal-card">
-    <button class="modal-close" aria-label="Close">✕</button>
-    <h2>📜 Missions</h2>
-    <div class="streak-box">🔥 Login streak: <b id="streak-count">0</b> days <span class="pill" id="streak-reward">+200💰/day</span></div>
-    <div id="mission-list" class="mission-list"></div>
-  </div>
-</div>
+    <section
+      class="modal"
+      id="modal-daily"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-daily"
+      aria-hidden="true"
+    >
+      <div class="modal-card daily-card">
+        <div class="daily-icon">
+          <svg class="ui-icon" aria-hidden="true">
+            <use href="#i-inventory" />
+          </svg>
+        </div>
+        <h2>Daily Reward!</h2>
+        <div class="daily-streak" id="daily-streak">Day 1 streak</div>
+        <div class="calendar-preview" aria-label="Weekly login calendar"></div>
+        <div class="daily-rewards" id="daily-rewards"></div>
+        <button class="btn-pink" id="daily-claim">CLAIM</button>
+      </div>
+    </section>
 
-<div class="modal" id="modal-daily">
-  <div class="modal-card daily-card">
-    <div class="daily-icon">🎁</div>
-    <h2>Daily Reward!</h2>
-    <div class="daily-streak" id="daily-streak">Day 1 streak</div>
-    <div class="daily-rewards" id="daily-rewards"></div>
-    <button class="btn-pink" id="daily-claim">CLAIM</button>
-  </div>
-</div>
+    <section
+      class="modal"
+      id="modal-offline"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-offline"
+      aria-hidden="true"
+    >
+      <div class="modal-card offline-card">
+        <div class="daily-icon">☾</div>
+        <h2>Welcome back!</h2>
+        <div class="offline-away" id="offline-away">
+          You were away for a while.
+        </div>
+        <div class="offline-gain" id="offline-gain">+0 💰</div>
+        <button class="btn-pink" id="offline-claim">COLLECT</button>
+      </div>
+    </section>
 
-<div class="modal" id="modal-offline">
-  <div class="modal-card offline-card">
-    <div class="daily-icon">🌙</div>
-    <h2>Welcome back!</h2>
-    <div class="offline-away" id="offline-away">You were away for a while.</div>
-    <div class="offline-gain" id="offline-gain">+0 💰</div>
-    <button class="btn-pink" id="offline-claim">COLLECT</button>
-  </div>
-</div>
+    <section
+      class="modal"
+      id="modal-shop"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-shop"
+      aria-hidden="true"
+    >
+      <div class="modal-card">
+        <button class="modal-close" aria-label="Close">✕</button>
+        <h2>Bond Boutique</h2>
+        <div class="modal-sub">Boosts & permanent bonds</div>
+        <div class="shop-sec">TIMED BOOSTS</div>
+        <div id="shop-boosts" class="shop-grid"></div>
+        <div class="shop-sec">PERMANENT · LOVE GEMS</div>
+        <div id="shop-perm" class="shop-grid"></div>
+        <div class="shop-sec">UTILITY</div>
+        <div id="shop-util" class="shop-grid"></div>
+      </div>
+    </section>
 
-<div class="modal" id="modal-shop">
-  <div class="modal-card">
-    <button class="modal-close" aria-label="Close">✕</button>
-    <h2>🛒 Shop</h2>
-    <div class="modal-sub">Boosts & permanent bonds</div>
-    <div class="shop-sec">TIMED BOOSTS</div>
-    <div id="shop-boosts" class="shop-grid"></div>
-    <div class="shop-sec">PERMANENT · LOVE GEMS</div>
-    <div id="shop-perm" class="shop-grid"></div>
-    <div class="shop-sec">UTILITY</div>
-    <div id="shop-util" class="shop-grid"></div>
-  </div>
-</div>
+    <section
+      class="modal"
+      id="modal-gacha"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-gacha"
+      aria-hidden="true"
+    >
+      <div class="modal-card wide">
+        <button class="modal-close" aria-label="Close">✕</button>
+        <h2>Costume Atelier</h2>
+        <div class="gacha-banner">
+          <span class="banner-kicker">✦ SSR COLLECTION</span><b>After Hours</b
+          ><span class="banner-copy"
+            >Midnight Bunny &amp; Silk Nightgown<br />A different side. Just for
+            you.</span
+          >
+        </div>
+        <div class="pity-row">
+          <div class="pity">SR pity: <b id="pity-sr">0</b>/10</div>
+          <div class="pity">SSR pity: <b id="pity-ssr">0</b>/50</div>
+          <div class="pity">⚡ <b id="gacha-energy">100</b></div>
+        </div>
+        <div class="gacha-buttons">
+          <button class="btn-glass" id="pull-x1">
+            PULL ×1<br /><small
+              >10⚡ · free in <span id="free-timer">--</span></small
+            >
+          </button>
+          <button class="btn-pink" id="pull-x10">
+            PULL ×10<br /><small>100⚡</small>
+          </button>
+        </div>
+        <div id="gacha-owned" class="gacha-owned"></div>
+      </div>
+    </section>
 
-<div class="modal" id="modal-gacha">
-  <div class="modal-card wide">
-    <button class="modal-close" aria-label="Close">✕</button>
-    <h2>🎰 Costume Gacha</h2>
-    <div class="gacha-banner">SSR <b>Midnight Bunny</b> &amp; <b>Silk Nightgown</b> — unique idle animations!</div>
-    <div class="pity-row">
-      <div class="pity">SR pity: <b id="pity-sr">0</b>/10</div>
-      <div class="pity">SSR pity: <b id="pity-ssr">0</b>/50</div>
-      <div class="pity">⚡ <b id="gacha-energy">100</b></div>
-    </div>
-    <div class="gacha-buttons">
-      <button class="btn-glass" id="pull-x1">PULL ×1<br><small>10⚡ · free in <span id="free-timer">--</span></small></button>
-      <button class="btn-pink" id="pull-x10">PULL ×10<br><small>100⚡</small></button>
-    </div>
-    <div id="gacha-owned" class="gacha-owned"></div>
-  </div>
-</div>
+    <section
+      class="modal"
+      id="modal-reveal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-reveal"
+      aria-hidden="true"
+    >
+      <div class="modal-card">
+        <h2>Gacha Results</h2>
+        <div id="reveal-grid" class="reveal-grid"></div>
+        <button class="btn-pink" id="reveal-close">DONE</button>
+      </div>
+    </section>
 
-<div class="modal" id="modal-reveal">
-  <div class="modal-card">
-    <h2>Gacha Results</h2>
-    <div id="reveal-grid" class="reveal-grid"></div>
-    <button class="btn-pink" id="reveal-close">DONE</button>
-  </div>
-</div>
+    <section
+      class="modal"
+      id="modal-inventory"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-inventory"
+      aria-hidden="true"
+    >
+      <div class="modal-card">
+        <button class="modal-close" aria-label="Close">✕</button>
+        <h2>Your Collection</h2>
+        <div class="modal-sub">Owned costumes — tap to equip</div>
+        <div id="inv-grid" class="inv-grid"></div>
+      </div>
+    </section>
 
-<div class="modal" id="modal-inventory">
-  <div class="modal-card">
-    <button class="modal-close" aria-label="Close">✕</button>
-    <h2>🎒 Inventory</h2>
-    <div class="modal-sub">Owned costumes — tap to equip</div>
-    <div id="inv-grid" class="inv-grid"></div>
-  </div>
-</div>
+    <section
+      class="modal"
+      id="modal-friends"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-friends"
+      aria-hidden="true"
+    >
+      <div class="modal-card">
+        <button class="modal-close" aria-label="Close">✕</button>
+        <h2>Connections</h2>
+        <div class="friend-code">
+          Your code: <b id="friend-code">B-0000</b>
+          <button class="btn-mini" id="copy-friend">COPY</button>
+        </div>
+        <div class="stub-note">
+          Friend list arrives in a future update — for now, share your code and
+          send energy gifts soon 💝
+        </div>
+        <div class="stub-row">
+          <button class="btn-glass" disabled>Send ⚡ Gift (soon)</button
+          ><button class="btn-glass" disabled>Claim (0)</button>
+        </div>
+      </div>
+    </section>
 
-<div class="modal" id="modal-friends">
-  <div class="modal-card">
-    <button class="modal-close" aria-label="Close">✕</button>
-    <h2>👥 Friends</h2>
-    <div class="friend-code">Your code: <b id="friend-code">B-0000</b> <button class="btn-mini" id="copy-friend">COPY</button></div>
-    <div class="stub-note">Friend list arrives in a future update — for now, share your code and send energy gifts soon 💝</div>
-    <div class="stub-row"><button class="btn-glass" disabled>Send ⚡ Gift (soon)</button><button class="btn-glass" disabled>Claim (0)</button></div>
-  </div>
-</div>
+    <section
+      class="modal"
+      id="modal-settings"
+      role="dialog"
+      aria-modal="true"
+      aria-label="modal-settings"
+      aria-hidden="true"
+    >
+      <div class="modal-card">
+        <button class="modal-close" aria-label="Close">✕</button>
+        <h2>Preferences</h2>
+        <div class="set-row">
+          <span>Reduced motion</span
+          ><button
+            class="toggle"
+            id="set-motion"
+            role="switch"
+            aria-checked="true"
+            aria-label="Animation preference"
+          >
+            <i></i>
+          </button>
+        </div>
+        <div class="set-row">
+          <span
+            >SFX volume <small class="set-val" id="sfx-val">70%</small></span
+          >
+          <input
+            type="range"
+            id="set-sfx"
+            min="0"
+            max="100"
+            value="70"
+            class="slider"
+            aria-label="SFX volume"
+          />
+        </div>
+        <div class="set-row">
+          <span
+            >Music volume
+            <small class="set-val" id="music-val">40%</small></span
+          >
+          <input
+            type="range"
+            id="set-music"
+            min="0"
+            max="100"
+            value="40"
+            class="slider"
+            aria-label="Music volume"
+          />
+        </div>
+        <div class="set-row">
+          <span>Theme</span>
+          <div class="theme-row" id="theme-row">
+            <button
+              class="swatch"
+              data-theme="pink"
+              style="--sw: #ff6b9d"
+              aria-label="Pink theme"
+            ></button>
+            <button
+              class="swatch"
+              data-theme="purple"
+              style="--sw: #c44dff"
+              aria-label="Purple theme"
+            ></button>
+            <button
+              class="swatch"
+              data-theme="gold"
+              style="--sw: #ffb347"
+              aria-label="Gold theme"
+            ></button>
+          </div>
+        </div>
+        <div class="set-row">
+          <span>Export save</span
+          ><button class="btn-mini" id="set-export">COPY JSON</button>
+        </div>
+        <div class="set-row">
+          <span>Import save</span
+          ><button class="btn-mini" id="set-import">PASTE & LOAD</button>
+        </div>
+        <div class="set-row danger">
+          <span>Hard reset</span
+          ><button class="btn-mini red" id="set-reset">WIPE SAVE</button>
+        </div>
+        <div class="set-note">
+          Progress saves automatically to this browser.
+        </div>
+      </div>
+    </section>
 
-<div class="modal" id="modal-settings">
-  <div class="modal-card">
-    <button class="modal-close" aria-label="Close">✕</button>
-    <h2>⚙️ Settings</h2>
-    <div class="set-row"><span>Reduced motion</span><button class="toggle" id="set-motion" role="switch" aria-checked="true"><i></i></button></div>
-    <div class="set-row"><span>SFX volume <small class="set-val" id="sfx-val">70%</small></span>
-      <input type="range" id="set-sfx" min="0" max="100" value="70" class="slider" aria-label="SFX volume"></div>
-    <div class="set-row"><span>Music volume <small class="set-val" id="music-val">40%</small></span>
-      <input type="range" id="set-music" min="0" max="100" value="40" class="slider" aria-label="Music volume"></div>
-    <div class="set-row"><span>Theme</span>
-      <div class="theme-row" id="theme-row">
-        <button class="swatch" data-theme="pink" style="--sw:#ff6b9d" aria-label="Pink theme"></button>
-        <button class="swatch" data-theme="purple" style="--sw:#c44dff" aria-label="Purple theme"></button>
-        <button class="swatch" data-theme="gold" style="--sw:#ffb347" aria-label="Gold theme"></button>
+    <!-- rotate gate (mobile landscape) -->
+    <div id="rotate-overlay">
+      <div class="rot-phone"></div>
+      <div class="rot-text">
+        Rotate your device<br /><small>Portrait mode works best</small>
       </div>
     </div>
-    <div class="set-row"><span>Export save</span><button class="btn-mini" id="set-export">COPY JSON</button></div>
-    <div class="set-row"><span>Import save</span><button class="btn-mini" id="set-import">PASTE & LOAD</button></div>
-    <div class="set-row danger"><span>Hard reset</span><button class="btn-mini red" id="set-reset">WIPE SAVE</button></div>
-    <div class="set-note">Progress saves automatically to this browser.</div>
-  </div>
-</div>
 
-<!-- rotate gate (mobile landscape) -->
-<div id="rotate-overlay">
-  <div class="rot-phone"></div>
-  <div class="rot-text">Rotate your device<br><small>Portrait mode works best</small></div>
-</div>
+    <!-- install PWA prompt -->
+    <div id="install-bar" class="hidden">
+      <span>Install <b>Dark Shy</b> for offline play</span>
+      <button id="install-btn">INSTALL</button>
+      <button id="install-dismiss" aria-label="Dismiss">✕</button>
+    </div>
 
-<!-- install PWA prompt -->
-<div id="install-bar" class="hidden">
-  <span>Install <b>Dark Shy</b> for offline play</span>
-  <button id="install-btn">INSTALL</button>
-  <button id="install-dismiss" aria-label="Dismiss">✕</button>
-</div>
+    <div id="toast"></div>
+    <div id="level-fx" class="hidden">+1 LV</div>
 
-<div id="toast"></div>
-<div id="level-fx" class="hidden">LEVEL UP!</div>
-
-<script src="data/content.js"></script>
-<script src="data/dialogue.js"></script>
-<script src="js/game.js"></script>
-</body>
+    <script src="data/content.js"></script>
+    <script src="data/dialogue.js"></script>
+    <script src="js/game.js"></script>
+    <script>
+      /* Visual adapter only: decorates regenerated markup; never reads/writes game state. */
+      (() => {
+        const $ = (id) => document.getElementById(id);
+        let previousFocus;
+        const open = (id) => {
+          const m = $("modal-" + id);
+          if (m) m.classList.add("open");
+        };
+        document
+          .querySelectorAll("[data-visual-modal]")
+          .forEach((b) =>
+            b.addEventListener("click", () => open(b.dataset.visualModal)),
+          );
+        const backdrop = $("rail-backdrop");
+        const syncPanels = () => {
+          const expanded = ["left-rail", "right-rail"].some((id) =>
+            $(id).classList.contains("open"),
+          );
+          backdrop.classList.toggle("visible", expanded);
+          $("toggle-left").setAttribute(
+            "aria-expanded",
+            $("left-rail").classList.contains("open"),
+          );
+          $("toggle-right").setAttribute(
+            "aria-expanded",
+            $("right-rail").classList.contains("open"),
+          );
+        };
+        backdrop.onclick = () => {
+          ["left-rail", "right-rail"].forEach((id) =>
+            $(id).classList.remove("open"),
+          );
+          syncPanels();
+        };
+        ["left-rail", "right-rail"].forEach((id) =>
+          new MutationObserver(syncPanels).observe($(id), {
+            attributes: true,
+            attributeFilter: ["class"],
+          }),
+        );
+        function decorateCostumes() {
+          document.querySelectorAll(".costume-thumb").forEach((card) => {
+            if (!card.querySelector(".costume-name")) {
+              const label = document.createElement("span");
+              label.className = "costume-name";
+              label.textContent = card.querySelector("img")?.alt || "";
+              card.append(label);
+            }
+            card.setAttribute("role", "button");
+            card.tabIndex = 0;
+            card.setAttribute("aria-label", card.title);
+            card.setAttribute(
+              "aria-pressed",
+              card.classList.contains("equipped"),
+            );
+          });
+          document.querySelectorAll(".inv-item").forEach((card) => {
+            card.setAttribute("role", "button");
+            card.tabIndex = 0;
+          });
+        }
+        new MutationObserver(decorateCostumes).observe($("costume-list"), {
+          childList: true,
+        });
+        document.addEventListener("keydown", (e) => {
+          if (
+            (e.key === "Enter" || e.key === " ") &&
+            e.target.matches(".costume-thumb,.inv-item")
+          ) {
+            e.preventDefault();
+            e.target.click();
+          }
+          if (e.key === "Enter" && e.target === $("character-wrap"))
+            $("tap-btn").click();
+          if (e.key === "Escape") backdrop.click();
+          if (e.key === "Tab") {
+            const m = [...document.querySelectorAll(".modal.open")].at(-1);
+            if (!m) return;
+            const items = [
+              ...m.querySelectorAll(
+                'button:not(:disabled),input,[tabindex="0"]',
+              ),
+            ].filter((x) => x.getClientRects().length);
+            const first = items[0],
+              last = items.at(-1);
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault();
+              last?.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault();
+              first?.focus();
+            }
+          }
+        });
+        document.querySelectorAll(".modal").forEach((m) =>
+          new MutationObserver(() => {
+            const active = m.classList.contains("open");
+            m.setAttribute("aria-hidden", !active);
+            m.inert = !active;
+            if (active) {
+              previousFocus = document.activeElement;
+              setTimeout(
+                () =>
+                  m
+                    .querySelector("button:not(:disabled),input")
+                    ?.focus({ preventScroll: true }),
+                50,
+              );
+            } else previousFocus?.focus?.({ preventScroll: true });
+            const any = !!document.querySelector(".modal.open");
+            $("hud").inert = any;
+            $("stage").inert = any;
+            $("bottom-bar").inert = any;
+          }).observe(m, { attributes: true, attributeFilter: ["class"] }),
+        );
+        $("tap-btn").addEventListener("pointerdown", (e) => {
+          const b = e.currentTarget,
+            r = b.getBoundingClientRect(),
+            p = document.createElement("i");
+          p.className = "ripple";
+          p.style.left = e.clientX - r.left + "px";
+          p.style.top = e.clientY - r.top + "px";
+          b.append(p);
+          setTimeout(() => p.remove(), 650);
+        });
+        const counter = $("coins");
+        new MutationObserver(() => {
+          if (
+            !document.body.classList.contains("no-motion") &&
+            !matchMedia("(prefers-reduced-motion:reduce)").matches
+          )
+            counter.animate(
+              [
+                { translate: "0 3px", opacity: 0.6 },
+                { translate: "0 0", opacity: 1 },
+              ],
+              { duration: 220 },
+            );
+        }).observe(counter, { childList: true });
+        new MutationObserver(() => {
+          $("set-motion").setAttribute(
+            "aria-checked",
+            $("set-motion").classList.contains("on"),
+          );
+        }).observe($("set-motion"), {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+        function decorateUpgrades() {
+          document.querySelectorAll(".up-buy").forEach((b) => {
+            if (b.closest(".up-action")) return;
+            const effect = b.closest(".up-item").querySelector(".up-eff");
+            effect.textContent = effect.textContent.replace("🔒", "LOCKED");
+            const action = document.createElement("div");
+            action.className = "up-action";
+            const cost = document.createElement("span");
+            cost.className = "up-cost";
+            cost.textContent = b.textContent.replace("💰", " ◈");
+            b.before(action);
+            action.append(cost, b);
+            b.textContent = "BUY";
+            b.setAttribute(
+              "aria-label",
+              "Buy " +
+                b.closest(".up-item").querySelector(".up-name").textContent +
+                " for " +
+                cost.textContent,
+            );
+          });
+        }
+        new MutationObserver(decorateUpgrades).observe($("upgrade-list"), {
+          childList: true,
+        });
+        decorateUpgrades();
+        const level = $("hud-level");
+        new MutationObserver(() => {
+          const bar = document.querySelector(".heart-bar");
+          bar.classList.remove("level-pulse");
+          void bar.offsetWidth;
+          bar.classList.add("level-pulse");
+          setTimeout(() => bar.classList.remove("level-pulse"), 650);
+        }).observe(level, { childList: true });
+        new MutationObserver(() => {
+          document
+            .querySelectorAll(".reveal-card.SSR.flipped")
+            .forEach((card) => {
+              if (card.dataset.celebrated) return;
+              card.dataset.celebrated = "true";
+              const fx = document.createElement("div");
+              fx.className = "reveal-confetti";
+              for (let i = 0; i < 16; i++) {
+                const bit = document.createElement("i");
+                const a = (i * Math.PI) / 8;
+                bit.style.setProperty(
+                  "--cx",
+                  Math.cos(a) * (90 + Math.random() * 50) + "px",
+                );
+                bit.style.setProperty(
+                  "--cy",
+                  Math.sin(a) * (90 + Math.random() * 60) + "px",
+                );
+                bit.style.setProperty("--delay", i * 15 + "ms");
+                fx.append(bit);
+              }
+              card.append(fx);
+              setTimeout(() => fx.remove(), 1600);
+            });
+        }).observe($("reveal-grid"), {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+        document.addEventListener(
+          "load",
+          (e) => {
+            if (e.target.tagName === "IMG")
+              e.target.classList.add("image-ready");
+          },
+          true,
+        );
+        const calendar = document.querySelector(".calendar-preview");
+        function refreshCalendar() {
+          const day = +(
+            document
+              .querySelector("#daily-streak")
+              ?.textContent.match(/\d+/)?.[0] || 1
+          );
+          calendar.innerHTML = "";
+          for (let i = 1; i <= 7; i++) {
+            const c = document.createElement("div");
+            c.className =
+              "calendar-day" + (i === ((day - 1) % 7) + 1 ? " current" : "");
+            c.innerHTML =
+              "DAY " + i + "<span>" + (i === 7 ? "◇" : "◈") + "</span>";
+            calendar.append(c);
+          }
+        }
+        new MutationObserver(refreshCalendar).observe($("daily-streak"), {
+          childList: true,
+        });
+        refreshCalendar();
+        document.querySelectorAll(".modal").forEach((m) => {
+          m.inert = !m.classList.contains("open");
+          const h = m.querySelector("h2");
+          if (h) {
+            h.id = m.id + "-title";
+            m.setAttribute("aria-labelledby", h.id);
+          }
+        });
+        document.querySelectorAll(".modal-card").forEach((card) => {
+          let y = null;
+          card.addEventListener(
+            "touchstart",
+            (e) => {
+              const t = e.touches[0];
+              y =
+                t.clientY - card.getBoundingClientRect().top < 30
+                  ? t.clientY
+                  : null;
+            },
+            { passive: true },
+          );
+          card.addEventListener(
+            "touchend",
+            (e) => {
+              if (y !== null && e.changedTouches[0].clientY - y > 80)
+                card.closest(".modal").classList.remove("open");
+              y = null;
+            },
+            { passive: true },
+          );
+        });
+        decorateCostumes();
+        syncPanels();
+      })();
+    </script>
+  </body>
 </html>
