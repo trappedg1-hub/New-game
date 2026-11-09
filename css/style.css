@@ -492,38 +492,6 @@ small {
   pointer-events: none;
   z-index: -1;
 }
-.character-stack {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.8s var(--ease);
-  pointer-events: none;
-  z-index: 2;
-}
-.character-stack.show {
-  opacity: 1;
-}
-.layer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: bottom;
-  will-change: transform;
-  filter: drop-shadow(0 8px 12px #0006);
-}
-.character-single,
-.char-breathe {
-  animation: breathe 4s ease-in-out infinite;
-  transform-origin: center bottom;
-}
-.ssr-anim .layer {
-  animation:
-    breathe 3s ease-in-out infinite,
-    glow 2s ease-in-out infinite;
-}
-
 #char-shadow {
   position: absolute;
   left: 20%;
@@ -3395,14 +3363,8 @@ h2:after {
   background: radial-gradient(ellipse, #ff6b9d26, transparent 70%);
   filter: blur(80px);
 }
-.character-stack {
-  transition: opacity 0.6s var(--ease);
-}
 .bg-layer {
   transition: opacity 0.8s var(--ease);
-}
-.layer {
-  -webkit-box-reflect: below -2px linear-gradient(transparent 88%, #ffffff1a);
 }
 #character-wrap {
   bottom: 8px;
@@ -4314,7 +4276,7 @@ button:active:not(:disabled),
   letter-spacing: 1.5px;
   margin-top: 16px;
 }
-.image-ready:not(.layer) {
+.image-ready:not(.char-single-img) {
   animation: imageFade 0.3s var(--ease) both;
 }
 .mission {
@@ -4944,7 +4906,7 @@ button:active:not(:disabled),
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .image-ready:not(.layer) {
+  .image-ready:not(.char-single-img) {
     animation: none;
   }
   .ssr-shake .modal-card {

@@ -1,3 +1,17 @@
+# Current renderer: SINGLE ART ONLY (supersedes all historical layered notes below)
+
+- All five tiers and seven costumes use `type: "single"` in manifest v7.
+- `#char-container` contains exactly one persistent `img#character-art`. No face, blink, cloth or hair DOM layers, A/B stacks or layered renderer remain.
+- `assets/characters/single/*.png`: whole original PNG illustrations resampled to 4096px high with Lanczos. These are upscaled originals, not native 4K detail. Native originals are retained unchanged. Bright green key fringe is removed from Tier 3 during this reproducible build.
+- Breathing runs on the image, 4s ease-in-out; accepted taps animate only its parent via cancellable WAAPI. Reduced-motion and motion-off stop animation.
+- New art decodes before assigning the same image's src, then fades from 0.35 to 1 over 300ms. There is no blank frame or outgoing duplicate. Stale async requests cannot win; failed requests retain the last good image.
+- Old layered asset directories remain historical unused files, not primary art or precached resources. Old layer-specific tests have been replaced by single-art coverage.
+- Gacha (including SSR reveal FX), wardrobe, saves and the local admin tools remain intact.
+- Current tests: `tests/character-animation.cjs`, `tests/single-art.cjs`, `tests/gacha.cjs`, `tests/admin.cjs`, `tests/smoke.cjs`.
+
+---
+## Historical implementation notes (not the current runtime)
+
 ## Latest safety status: asset-content cleanup and Tier 2 quarantine
 
 **Tier 2 is now a clean whole-image fallback**, not a layered rig. Its candidate paths are moved out of runtime `layers` into `candidateLayers`; the original 421×1185 whole-image canvas is restored. `contentAudit.status: quarantined` prevents the renderer from mounting candidates even if someone accidentally toggles status back to layered. All required part paths must also be present before any rig mounts. Tiers 1/3/4/5 remain layered after cleanup and visual review; costumes retain their previous whole-art fallbacks.

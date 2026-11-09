@@ -1,191 +1,189 @@
 {
-  "version": 6,
-  "generatorLimit": 10,
+  "version": 7,
+  "renderer": "single",
   "tiers": {
     "1": {
-      "status": "layered",
-      "canvas": [420, 1323],
-      "source": "assets/characters/tier1.webp",
-      "layers": {
-        "body_base": "assets/characters/tier1/body_base.png",
-        "hair_back": "assets/characters/tier1/hair_back.png",
-        "hair_front": "assets/characters/tier1/hair_front.png",
-        "face": "assets/characters/tier1/face.png",
-        "face_blink": "assets/characters/tier1/face_blink.png"
-      },
-      "optionalCloth": {
-        "path": "assets/characters/tier1/cloth_loose.png",
-        "enabled": false,
-        "reason": "Stranger has no cloth flutter; waistband registration did not pass seam check."
-      },
-      "registration": "Generated separately; keyed, rescaled and manually registered. Closed eyelid patch composited over unchanged open-face silhouette.",
-      "hairBackReveal": [156, 210],
-      "blinkRegions": [
-        [195, 118, 250, 159],
-        [278, 119, 330, 156]
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/tier1.png",
+      "canvas": [
+        1300,
+        4096
       ],
-      "contentAudit": {
-        "status": "cleaned-and-reviewed",
-        "report": "assets/characters/layer-content-audit.json"
-      }
+      "original": "assets/characters/tier1.png",
+      "nativeCanvas": [
+        420,
+        1323
+      ],
+      "upscaled": true
     },
     "2": {
-      "status": "fallback",
-      "canvas": [421, 1185],
-      "source": "assets/characters/tier2.webp",
-      "layers": {},
-      "hairBackReveal": [150, 200],
-      "registration": "Independent AI parts keyed and registered. Generated closed eyelids composited over open-face silhouette. Optional cloth omitted.",
-      "blinkRegions": [
-        [166, 117, 212, 149],
-        [234, 110, 282, 143]
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/tier2.png",
+      "canvas": [
+        1455,
+        4096
       ],
-      "reason": "Safety quarantine after reported duplicate facial features. Clean whole-image art is used; candidate separation/registration is not visually certified.",
-      "candidateLayers": {
-        "body_base": "assets/characters/tier2/body_base.png",
-        "hair_back": "assets/characters/tier2/hair_back.png",
-        "hair_front": "assets/characters/tier2/hair_front.png",
-        "face": "assets/characters/tier2/face.png",
-        "face_blink": "assets/characters/tier2/face_blink.png"
-      },
-      "candidateCanvas": [420, 1323],
-      "contentAudit": {
-        "status": "quarantined",
-        "report": "assets/characters/layer-content-audit.json"
-      }
+      "original": "assets/characters/tier2.png",
+      "nativeCanvas": [
+        421,
+        1185
+      ],
+      "upscaled": true
     },
     "3": {
-      "status": "layered",
-      "canvas": [420, 1323],
-      "source": "assets/characters/tier3.webp",
-      "layers": {
-        "body_base": "assets/characters/tier3/body_base.png",
-        "hair_back": "assets/characters/tier3/hair_back.png",
-        "hair_front": "assets/characters/tier3/hair_front.png",
-        "face": "assets/characters/tier3/face.png",
-        "face_blink": "assets/characters/tier3/face_blink.png"
-      },
-      "optionalCloth": {
-        "enabled": false,
-        "reason": "Not generated; optional fabric omitted to prioritize complete five-part rigs."
-      },
-      "registration": "Independent AI components keyed and manually registered. Generated closed eyelids blended over unchanged open-face silhouette.",
-      "hairBackReveal": [151, 197],
-      "blinkRegions": [
-        [113, 138, 156, 165],
-        [171, 122, 223, 154]
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/tier3.png",
+      "canvas": [
+        1305,
+        4096
       ],
-      "contentAudit": {
-        "status": "cleaned-and-reviewed",
-        "report": "assets/characters/layer-content-audit.json"
-      }
+      "original": "assets/characters/tier3.png",
+      "nativeCanvas": [
+        411,
+        1290
+      ],
+      "upscaled": true
     },
     "4": {
-      "status": "layered",
-      "canvas": [420, 1323],
-      "source": "assets/characters/tier4.webp",
-      "layers": {
-        "body_base": "assets/characters/tier4/body_base.png",
-        "hair_back": "assets/characters/tier4/hair_back.png",
-        "hair_front": "assets/characters/tier4/hair_front.png",
-        "face": "assets/characters/tier4/face.png",
-        "face_blink": "assets/characters/tier4/face_blink.png"
-      },
-      "optionalCloth": {
-        "enabled": false,
-        "reason": "Not generated; optional fabric omitted to prioritize complete five-part rigs."
-      },
-      "registration": "Independent AI components keyed and manually registered. Generated closed eyelids blended over unchanged open-face silhouette.",
-      "viewport": [0, 617, 420, 706],
-      "hairBackReveal": [723, 759],
-      "blinkRegions": [
-        [153, 703, 184, 730],
-        [190, 690, 235, 721]
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/tier4.png",
+      "canvas": [
+        2437,
+        4096
       ],
-      "contentAudit": {
-        "status": "cleaned-and-reviewed",
-        "report": "assets/characters/layer-content-audit.json"
-      }
+      "original": "assets/characters/tier4.png",
+      "nativeCanvas": [
+        701,
+        1178
+      ],
+      "upscaled": true
     },
     "5": {
-      "status": "layered",
-      "canvas": [420, 1323],
-      "source": "assets/characters/tier5.webp",
-      "layers": {
-        "body_base": "assets/characters/tier5/body_base.png",
-        "hair_back": "assets/characters/tier5/hair_back.png",
-        "hair_front": "assets/characters/tier5/hair_front.png",
-        "face": "assets/characters/tier5/face.png",
-        "face_blink": "assets/characters/tier5/face_blink.png"
-      },
-      "hairBackReveal": [145, 195],
-      "registration": "Independent AI parts keyed and registered. Generated closed eyelids composited over open-face silhouette. Optional cloth omitted.",
-      "blinkRegions": [
-        [112, 128, 153, 156],
-        [169, 116, 216, 147]
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/tier5.png",
+      "canvas": [
+        1248,
+        4096
       ],
-      "contentAudit": {
-        "status": "cleaned-and-reviewed",
-        "report": "assets/characters/layer-content-audit.json"
-      }
+      "original": "assets/characters/tier5.png",
+      "nativeCanvas": [
+        403,
+        1323
+      ],
+      "upscaled": true
     }
   },
   "costumes": {
-    "cardigan": {
-      "status": "fallback",
-      "source": "assets/characters/costume_cardigan.webp",
-      "ssr": false,
-      "reason": "No independently generated costume rig.",
-      "canvas": [395, 1320]
-    },
-    "track": {
-      "status": "fallback",
-      "source": "assets/characters/costume_track.webp",
-      "ssr": false,
-      "reason": "No independently generated costume rig.",
-      "canvas": [584, 1321]
-    },
     "apron": {
-      "status": "fallback",
-      "source": "assets/characters/costume_apron.webp",
-      "ssr": false,
-      "reason": "No independently generated costume rig.",
-      "canvas": [500, 1379]
-    },
-    "maid": {
-      "status": "fallback",
-      "source": "assets/characters/costume_maid.webp",
-      "ssr": false,
-      "reason": "No independently generated costume rig.",
-      "canvas": [396, 1177]
-    },
-    "pool": {
-      "status": "fallback",
-      "source": "assets/characters/costume_pool.webp",
-      "ssr": false,
-      "reason": "No independently generated costume rig.",
-      "canvas": [360, 1216]
-    },
-    "gown": {
-      "status": "fallback",
-      "source": "assets/characters/costume_gown.webp",
-      "ssr": true,
-      "reason": "Three generated components retained. Open-face request rejected by per-turn limit after a failed body attempt consumed one request. Both faces pending; atomic fallback with SSR gold lighting until complete.",
-      "canvas": [393, 1292],
-      "candidateLayers": {
-        "body_base": "assets/characters/costume_gown/body_base.png",
-        "hair_back": "assets/characters/costume_gown/hair_back.png",
-        "hair_front": "assets/characters/costume_gown/hair_front.png"
-      },
-      "candidateCanvas": [420, 1323]
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/costume_apron.png",
+      "canvas": [
+        1485,
+        4096
+      ],
+      "original": "assets/characters/costume_apron.png",
+      "nativeCanvas": [
+        500,
+        1379
+      ],
+      "upscaled": true
     },
     "bunny": {
-      "status": "fallback",
-      "source": "assets/characters/costume_bunny.webp",
-      "ssr": true,
-      "reason": "No independently generated costume rig.",
-      "canvas": [341, 1354]
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/costume_bunny.png",
+      "canvas": [
+        1032,
+        4096
+      ],
+      "original": "assets/characters/costume_bunny.png",
+      "nativeCanvas": [
+        341,
+        1354
+      ],
+      "upscaled": true
+    },
+    "cardigan": {
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/costume_cardigan.png",
+      "canvas": [
+        1226,
+        4096
+      ],
+      "original": "assets/characters/costume_cardigan.png",
+      "nativeCanvas": [
+        395,
+        1320
+      ],
+      "upscaled": true
+    },
+    "gown": {
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/costume_gown.png",
+      "canvas": [
+        1246,
+        4096
+      ],
+      "original": "assets/characters/costume_gown.png",
+      "nativeCanvas": [
+        393,
+        1292
+      ],
+      "upscaled": true
+    },
+    "maid": {
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/costume_maid.png",
+      "canvas": [
+        1378,
+        4096
+      ],
+      "original": "assets/characters/costume_maid.png",
+      "nativeCanvas": [
+        396,
+        1177
+      ],
+      "upscaled": true
+    },
+    "pool": {
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/costume_pool.png",
+      "canvas": [
+        1213,
+        4096
+      ],
+      "original": "assets/characters/costume_pool.png",
+      "nativeCanvas": [
+        360,
+        1216
+      ],
+      "upscaled": true
+    },
+    "track": {
+      "type": "single",
+      "status": "single",
+      "source": "assets/characters/single/costume_track.png",
+      "canvas": [
+        1811,
+        4096
+      ],
+      "original": "assets/characters/costume_track.png",
+      "nativeCanvas": [
+        584,
+        1321
+      ],
+      "upscaled": true
     }
   },
-  "notes": "AI components require registration and matte cleanup; these are not Live2D meshes."
+  "notes": "Whole original illustrations only. 4096px-high PNGs are Lanczos upscales of native originals, not newly generated native 4K detail."
 }

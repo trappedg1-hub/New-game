@@ -223,15 +223,16 @@
         <div id="costume-list"></div>
       </aside>
 
-      <!-- character (layered stack, crossfading A/B) -->
+      <!-- One full illustration; no layered parts or outgoing duplicate. -->
       <div
         id="character-wrap"
         role="button"
         tabindex="0"
         aria-label="Tap B to earn coins"
       >
-        <div class="character-stack" id="char-a"></div>
-        <div class="character-stack" id="char-b"></div>
+        <div class="character-wrapper" id="char-container">
+          <img id="character-art" src="assets/characters/single/tier1.png" class="char-single-img" alt="Character" draggable="false" />
+        </div>
         <div id="char-shadow"></div>
         <div id="bubble" role="status">
           <div class="bubble-tail"></div>

@@ -99,18 +99,8 @@ const assert = require("node:assert/strict");
       .filter({ hasText: "Silk Nightgown" })
       .click();
     await p.waitForTimeout(900);
-    assert(
-      await p
-        .locator(
-          '.character-stack.show.ssr-anim [data-animation-mode="fallback"]',
-        )
-        .count(),
-    );
-    assert.equal(
-      await p.locator(".character-stack.show img").count(),
-      1,
-      "incomplete SSR rig must remain atomic fallback",
-    );
+    await p.waitForFunction(()=>document.getElementById('character-art').getAttribute('src')==='assets/characters/single/costume_gown.png');
+    assert.equal(await p.locator('#character-wrap img').count(),1,'SSR uses exactly one complete illustration');
     await p.close();
     console.log(
       "PASS SSR@50 priority, gold card, confetti, decoded costume art",

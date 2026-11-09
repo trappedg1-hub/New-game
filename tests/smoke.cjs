@@ -6,7 +6,7 @@ const {JSDOM}=require('jsdom');const fs=require('fs');const assert=require('node
  w.innerWidth=width;w.matchMedia=()=>({matches:width<768});w.HTMLElement.prototype.animate=()=>({});
  for(const p of ['data/content.js','data/dialogue.js','js/character-animation.js','js/game.js'])w.eval(fs.readFileSync(p,'utf8'));
  await new Promise(r=>setTimeout(r,80));
- assert.equal(w.document.querySelectorAll('.character-stack img').length,1);
+ assert.equal(w.document.querySelectorAll('#character-wrap img').length,1);
  const tap=w.document.getElementById('tap-btn');tap.click();tap.click();
  await new Promise(r=>setTimeout(r,450));
  assert.equal(w.document.getElementById('coins').textContent,'201');

@@ -133,16 +133,8 @@ function checkTier(){
 }
 
 /* ---------------- Art / BG crossfade ---------------- */
-let artFlip = false;
-function showArt(src, ssr){
-  const a = $('char-a'), b = $('char-b');
-  const inc = artFlip ? a : b, out = artFlip ? b : a;
-  artFlip = !artFlip;
-  out.classList.remove('show');
-  window.CharacterAnimation.unmount(out);
-  mountArt(inc,src);
-  inc.classList.toggle('ssr-anim', !!ssr);
-  inc.classList.add('show');
+function showArt(src){
+  mountArt($('char-container'),src);
 }
 let bgFlip = false;
 function showBg(src){
@@ -202,9 +194,6 @@ function tap(x, y){
   if(S.daily.date===today()) S.daily.d_taps++;
   if(x!=null){ floatText(x, y-14, '+'+fmt(gain)); burst(x,y); }
   // squash
-  const img = document.querySelector('.char.show');
-  if(img){ img.classList.remove('tapped'); void img.offsetWidth; img.classList.add('tapped');
-    setTimeout(()=>img.classList.remove('tapped'),170); }
   const sh = $('char-shadow'); sh.classList.add('pop'); setTimeout(()=>sh.classList.remove('pop'),150);
   // dialogue pacing
   S.tapTalk++;
@@ -678,8 +667,7 @@ function boot(){
   // art & bg
   const t = tierOf(S.level);
   const a = currentArt();
-  mountArt($('char-a'),a.src); $('char-a').classList.add('show'); $('char-a').classList.toggle('ssr-anim', !!a.ssr);
-  window.CharacterAnimation.unmount($('char-b'));
+  mountArt($('char-container'),a.src);
   $('bg-a').style.backgroundImage = `url('${t.bg}')`;
   $('bg-a').classList.add('show');
   $('auto-state').textContent = autoOn()?'ON':'OFF';
