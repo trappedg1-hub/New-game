@@ -750,7 +750,10 @@
           setTimeout(() => p.remove(), 650);
         });
         const counter = $("coins");
+        let previousCoins = counter.textContent;
         new MutationObserver(() => {
+          if (counter.textContent === previousCoins) return;
+          previousCoins = counter.textContent;
           if (
             !document.body.classList.contains("no-motion") &&
             !matchMedia("(prefers-reduced-motion:reduce)").matches
@@ -799,7 +802,10 @@
         });
         decorateUpgrades();
         const level = $("hud-level");
+        let previousLevel = level.textContent;
         new MutationObserver(() => {
+          if (level.textContent === previousLevel) return;
+          previousLevel = level.textContent;
           const bar = document.querySelector(".heart-bar");
           bar.classList.remove("level-pulse");
           void bar.offsetWidth;

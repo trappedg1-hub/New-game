@@ -3181,3 +3181,21 @@ FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 
 */
+/* Keep effect descriptions readable on small displays. */
+.up-eff {
+  font-size: 10px;
+}
+.up-name {
+  font-size: 12px;
+}
+@media (max-width: 767px) {
+  .up-eff {
+    font-size: 10px;
+  }
+  .up-name {
+    font-size: 12px;
+  }
+  .up-name .lv {
+    font-size: 10px;
+  }
+}
