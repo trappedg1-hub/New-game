@@ -27,6 +27,7 @@ function def(){
     freePull:0, pity:{sr:0,ssr:0},
     stats:{taps:0,coins:0,pulls:0},
     prestige:0, settings:{motion:true},
+    skin:{tone:'porcelain',tan:'none',gloss:50,unlocked:[]},
     friend:'B-'+Math.floor(1000+Math.random()*9000),
     lastSeen:Date.now(), bubbleAt:0, tapTalk:0,
   };
@@ -44,6 +45,7 @@ function load(){
     S.settings = Object.assign(def().settings, d.settings||{});
     S.pity = Object.assign(def().pity, d.pity||{});
     S.daily = Object.assign(def().daily, d.daily||{});
+    S.skin = Object.assign(def().skin, d.skin||{}); if(!Array.isArray(S.skin.unlocked)) S.skin.unlocked=[];
     if(S.daily.date !== today()) S.daily = {date:today(),d_taps:0,d_earned:0,d_pulls:0,claimed:{}};
   }catch(e){ console.warn('save broken', e); }
 }
@@ -70,8 +72,9 @@ function boostMult(){
 const totalMult = () => Math.max(permMult(), boostMult());
 function tapPower(){ let p=1; for(const u of UPGRADES) if(u.kind==='tap') p += S.up[u.id]*u.eff; return p; }
 function baseCps(){ let c=0; for(const u of UPGRADES) if(u.kind==='auto') c += S.up[u.id]*u.eff; return c; }
-function cps(){ return baseCps() * totalMult(); }
-function coinsPerTap(){ return tapPower() * totalMult(); }
+function tanMult(){ return 1 + 0.05*((S.skin&&S.skin.unlocked)?S.skin.unlocked.length:0); }
+function cps(){ return baseCps() * totalMult() * tanMult(); }
+function coinsPerTap(){ return tapPower() * totalMult() * tanMult(); }
 const tierOf = lv => TIERS.find(t => lv>=t.min && lv<=t.max) || TIERS[0];
 const costOf = (u,lvl) => Math.ceil(u.base * Math.pow(u.rate, lvl));
 const autoOn = () => S.auto !== false;
@@ -202,22 +205,108 @@ function tap(x, y){
   navigator.vibrate?.(10); $('bubble').classList.remove('show');
   window.CharacterAnimation?.react();
   $('coins').animate([{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:180});
-  const gain = coinsPerTap();
+  const stageUp = comboTap();
+  let gain = coinsPerTap();
+  if(comboStage===3) gain *= 4;
+  let crit=false;
+  if(heartEyesActive() && Math.random()<.15){ crit=true; gain*=20; }
   addCoins(gain);
   addXp(1 + Math.floor(tapPower()/2));
   S.stats.taps++;
   if(S.daily.date===today()) S.daily.d_taps++;
-  if(x!=null){ floatText(x, y-14, '+'+fmt(gain)); burst(x,y); }
+  if(x!=null){ if(crit) floatText(x, y-36, 'CRIT TAP! x20', 'crit'); floatText(x, y-14, '+'+fmt(gain)); burst(x,y); if(crit) burst(x,y); }
   // squash
   const sh = $('char-shadow'); sh.classList.add('pop'); setTimeout(()=>sh.classList.remove('pop'),150);
   // dialogue pacing
   S.tapTalk++;
-  if(S.tapTalk % 25 === 0) idleTalk();
+  if(stageUp) { /* stage line keeps the bubble this tap */ }
+  else if(S.tapTalk % 25 === 0) idleTalk();
+  else if(heartEyesActive() && Math.random()<.18) say(HEART_LINES[Math.floor(Math.random()*HEART_LINES.length)], 2600);
   else if(Math.random()<0.12){
     const t = sceneTier();
     say(t.lines[Math.floor(Math.random()*t.lines.length)], 2600);
   }
   save();
+}
+
+/* ---------------- Fanservice: combo dishevelment & heart-eyes ---------------- */
+const COMBO_STAGES=[{at:0,name:'PRISTINE',line:null},{at:150,name:'LIGHT SLIP',line:'W-what are you doing so fast...?'},{at:300,name:'MEDIUM SLIP',line:'Wait, my outfit is slipping...!'},{at:600,name:'DISHEVELED',line:"I can't keep up with you... don't look!"}];
+const HEART_LINES=["I can't look away from you...","My heart is overflowing...","Only look at me..."];
+let comboCount=0, comboLast=0, comboStage=0;
+const stageFor = n => n>=600?3 : n>=300?2 : n>=150?1 : 0;
+function heartEyesActive(){ return S.level>=50 || (S.boost.id && Date.now()<S.boost.until); }
+function updateComboMeter(){
+  const m=$('combo-meter'); if(!m) return;
+  m.hidden = comboCount<=0;
+  $('combo-count').textContent = comboCount+' COMBO';
+  $('combo-stage').textContent = COMBO_STAGES[comboStage].name;
+  const cur=COMBO_STAGES[comboStage].at, nxt=comboStage<3?COMBO_STAGES[comboStage+1].at:null;
+  $('combo-fill').style.width = (nxt? (comboCount-cur)/(nxt-cur)*100 : 100)+'%';
+  $('combo-next').textContent = nxt? (nxt-comboCount)+' taps \u00b7 '+COMBO_STAGES[comboStage+1].name : 'MAX \u00b7 taps x4 coins';
+}
+function applyComboStage(st){
+  comboStage=st;
+  const s=$('character-surface');
+  s.classList.remove('stage-1','stage-2','stage-3');
+  if(st) s.classList.add('stage-'+st);
+  updateComboMeter();
+}
+function comboTap(){
+  comboCount++; comboLast=performance.now();
+  const st=stageFor(comboCount), up=st>comboStage;
+  if(up){ applyComboStage(st); if(COMBO_STAGES[st].line) say(COMBO_STAGES[st].line, 3400); }
+  else updateComboMeter();
+  return up;
+}
+function comboIdleReset(){
+  if(comboCount>0 && performance.now()-comboLast>3500){
+    comboCount=0; applyComboStage(0);
+    const s=$('character-surface');
+    s.classList.add('fixing'); setTimeout(()=>s.classList.remove('fixing'), 820);
+    say('Phew... let me fix myself.', 2800);
+    updateComboMeter();
+  }
+}
+let lastAura=0;
+function auraTick(now){
+  const on=heartEyesActive();
+  $('character-surface').classList.toggle('heart-eyes', on);
+  if(!on || !S.settings.motion || document.body.classList.contains('no-motion') || now-lastAura<650) return;
+  const wrap=$('character-wrap');
+  if(wrap.querySelectorAll('.aura-heart').length>=12) return;
+  lastAura=now;
+  const h=document.createElement('span');
+  h.className='aura-heart'; h.textContent='\u2665';
+  h.style.left=(30+Math.random()*40)+'%';
+  h.style.fontSize=(12+Math.random()*14)+'px';
+  wrap.appendChild(h); setTimeout(()=>h.remove(), 3500);
+}
+window.__fanservice={
+  get combo(){return comboCount;}, get stage(){return comboStage;},
+  setCombo(n){ comboCount=n; comboLast=performance.now(); applyComboStage(stageFor(n)); },
+  heartEyes:heartEyesActive,
+};
+
+/* ---------------- Skin & Tan Studio ---------------- */
+function applySkin(){
+  const s=$('character-surface'); if(!s) return;
+  s.classList.remove('tone-sunkissed','tone-golden','tone-bronze','tan-bikini','tan-straps','tan-heart');
+  if(S.skin.tone!=='porcelain') s.classList.add('tone-'+S.skin.tone);
+  if(S.skin.tan!=='none') s.classList.add('tan-'+S.skin.tan);
+  s.style.setProperty('--gloss', S.skin.gloss/100);
+  document.querySelectorAll('#tone-row .swatch').forEach(b=>b.classList.toggle('active', b.dataset.tone===S.skin.tone));
+  document.querySelectorAll('#tan-row .swatch').forEach(b=>b.classList.toggle('active', b.dataset.tan===S.skin.tan));
+  if($('gloss-range')){ $('gloss-range').value=S.skin.gloss; $('gloss-val').textContent=S.skin.gloss+'%'; }
+  if($('tan-perk')) $('tan-perk').textContent='+'+(S.skin.unlocked.length*5)+'% COINS';
+}
+function bindStudio(){
+  document.querySelectorAll('#tone-row .swatch').forEach(b=>b.onclick=()=>{ S.skin.tone=b.dataset.tone; applySkin(); save(); });
+  document.querySelectorAll('#tan-row .swatch').forEach(b=>b.onclick=()=>{
+    const tan=b.dataset.tan;
+    if(tan!=='none' && !S.skin.unlocked.includes(tan)){ S.skin.unlocked.push(tan); toast('Tan style unlocked \u00b7 +5% permanent coins \u2600\ufe0f'); }
+    S.skin.tan=tan; applySkin(); save();
+  });
+  $('gloss-range').addEventListener('input', e=>{ S.skin.gloss=+e.target.value; applySkin(); save(); });
 }
 
 /* ---------------- Energy / regen tick ---------------- */
@@ -534,7 +623,7 @@ function renderAll(){ renderHUD(); renderUpgrades(); renderMissions(); renderSho
 let acc = 0, last = Date.now();
 function loop(){
   const now = Date.now(), dt = Math.min(CONFIG.OFFLINE_CAP_MS,now-last); last = now;
-  tickEnergy();
+  tickEnergy(); comboIdleReset(); auraTick(now);
   if(autoOn() && baseCps()>0){
     const gain = cps()*dt/1000;
     if(gain>0) addCoins(gain);
@@ -714,7 +803,7 @@ function boot(){
   // preload
   [...TIERS.map(t=>t.art), ...TIERS.map(t=>t.bg)]
     .forEach(src=>{ const i=new Image(); i.src=src; });
-  renderAll();
+  renderAll(); bindStudio(); applySkin();
   setTimeout(()=>idleTalk(), 700);
   setInterval(save, CONFIG.SAVE_MS);
   setInterval(newDayCheck, 60000);
