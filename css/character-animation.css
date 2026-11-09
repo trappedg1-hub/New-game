@@ -54,11 +54,6 @@ body.tier-5 {
   --tap-angle: 1.2deg;
   --hip-angle: 0.4deg;
 }
-/* Cancel the legacy whole-stack squash; each part now has its own reaction group. */
-#character-wrap.char-tap,
-.char-tap .character-stack.show {
-  animation: none !important;
-}
 .character-rig {
   position: absolute;
   inset: 0;
@@ -74,6 +69,7 @@ body.tier-5 {
   translate: -50% 0;
   isolation: isolate;
 }
+.rig-tap-body,
 .rig-reactor,
 .rig-breath,
 .rig-back-react,
@@ -105,11 +101,11 @@ body.tier-5 {
   animation: rigBreathing var(--breath-time, 3.5s) ease-in-out infinite;
 }
 .rig-hair-back {
-  transform-origin: 61% 4%;
+  transform-origin: var(--rig-hair-origin, center top);
   animation: rigHairBack 4.2s ease-in-out infinite;
 }
 .rig-hair-front {
-  transform-origin: 61% 4%;
+  transform-origin: var(--rig-hair-origin, center top);
   animation: rigHairFront 4.5s ease-in-out infinite;
 }
 .rig-face {
@@ -150,25 +146,7 @@ body.tier-5 {
 }
 .rig-back-react,
 .rig-front-react {
-  transform-origin: 61% 4%;
-}
-.rig-reacting .rig-reactor {
-  animation: rigTapBody 0.6s ease-out !important;
-}
-.rig-reacting .rig-back-react {
-  animation: rigTapHair 0.65s ease-out;
-}
-.rig-reacting .rig-front-react {
-  animation: rigTapHair 0.6s ease-out reverse;
-}
-.rig-reacting .rig-face {
-  animation: rigTapFace 0.4s ease-out;
-}
-.rig-reacting .face-open {
-  animation: rigTapOpen 0.6s linear !important;
-}
-.rig-reacting .face-closed {
-  animation: rigTapClosed 0.6s linear !important;
+  transform-origin: var(--rig-hair-origin, center top);
 }
 .rig-enter {
   animation: rigAppear 0.3s ease both;
@@ -194,9 +172,6 @@ body.tier-5 {
   opacity: 0.45;
   animation: rigSSRSpark 4s ease-in-out infinite;
   pointer-events: none;
-}
-.character-stack.ssr-anim .rig-reacting .rig-canvas:before {
-  animation: rigSSRGlow 0.6s ease-out;
 }
 @keyframes rigBreathing {
   0%,
@@ -303,66 +278,6 @@ body.tier-5 {
   }
   50% {
     transform: rotate(0.25deg);
-  }
-}
-@keyframes rigTapBody {
-  0%,
-  100% {
-    transform: translateY(0) scale(1) rotate(0);
-  }
-  20% {
-    transform: translateY(2px) scale(0.985);
-  }
-  50% {
-    transform: translateY(var(--tap-y, -4px)) scale(var(--tap-scale, 1.01))
-      rotate(var(--tap-angle, 0deg));
-  }
-}
-@keyframes rigTapHair {
-  0%,
-  100% {
-    transform: rotate(0);
-  }
-  30% {
-    transform: rotate(-1.5deg) translateY(2px);
-  }
-  60% {
-    transform: rotate(1deg) translateY(-1px);
-  }
-}
-@keyframes rigTapFace {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  40% {
-    transform: scale(1.012);
-    opacity: 0.96;
-  }
-}
-@keyframes rigTapOpen {
-  0%,
-  15%,
-  48%,
-  100% {
-    opacity: 1;
-  }
-  20%,
-  42% {
-    opacity: 0;
-  }
-}
-@keyframes rigTapClosed {
-  0%,
-  15%,
-  48%,
-  100% {
-    opacity: 0;
-  }
-  20%,
-  42% {
-    opacity: 1;
   }
 }
 @keyframes rigAppear {

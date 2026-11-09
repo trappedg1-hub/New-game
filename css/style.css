@@ -523,9 +523,7 @@ small {
     breathe 3s ease-in-out infinite,
     glow 2s ease-in-out infinite;
 }
-.char-tap .character-stack.show {
-  animation: tapReact 0.3s ease-out;
-}
+
 #char-shadow {
   position: absolute;
   left: 20%;
@@ -1970,11 +1968,7 @@ h2:after {
     filter: drop-shadow(0 0 20px #ffd70099);
   }
 }
-@keyframes tapReact {
-  30% {
-    transform: translateY(3px) scale(0.98);
-  }
-}
+
 @keyframes shimmer {
   0%,
   30% {

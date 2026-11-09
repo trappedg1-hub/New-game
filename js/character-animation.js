@@ -76,7 +76,7 @@
     const { root, canvas } = frame([420, 1323]);
     root.dataset.animationMode = "fallback";
     const react = document.createElement("div");
-    react.className = "rig-reactor";
+    react.className = "rig-tap-body";
     const sway = document.createElement("div");
     sway.className = "fallback-sway";
     const breath = document.createElement("div");
@@ -99,6 +99,10 @@
       scene.style.top = (-view[1] / view[3]) * 100 + "%";
       scene.style.width = (config.canvas[0] / view[2]) * 100 + "%";
       scene.style.height = (config.canvas[1] / view[3]) * 100 + "%";
+      scene.style.setProperty(
+        "--rig-hair-origin",
+        `50% ${(view[1] / config.canvas[1]) * 100}%`,
+      );
     }
     canvas.append(scene);
     root.dataset.animationMode = "layered";
@@ -112,12 +116,12 @@
     reactor.className = "rig-reactor";
     const breath = document.createElement("div");
     breath.className = "rig-breath";
-    breath.append(image(config.layers.body_base, "layer-body"));
+    reactor.append(image(config.layers.body_base, "layer-body"));
     if (config.layers.cloth_loose) {
       const cloth = document.createElement("div");
       cloth.className = "rig-cloth";
       cloth.append(image(config.layers.cloth_loose, "layer-cloth"));
-      breath.append(cloth);
+      reactor.append(cloth);
     }
     const face = document.createElement("div");
     face.className = "rig-face";
@@ -125,16 +129,20 @@
       image(config.layers.face, "layer-face face-open"),
       image(config.layers.face_blink, "layer-face-blink face-closed"),
     );
-    breath.append(face);
+    reactor.append(face);
     const frontReact = document.createElement("div");
     frontReact.className = "rig-front-react";
     const frontSway = document.createElement("div");
     frontSway.className = "rig-hair-front";
     frontSway.append(image(config.layers.hair_front, "layer-hair-front"));
     frontReact.append(frontSway);
-    breath.append(frontReact);
-    reactor.append(breath);
-    scene.append(backReact, reactor);
+    reactor.append(frontReact);
+    // A shared breathing parent keeps every registered layer moving together.
+    const bounce = document.createElement("div");
+    bounce.className = "rig-tap-body";
+    breath.append(backReact, reactor);
+    bounce.append(breath);
+    scene.append(bounce);
     return root;
   }
   function configFor(src) {
@@ -174,26 +182,85 @@
       }
     });
   }
-  let reactionTimer,
-    lastReaction = -Infinity;
+  const reactions = new Map();
+  function animateReaction(el, frames, duration) {
+    if (!el?.animate) return;
+    const previous = reactions.get(el);
+    if (previous) {
+      // Retarget from the visible pose; rapid taps never accumulate transforms.
+      const style = getComputedStyle(el);
+      for (const property of Object.keys(frames[0]))
+        frames[0][property] = style[property];
+      previous.cancel();
+    }
+    const animation = el.animate(frames, { duration, easing: "ease-out" });
+    reactions.set(el, animation);
+    const cleanup = () => {
+      if (reactions.get(el) === animation) reactions.delete(el);
+    };
+    animation.onfinish = cleanup;
+    animation.oncancel = cleanup;
+  }
+  function stopReactions() {
+    for (const animation of reactions.values()) animation.cancel();
+    reactions.clear();
+  }
   function react() {
-    if (reduced.matches || document.body.classList.contains("no-motion"))
+    if (
+      reduced.matches ||
+      document.body.classList.contains("no-motion") ||
+      document.hidden
+    )
       return;
-    if (performance.now() - lastReaction < 80) return;
-    lastReaction = performance.now();
-    clearTimeout(reactionTimer);
-    const roots = [
-      ...document.querySelectorAll(".character-stack.show .character-rig"),
-    ];
-    roots.forEach((root) => {
-      root.classList.remove("rig-reacting");
-      void root.offsetWidth;
-      root.classList.add("rig-reacting");
-    });
-    reactionTimer = setTimeout(
-      () => roots.forEach((root) => root.classList.remove("rig-reacting")),
-      650,
-    );
+    for (const root of document.querySelectorAll(
+      ".character-stack.show .character-rig",
+    )) {
+      const style = getComputedStyle(document.body);
+      animateReaction(
+        root.querySelector(".rig-tap-body"),
+        [
+          { transform: "translateY(0) scale(1) rotate(0)" },
+          { transform: "translateY(3px) scale(0.985)", offset: 0.2 },
+          {
+            transform: `translateY(${style.getPropertyValue("--tap-y").trim() || "-4px"}) scale(${style.getPropertyValue("--tap-scale").trim() || "1.01"}) rotate(${style.getPropertyValue("--tap-angle").trim() || "0deg"})`,
+            offset: 0.5,
+          },
+          { transform: "translateY(0) scale(1) rotate(0)" },
+        ],
+        500,
+      );
+      // Low-end mode retains the body bounce but omits hair and face effects.
+      if (lowEnd()) continue;
+      for (const [selector, direction, duration] of [
+        [".rig-front-react", -1, 600],
+        [".rig-back-react", 1, 650],
+      ])
+        animateReaction(
+          root.querySelector(selector),
+          [
+            { transform: "rotate(0) translateY(0)" },
+            {
+              transform: `rotate(${direction * 3}deg) translateY(3px)`,
+              offset: 0.3,
+            },
+            {
+              transform: `rotate(${direction * -2}deg) translateY(-1px)`,
+              offset: 0.6,
+            },
+            { transform: "rotate(0) translateY(0)" },
+          ],
+          duration,
+        );
+      animateReaction(
+        root.querySelector(".rig-face"),
+        [
+          { filter: "brightness(1) saturate(1)" },
+          { filter: "brightness(1.1) saturate(1.25)", offset: 0.3 },
+          { filter: "brightness(1) saturate(1)" },
+        ],
+        400,
+      );
+    }
   }
   document.addEventListener("DOMContentLoaded", () => {
     syncTier();
@@ -201,14 +268,14 @@
       document.getElementById("hud-level"),
       { childList: true },
     );
-    for (const id of ["character-wrap", "tap-btn"])
-      document
-        .getElementById(id)
-        .addEventListener("pointerdown", react, { passive: true });
-    document.addEventListener("keydown", (e) => {
-      if (e.code === "Space" && !document.querySelector(".modal.open")) react();
+    // Reactions are triggered only by accepted game taps (touch/click/keyboard).
+    document.addEventListener("visibilitychange", () => {
+      syncTier();
+      if (document.hidden) stopReactions();
     });
-    document.addEventListener("visibilitychange", syncTier);
+    reduced.addEventListener?.("change", () => {
+      if (reduced.matches) stopReactions();
+    });
     window.addEventListener("resize", syncTier, { passive: true });
   });
   window.CharacterAnimation = { mount, ready, react };

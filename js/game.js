@@ -191,7 +191,7 @@ let lastTap=-Infinity;
 function tap(x, y){
   if(performance.now()-lastTap<CONFIG.TAP_MIN_MS)return; lastTap=performance.now();
   navigator.vibrate?.(10); $('bubble').classList.remove('show');
-  const wrap=$('character-wrap'); wrap.classList.remove('char-tap');void wrap.offsetWidth;wrap.classList.add('char-tap');setTimeout(()=>wrap.classList.remove('char-tap'),300);
+  window.CharacterAnimation?.react();
   $('coins').animate([{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:180});
   const gain = coinsPerTap();
   addCoins(gain);
