@@ -16,6 +16,8 @@ const assert = require("node:assert/strict");
       [3, 8, true],
       [4, 8, false],
       [2, 2, true],
+      [2, 8, false],
+      [5, 8, true],
     ]) {
       const page = await browser.newPage({
         viewport: { width: 390, height: 844 },

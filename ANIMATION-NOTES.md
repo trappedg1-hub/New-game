@@ -1,3 +1,34 @@
+# Current delivery status — final tiers and gem gacha
+
+All five relationship tiers now use five independently generated registered components, RGBA **420×1323**. Tier 2's four existing candidates were reprocessed and registered; its old face candidate contained a dressed figure, so only the head of that independently generated component was retained. A newly generated closed face supplies the eyelid patch. Tier 5 has five new independent components. Original whole-character art was not sliced into parts. `tools/register_final_tiers.py` reproduces preparation. Browser review corrected a Tier 2 scalp gap; new tiers retain distinct front/back motion and masks.
+
+| Runtime asset | Status |
+|---|---|
+| Tiers 1–5 | All layered; five enabled parts each |
+| Silk Nightgown | Whole-art fallback with existing SSR gold lighting; three 420×1323 candidates saved under `assets/characters/costume_gown/` |
+| Other collectible costumes | Existing whole-art fallbacks |
+
+The service counted a failed Tier 5 body request against its 10-request budget. The body retry succeeded. **Nine successful images** this turn: six required tier components plus three Nightgown parts (body/back/front hair). The Nightgown open-face request was rejected by the limit; both its open and closed faces remain pending. Incomplete candidates are recorded in the manifest, never mounted as a broken rig. No additional image calls were attempted after the limit response.
+
+## Gem gacha
+
+The existing accessible left-menu Gacha modal is now explicitly labeled “Gacha 🎰” and shows its banner, pool, rates, gem balance, pity, paid x1 at 100 gems, paid x10 at 900 gems, and a separate free x1 button with a rolling 24-hour cooldown. Paid pulls do not consume the free claim or energy. Draw outcomes, ownership, duplicate coin rewards and pity are persisted before the reveal animation. Cards rotateY-flip over 800ms with NEW! badges, duplicate rewards, and SSR gold lighting/confetti/brief WAAPI shake. Draws unlock the wardrobe immediately; existing owned outfits and saves are retained.
+
+Pool clarification: the requested N/R/SSR list contains no SR outfit despite a 9% SR rate. N is Cardigan/Track Star/Café Apron, R is Maid/Poolside, SSR is Silk Nightgown/Midnight Bunny. SR draws are explicitly labeled upgraded Maid/Poolside cards, unlocking those same wardrobe IDs and paying SR duplicate rewards. This interpretation is disclosed in the modal. SR-or-better is guaranteed by draw 10; SSR is guaranteed by draw 50 and takes priority. Natural SSR remains possible at the SR-pity threshold. This is a local game-currency draw system, not a payment service.
+
+## Current verification
+
+- Renderer unit tests and game smoke tests pass (360/390/414/1280).
+- PNG audit: all 25 enabled tier paths exist, RGBA 420×1323, transparent alpha, and distinct open/closed faces.
+- Hair regression checks now pass with **all five tiers layered**.
+- Tap regression tests cover full motion Tiers 1–5, touch/mouse, blink opacity complementarity, idle clock continuity, no disappearing frames, no residual transforms, and two-core mobile breathing-only plus bounce.
+- Gacha browser tests cover gem prices and x10 discount, energy unchanged, separate free claim/cooldown, duplicate payout, NEW badge, immediate collection unlock, SR@10/SSR@50, persistence across reload, insufficient funds, SSR confetti, and equipping the Nightgown as an atomic whole-image SSR fallback.
+- Native-device 60fps and Live2D mesh deformation remain unverified/not claimed.
+
+The sections below are historical batch records, superseded by this current status.
+
+---
+
 # Independent character animation / status
 
 ## Delivered assets

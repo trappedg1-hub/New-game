@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "generatorLimit": 10,
   "tiers": {
     "1": {
@@ -22,17 +22,18 @@
       "hairBackReveal": [156, 210]
     },
     "2": {
-      "status": "fallback",
-      "canvas": [421, 1185],
+      "status": "layered",
+      "canvas": [420, 1323],
       "source": "assets/characters/tier2.webp",
-      "layers": {},
-      "reason": "Four existing candidates retained; generated closed-eye face still pending next image budget.",
-      "candidateLayers": [
-        "assets/characters/tier2/body_base.png",
-        "assets/characters/tier2/hair_back.png",
-        "assets/characters/tier2/hair_front.png",
-        "assets/characters/tier2/face.png"
-      ]
+      "layers": {
+        "body_base": "assets/characters/tier2/body_base.png",
+        "hair_back": "assets/characters/tier2/hair_back.png",
+        "hair_front": "assets/characters/tier2/hair_front.png",
+        "face": "assets/characters/tier2/face.png",
+        "face_blink": "assets/characters/tier2/face_blink.png"
+      },
+      "hairBackReveal": [150, 200],
+      "registration": "Independent AI parts keyed and registered. Generated closed eyelids composited over open-face silhouette. Optional cloth omitted."
     },
     "3": {
       "status": "layered",
@@ -72,11 +73,18 @@
       "hairBackReveal": [723, 759]
     },
     "5": {
-      "status": "fallback",
-      "canvas": [403, 1323],
+      "status": "layered",
+      "canvas": [420, 1323],
       "source": "assets/characters/tier5.webp",
-      "layers": {},
-      "reason": "Pending next image budget; Tier 3 and Tier 4 completed first per priority."
+      "layers": {
+        "body_base": "assets/characters/tier5/body_base.png",
+        "hair_back": "assets/characters/tier5/hair_back.png",
+        "hair_front": "assets/characters/tier5/hair_front.png",
+        "face": "assets/characters/tier5/face.png",
+        "face_blink": "assets/characters/tier5/face_blink.png"
+      },
+      "hairBackReveal": [145, 195],
+      "registration": "Independent AI parts keyed and registered. Generated closed eyelids composited over open-face silhouette. Optional cloth omitted."
     }
   },
   "costumes": {
@@ -119,8 +127,14 @@
       "status": "fallback",
       "source": "assets/characters/costume_gown.webp",
       "ssr": true,
-      "reason": "No independently generated costume rig.",
-      "canvas": [393, 1292]
+      "reason": "Three generated components retained. Open-face request rejected by per-turn limit after a failed body attempt consumed one request. Both faces pending; atomic fallback with SSR gold lighting until complete.",
+      "canvas": [393, 1292],
+      "candidateLayers": {
+        "body_base": "assets/characters/costume_gown/body_base.png",
+        "hair_back": "assets/characters/costume_gown/hair_back.png",
+        "hair_front": "assets/characters/costume_gown/hair_front.png"
+      },
+      "candidateCanvas": [420, 1323]
     },
     "bunny": {
       "status": "fallback",

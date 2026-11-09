@@ -227,39 +227,47 @@ function tickEnergy(){
 
 /* ---------------- Gacha ---------------- */
 function rollRarity(){
-  if(S.pity.ssr >= 49){ S.pity.ssr = 0; S.pity.sr = 0; return 'SSR'; }
-  if(S.pity.sr >= 9){ S.pity.sr = 0; S.pity.ssr++; return 'SR'; }
-  const r = Math.random();
-  let acc = 0, hit = 'N';
-  for(const k of ['N','R','SR','SSR']){ acc += RARITY_RATE[k]; if(r<acc){ hit=k; break; } }
-  if(hit==='SR'){ S.pity.sr=0; S.pity.ssr++; }
-  else if(hit==='SSR'){ S.pity.ssr=0; S.pity.sr=0; }
-  else { S.pity.sr++; S.pity.ssr++; }
+  if(S.pity.ssr >= 49){ S.pity.ssr=0; S.pity.sr=0; return 'SSR'; }
+  const r=Math.random();let acc=0,hit='N';
+  for(const k of ['N','R','SR','SSR']){acc+=RARITY_RATE[k];if(r<acc){hit=k;break;}}
+  if(hit!=='SSR' && S.pity.sr>=9)hit='SR';
+  if(hit==='SSR'){S.pity.ssr=0;S.pity.sr=0;}
+  else {S.pity.ssr++;S.pity.sr=hit==='SR'?0:S.pity.sr+1;}
   return hit;
 }
-function pull(n){
-  if(n===1){
-    const free = Date.now()-S.freePull >= FREE_PULL_MS;
-    if(!free && S.energy < 10){ toast('Not enough ⚡ — wait for a refill!'); return; }
-    if(free) S.freePull = Date.now(); else S.energy -= 10;
+function pull(n,free=false){
+  if(!$('modal-gacha').classList.contains('open') || ![1,10].includes(n))return;
+  const cost=n===10?900:100;
+  if(free){
+    if(n!==1 || Date.now()-S.freePull<FREE_PULL_MS){toast('Free pull available once every 24 hours');return;}
+    S.freePull=Date.now();
   }else{
-    if(S.energy < 100){ toast('Need100 ⚡ for a ×10 pull'); return; }
-    S.energy -= 100;
+    if(S.gems<cost){toast('Not enough 💎');return;}
+    S.gems-=cost;
   }
-  const results = [];
+  const results=[];
   for(let i=0;i<n;i++){
-    const rar = rollRarity();
-    const pool = COSTUMES.filter(c=>c.id!=='base' && c.rarity===rar);
-    const pick = pool[Math.floor(Math.random()*pool.length)];
-    const owned = S.owned.includes(pick.id);
-    if(!owned) S.owned.push(pick.id);
-    results.push({c:pick, dup:owned});
-    S.stats.pulls++; S.pity.sr = S.pity.sr;
-    if(S.daily.date===today()) S.daily.d_pulls++;
+    const rar=rollRarity();
+    // The requested seven-outfit pool has no distinct SR outfit. SR upgrades an R card.
+    const pool=COSTUMES.filter(c=>c.id!=='base'&&c.rarity===(rar==='SR'?'R':rar));
+    const pick=pool[Math.floor(Math.random()*pool.length)];
+    const owned=S.owned.includes(pick.id);
+    if(!owned)S.owned.push(pick.id);else addCoins(DUP_COINS[rar]);
+    results.push({c:{...pick,rarity:rar},dup:owned});
+    S.stats.pulls++;
+    if(S.daily.date===today())S.daily.d_pulls++;
   }
-  save();
-  renderAll();
-  showReveal(results);
+  renderAll();saveNow();showReveal(results);
+}
+function ssrCelebration(){
+  if(!S.settings.motion || matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const card=$('modal-reveal').querySelector('.modal-card');
+  card.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],{duration:400});
+  for(let i=0;i<(mobile()?16:30);i++){
+    const el=document.createElement('i');el.className='gacha-confetti';
+    el.style.cssText=`left:${15+Math.random()*70}%;--drift:${Math.random()*180-90}px;--spin:${Math.random()*720}deg;background:${['#ffd700','#ffe7a0','#ff80bd'][i%3]}`;
+    $('modal-reveal').append(el);setTimeout(()=>el.remove(),1600);
+  }
 }
 function showReveal(results){
   const grid = $('reveal-grid'); grid.innerHTML='';
@@ -271,11 +279,10 @@ function showReveal(results){
       <div class="inner">
         <img src="${r.c.img||'assets/characters/tier1.png'}" alt="${r.c.name}">
         <div class="rr rar ${r.c.rarity}">${r.c.rarity} · ${r.c.name.toUpperCase()}</div>
-        ${r.dup?`<div class="dup-tag">DUP +${DUP_COINS[r.c.rarity]}💰</div>`:''}
+        ${r.dup?`<div class="dup-tag">DUP +${DUP_COINS[r.c.rarity]}💰</div>`:'<div class="new-badge">NEW!</div>'}
       </div>`;
-    if(r.dup) addCoins(DUP_COINS[r.c.rarity]);
     grid.appendChild(card);
-    setTimeout(()=>{card.classList.add('flipped');if(r.c.rarity==='SSR')burst(innerWidth/2,innerHeight/3);},1000+i*300);
+    setTimeout(()=>{card.classList.add('flipped');if(r.c.rarity==='SSR' && card.isConnected && $('modal-reveal').classList.contains('open'))ssrCelebration();},150+i*100);
   });
   $('modal-gacha').classList.remove('open');
   $('modal-reveal').classList.add('open');
@@ -440,9 +447,12 @@ function renderShop(){
 function renderGacha(){
   $('pity-sr').textContent = S.pity.sr;
   $('pity-ssr').textContent = S.pity.ssr;
-  $('gacha-energy').textContent = Math.floor(S.energy);
+  $('gacha-energy').textContent = Math.floor(S.gems);
+  $('pull-x1').disabled=S.gems<100;
+  $('pull-x10').disabled=S.gems<900;
   const free = Date.now()-S.freePull >= FREE_PULL_MS;
-  $('free-timer').textContent = free ? 'NOW' :
+  $('pull-free').disabled=!free;
+  $('free-timer').textContent = free ? 'READY · 1 per 24h' :
     Math.ceil((FREE_PULL_MS-(Date.now()-S.freePull))/60000)+'m';
   const ownedN = S.owned.length-1, total = COSTUMES.length-1;
   $('gacha-owned').textContent = `Collection: ${ownedN}/${total} costumes`;
@@ -502,14 +512,15 @@ function loop(){
   // passive relationship XP from auto
   if(autoOn() && baseCps()>0) addXp(baseCps()*totalMult()*dt/1000/4);
   acc += dt;
-  if(acc > 400){ acc = 0; renderHUD(); if(Math.random()<0.08) idleTalk(); }
+  if(acc > 400){ acc = 0; renderHUD(); if($('modal-gacha').classList.contains('open'))renderGacha(); if(Math.random()<0.08) idleTalk(); }
   if(now - (S.bubbleAt||0) > 8000){ S.bubbleAt = now; idleTalk(); }
   renderGachaTimers();
   requestAnimationFrame(loop);
 }
 function renderGachaTimers(){
   const free = Date.now()-S.freePull >= FREE_PULL_MS;
-  $('free-timer').textContent = free ? 'NOW' :
+  $('pull-free').disabled=!free;
+  $('free-timer').textContent = free ? 'READY · 1 per 24h' :
     Math.ceil((FREE_PULL_MS-(Date.now()-S.freePull))/60000)+'m';
 }
 
@@ -557,6 +568,7 @@ function bind(){
     save();
   };
   $('pull-x1').onclick = ()=>pull(1);
+  $('pull-free').onclick = ()=>pull(1,true);
   $('pull-x10').onclick = ()=>pull(10);
   $('reveal-close').onclick = ()=>{ $('modal-reveal').classList.remove('open'); openModal('gacha'); };
   $('btn-prestige').onclick = ()=>{ $('prestige-preview').textContent=`Lv ${S.level} · ${fmt(S.coins)} coins → +${prestigeGain()} 💎`;openModal('prestige');};

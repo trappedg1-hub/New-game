@@ -16,10 +16,10 @@ window.CONTENT = (() => {
   const COSTUMES = [
     { id:'base',     name:'Tier Outfit',    rarity:'N',  img:null },
     { id:'cardigan', name:'Cozy Cardigan',  rarity:'N',  img:'assets/characters/costume_cardigan' },
-    { id:'track',    name:'Track Star',     rarity:'R',  img:'assets/characters/costume_track' },
-    { id:'apron',    name:'Café Apron',     rarity:'R',  img:'assets/characters/costume_apron' },
-    { id:'maid',     name:'French Maid',    rarity:'SR', img:'assets/characters/costume_maid' },
-    { id:'pool',     name:'Poolside',       rarity:'SR', img:'assets/characters/costume_pool' },
+    { id:'track',    name:'Track Star',     rarity:'N',  img:'assets/characters/costume_track' },
+    { id:'apron',    name:'Café Apron',     rarity:'N',  img:'assets/characters/costume_apron' },
+    { id:'maid',     name:'French Maid',    rarity:'R', img:'assets/characters/costume_maid' },
+    { id:'pool',     name:'Poolside',       rarity:'R', img:'assets/characters/costume_pool' },
     { id:'gown',     name:'Silk Nightgown', rarity:'SSR',img:'assets/characters/costume_gown', ssrAnim:true },
     { id:'bunny',    name:'Midnight Bunny', rarity:'SSR',img:'assets/characters/costume_bunny', ssrAnim:true },
   ];

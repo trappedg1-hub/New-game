@@ -192,7 +192,7 @@
           <span class="ico"
             ><svg class="ui-icon" aria-hidden="true">
               <use href="#i-gacha" /></svg></span
-          >Gacha
+          >Gacha 🎰
         </button>
         <button class="rail-btn" data-modal="inventory">
           <span class="ico"
@@ -426,7 +426,7 @@
     >
       <div class="modal-card wide">
         <button class="modal-close" aria-label="Close">✕</button>
-        <h2>Costume Atelier</h2>
+        <h2>Gacha · Costume Atelier</h2>
         <div class="gacha-banner">
           <span class="banner-kicker">✦ SSR COLLECTION</span><b>After Hours</b
           ><span class="banner-copy"
@@ -434,19 +434,26 @@
             you.</span
           >
         </div>
+        <p class="gacha-rates">N 60% · R 30% · SR 9% · SSR 1%</p>
+        <p class="gacha-pool">
+          N: Cardigan / Track Star / Café Apron<br />R: Maid / Poolside · SR:
+          upgraded Maid / Poolside cards<br />SSR: Silk Nightgown / Midnight
+          Bunny
+        </p>
         <div class="pity-row">
-          <div class="pity">SR pity: <b id="pity-sr">0</b>/10</div>
+          <div class="pity">SR or better: <b id="pity-sr">0</b>/10</div>
           <div class="pity">SSR pity: <b id="pity-ssr">0</b>/50</div>
-          <div class="pity">⚡ <b id="gacha-energy">100</b></div>
+          <div class="pity">💎 <b id="gacha-energy">0</b></div>
         </div>
         <div class="gacha-buttons">
           <button class="btn-glass" id="pull-x1">
-            PULL ×1<br /><small
-              >10⚡ · free in <span id="free-timer">--</span></small
-            >
+            PULL ×1<br /><small>100💎</small>
           </button>
           <button class="btn-pink" id="pull-x10">
-            PULL ×10<br /><small>100⚡</small>
+            PULL ×10<br /><small>900💎</small>
+          </button>
+          <button class="btn-glass" id="pull-free">
+            FREE DAILY ×1<br /><small id="free-timer">--</small>
           </button>
         </div>
         <div id="gacha-owned" class="gacha-owned"></div>

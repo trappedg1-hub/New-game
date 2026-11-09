@@ -48,7 +48,10 @@ const fs = require("node:fs");
     ];
     w.CharacterAnimation.mount(el, `assets/characters/tier${tier}.webp`);
     await new Promise((r) => setTimeout(r, 5));
-    assert.equal(el.firstElementChild.dataset.animationMode, manifest.tiers[tier].status);
+    assert.equal(
+      el.firstElementChild.dataset.animationMode,
+      manifest.tiers[tier].status,
+    );
     if (manifest.tiers[tier].status === "layered") {
       assert.equal(el.querySelectorAll(".rig-layer").length, 5);
       assert(el.querySelector(".rig-hair-front"));
@@ -63,7 +66,10 @@ const fs = require("node:fs");
   w.CharacterAnimation.mount(el, "assets/characters/tier1.webp");
   w.CharacterAnimation.mount(el, "assets/characters/tier5.webp");
   await new Promise((r) => setTimeout(r, 20));
-  assert.equal(el.firstElementChild.dataset.animationMode, "fallback");
+  assert.equal(
+    el.firstElementChild.dataset.animationMode,
+    manifest.tiers[5].status,
+  );
   dom.window.close();
   console.log(
     "PASS layered rendering, explicit fallbacks, tier classes, same-src preload, stale-load cancellation",
