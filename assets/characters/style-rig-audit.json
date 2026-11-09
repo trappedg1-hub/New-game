@@ -1,0 +1,235 @@
+{
+  "review": "Visual audit of all 12 unique full-art sources and rendered rigs; 8 wardrobe entries means base + 7 costumes, not 8 extra costumes.",
+  "styleFindings": {
+    "bunny": "Flat unshaded body/stockings were the clearest style mismatch; regenerated shaded satin/skin/stockings body enabled.",
+    "maid": "Flat body rendering upgraded to shaded fabric/stockings/skin.",
+    "others": "Reviewed as finished colored illustrations, not pencil/graphite or lineart-only drafts."
+  },
+  "generationBatch": {
+    "count": 10,
+    "accepted": [
+      "style-bunny/body_base.png",
+      "style-maid/body_base.png"
+    ],
+    "rejected": "Other generated candidates changed layout, duplicated components or failed background requirements; retained reviewed original hair/faces instead."
+  },
+  "limitation": "Output tools returned larger noncanonical canvases despite prompt. Final 420x1323 RGBA files are deterministically normalized, not falsely described as native model outputs. Aesthetic quality and exact line thickness are visual judgments, not machine-certified Nikke equivalence.",
+  "rigs": {
+    "tier1": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        250.5,
+        15
+      ],
+      "view": [
+        0,
+        0,
+        420,
+        1323
+      ],
+      "bodyRegistration": "Common per-rig transform, no independent part resizing."
+    },
+    "tier2": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        224.5,
+        26
+      ],
+      "view": [
+        0,
+        0,
+        420,
+        1323
+      ],
+      "bodyRegistration": "Common per-rig transform, no independent part resizing."
+    },
+    "tier3": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        178.0,
+        29
+      ],
+      "view": [
+        0,
+        0,
+        420,
+        1323
+      ],
+      "bodyRegistration": "Common per-rig transform, no independent part resizing."
+    },
+    "tier4": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        199.5,
+        628
+      ],
+      "view": [
+        0,
+        617,
+        420,
+        706
+      ],
+      "bodyRegistration": "Common per-rig transform, no independent part resizing."
+    },
+    "tier5": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        165.5,
+        29
+      ],
+      "view": [
+        0,
+        0,
+        420,
+        1323
+      ],
+      "bodyRegistration": "Common per-rig transform, no independent part resizing."
+    },
+    "apron": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        165.5,
+        202
+      ],
+      "view": [
+        0,
+        165,
+        420,
+        1158
+      ],
+      "bodyRegistration": "Common per-rig transform, no independent part resizing."
+    },
+    "bunny": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        212.5,
+        150
+      ],
+      "view": [
+        43,
+        0,
+        333,
+        1323
+      ],
+      "bodyRegistration": "Single common transform; independent regenerated body manually anchored to neck/foot baseline before common transform."
+    },
+    "cardigan": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        186.0,
+        6
+      ],
+      "view": [
+        12,
+        0,
+        396,
+        1323
+      ],
+      "bodyRegistration": "Common per-rig transform, no independent part resizing."
+    },
+    "gown": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        216.5,
+        20
+      ],
+      "view": [
+        9,
+        0,
+        402,
+        1323
+      ],
+      "bodyRegistration": "Common per-rig transform, no independent part resizing."
+    },
+    "maid": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        207.5,
+        104
+      ],
+      "view": [
+        0,
+        74,
+        420,
+        1249
+      ],
+      "bodyRegistration": "Single common transform; independent regenerated body manually anchored to neck/foot baseline before common transform."
+    },
+    "pool": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        199.0,
+        31
+      ],
+      "view": [
+        14,
+        0,
+        392,
+        1323
+      ],
+      "bodyRegistration": "Common per-rig transform, no independent part resizing."
+    },
+    "track": {
+      "canvas": [
+        420,
+        1323
+      ],
+      "layers": 5,
+      "crownPivot": [
+        184.5,
+        418
+      ],
+      "view": [
+        0,
+        373,
+        420,
+        950
+      ],
+      "bodyRegistration": "Common per-rig transform, no independent part resizing."
+    }
+  }
+}

@@ -14,5 +14,7 @@ for name,c in m['costumes'].items():
  allowed=np.zeros(a.shape[:2],bool);allowed[y:bottom,x:right]=True
  assert np.array_equal(a[~allowed],b[~allowed]),name
  assert np.any(a!=b),name
- assert bottom<c['canvas'][1]*(.25 if name=='bunny' else .2),name
+ assert c['canvas']==[420,1323],name
+ head=images['face_open'].getbbox()
+ assert bottom<head[1]+(head[3]-head[1])*.85,name
  print('PASS',name,'registered canvas, identical alpha and non-eye pixels')

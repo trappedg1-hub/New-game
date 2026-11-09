@@ -1,6 +1,6 @@
 {
-  "version": 17,
-  "renderer": "validated-layered-with-single-fallback",
+  "version": 18,
+  "renderer": "canonical-420x1323-registered-png",
   "tiers": {
     "1": {
       "status": "layered",
@@ -42,7 +42,7 @@
       },
       "hairPivot": [
         250.5,
-        54.24
+        15
       ]
     },
     "2": {
@@ -85,7 +85,7 @@
       },
       "hairPivot": [
         224.5,
-        59.48
+        26
       ]
     },
     "3": {
@@ -128,7 +128,7 @@
       },
       "hairPivot": [
         178.0,
-        63.2
+        29
       ]
     },
     "4": {
@@ -177,7 +177,7 @@
       },
       "hairPivot": [
         199.5,
-        654.46
+        628
       ]
     },
     "5": {
@@ -220,7 +220,7 @@
       },
       "hairPivot": [
         165.5,
-        62.3
+        29
       ]
     }
   },
@@ -230,8 +230,8 @@
       "status": "layered",
       "source": "assets/characters/single/costume_apron.png",
       "canvas": [
-        624,
-        1721
+        420,
+        1323
       ],
       "original": "assets/characters/costume_apron.png",
       "nativeCanvas": [
@@ -254,24 +254,26 @@
       },
       "ground": {
         "size": [
-          624,
-          1721
+          420,
+          1158
         ],
-        "floor": 0.9959325973271353,
+        "floor": 0.9956822107081175,
         "contacts": [
           {
-            "x": 0.21,
-            "width": 0.15
-          },
-          {
-            "x": 0.5,
-            "width": 0.16
+            "x": 0.44524,
+            "width": 0.14048
           }
         ]
       },
       "hairPivot": [
-        246.0,
-        103.1
+        165.5,
+        202
+      ],
+      "viewport": [
+        0,
+        165,
+        420,
+        1158
       ]
     },
     "bunny": {
@@ -279,8 +281,8 @@
       "status": "layered",
       "source": "assets/characters/single/costume_bunny.png",
       "canvas": [
-        512,
-        2033
+        420,
+        1323
       ],
       "original": "assets/characters/costume_bunny.png",
       "nativeCanvas": [
@@ -303,24 +305,26 @@
       },
       "ground": {
         "size": [
-          512,
-          2033
+          333,
+          1323
         ],
-        "floor": 0.9955730447614363,
+        "floor": 0.9954648526077098,
         "contacts": [
           {
-            "x": 0.2,
-            "width": 0.14
-          },
-          {
-            "x": 0.58,
-            "width": 0.18
+            "x": 0.62012,
+            "width": 0.2042
           }
         ]
       },
       "hairPivot": [
-        260.5,
-        284.5
+        212.5,
+        150
+      ],
+      "viewport": [
+        43,
+        0,
+        333,
+        1323
       ]
     },
     "cardigan": {
@@ -328,8 +332,8 @@
       "status": "layered",
       "source": "assets/characters/single/costume_cardigan.png",
       "canvas": [
-        560,
-        1871
+        420,
+        1323
       ],
       "original": "assets/characters/costume_cardigan.png",
       "nativeCanvas": [
@@ -352,24 +356,26 @@
       },
       "ground": {
         "size": [
-          560,
-          1871
+          396,
+          1323
         ],
-        "floor": 0.9957242116515232,
+        "floor": 0.9954648526077098,
         "contacts": [
           {
-            "x": 0.38,
-            "width": 0.22
-          },
-          {
-            "x": 0.78,
-            "width": 0.2
+            "x": 0.33207,
+            "width": 0.21212
           }
         ]
       },
       "hairPivot": [
-        246.5,
-        64.38
+        186.0,
+        6
+      ],
+      "viewport": [
+        12,
+        0,
+        396,
+        1323
       ]
     },
     "gown": {
@@ -377,8 +383,8 @@
       "status": "layered",
       "source": "assets/characters/single/costume_gown.png",
       "canvas": [
-        560,
-        1841
+        420,
+        1323
       ],
       "original": "assets/characters/costume_gown.png",
       "nativeCanvas": [
@@ -401,20 +407,26 @@
       },
       "ground": {
         "size": [
-          560,
-          1841
+          402,
+          1323
         ],
-        "floor": 1,
+        "floor": 1.0,
         "contacts": [
           {
-            "x": 0.48,
-            "width": 0.18
+            "x": 0.4801,
+            "width": 0.20149
           }
         ]
       },
       "hairPivot": [
-        289.0,
-        80.32
+        216.5,
+        20
+      ],
+      "viewport": [
+        9,
+        0,
+        402,
+        1323
       ]
     },
     "maid": {
@@ -422,8 +434,8 @@
       "status": "layered",
       "source": "assets/characters/single/costume_maid.png",
       "canvas": [
-        592,
-        1760
+        420,
+        1323
       ],
       "original": "assets/characters/costume_maid.png",
       "nativeCanvas": [
@@ -446,24 +458,30 @@
       },
       "ground": {
         "size": [
-          592,
-          1760
+          420,
+          1249
         ],
-        "floor": 1,
+        "floor": 1.0,
         "contacts": [
           {
-            "x": 0.44,
-            "width": 0.17
+            "x": 0.44881,
+            "width": 0.1381
           },
           {
-            "x": 0.75,
-            "width": 0.17
+            "x": 0.66905,
+            "width": 0.06429
           }
         ]
       },
       "hairPivot": [
-        292.5,
-        92.98
+        207.5,
+        104
+      ],
+      "viewport": [
+        0,
+        74,
+        420,
+        1249
       ]
     },
     "pool": {
@@ -471,8 +489,8 @@
       "status": "layered",
       "source": "assets/characters/single/costume_pool.png",
       "canvas": [
-        560,
-        1892
+        420,
+        1323
       ],
       "original": "assets/characters/costume_pool.png",
       "nativeCanvas": [
@@ -495,20 +513,26 @@
       },
       "ground": {
         "size": [
-          560,
-          1892
+          392,
+          1323
         ],
-        "floor": 0.9947145877378436,
+        "floor": 0.9947089947089947,
         "contacts": [
           {
-            "x": 0.43,
-            "width": 0.19
+            "x": 0.47959,
+            "width": 0.16071
           }
         ]
       },
       "hairPivot": [
-        264.0,
-        96.96
+        199.0,
+        31
+      ],
+      "viewport": [
+        14,
+        0,
+        392,
+        1323
       ]
     },
     "track": {
@@ -516,8 +540,8 @@
       "status": "layered",
       "source": "assets/characters/single/costume_track.png",
       "canvas": [
-        688,
-        1556
+        420,
+        1323
       ],
       "original": "assets/characters/costume_track.png",
       "nativeCanvas": [
@@ -540,24 +564,26 @@
       },
       "ground": {
         "size": [
-          688,
-          1556
+          420,
+          950
         ],
-        "floor": 0.9955012853470437,
+        "floor": 0.9957894736842106,
         "contacts": [
           {
-            "x": 0.18,
-            "width": 0.14
-          },
-          {
-            "x": 0.72,
-            "width": 0.19
+            "x": 0.17857,
+            "width": 0.13095
           }
         ]
       },
       "hairPivot": [
-        302.5,
-        117.06
+        184.5,
+        418
+      ],
+      "viewport": [
+        0,
+        373,
+        420,
+        950
       ]
     }
   },

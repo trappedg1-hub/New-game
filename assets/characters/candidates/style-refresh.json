@@ -1,0 +1,132 @@
+{
+  "assets/characters/candidates/keyed/style-bunny/body_base.png": {
+    "size": [
+      576,
+      1840
+    ],
+    "alpha_bbox": [
+      62,
+      415,
+      453,
+      1832
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/style-bunny/face_closed.png": {
+    "size": [
+      576,
+      1840
+    ],
+    "alpha_bbox": [
+      192,
+      216,
+      392,
+      465
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/style-bunny/face_open.png": {
+    "size": [
+      576,
+      1840
+    ],
+    "alpha_bbox": [
+      194,
+      214,
+      391,
+      461
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/style-bunny/hair_back.png": {
+    "size": [
+      576,
+      1840
+    ],
+    "alpha_bbox": [
+      80,
+      203,
+      515,
+      1771
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/style-bunny/hair_front.png": {
+    "size": [
+      576,
+      1840
+    ],
+    "alpha_bbox": [
+      0,
+      0,
+      576,
+      1840
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/style-maid/body_base.png": {
+    "size": [
+      576,
+      1840
+    ],
+    "alpha_bbox": [
+      2,
+      345,
+      576,
+      1840
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/style-maid/face_closed.png": {
+    "size": [
+      576,
+      1840
+    ],
+    "alpha_bbox": [
+      23,
+      153,
+      554,
+      1654
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/style-maid/face_open.png": {
+    "size": [
+      576,
+      1814
+    ],
+    "alpha_bbox": [
+      26,
+      151,
+      550,
+      1630
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/style-maid/hair_back.png": {
+    "size": [
+      576,
+      1840
+    ],
+    "alpha_bbox": [
+      115,
+      123,
+      480,
+      1227
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/style-maid/hair_front.png": {
+    "size": [
+      576,
+      1840
+    ],
+    "alpha_bbox": [
+      148,
+      107,
+      434,
+      505
+    ],
+    "status": "unregistered_candidate"
+  }
+}

@@ -12,15 +12,16 @@ for(const [t,c] of Object.entries(m.tiers)){
  const states=await p.evaluate(()=>{
   const a=document.querySelector('.face-open'),b=document.querySelector('.face-closed');
   const anim=[a.getAnimations()[0],b.getAnimations()[0]];anim.forEach(x=>x.pause());
-  const pairs=[0,4300,4350,4400,4499,4500].map(time=>{anim.forEach(x=>x.currentTime=time);return [getComputedStyle(a).opacity,getComputedStyle(b).opacity];});
+  const pairs=[0,4274,4275,4364,4365,4500].map(time=>{anim.forEach(x=>x.currentTime=time);return [getComputedStyle(a).opacity,getComputedStyle(b).opacity];});
   anim.forEach(x=>x.play());return pairs;
- });assert.deepEqual(states,[['1','0'],['1','0'],['0','1'],['0','1'],['0','1'],['1','0']]);
- const geometry=await p.evaluate(()=>{
+ });assert.deepEqual(states,[['1','0'],['1','0'],['0','1'],['0','1'],['1','0'],['1','0']]);
+ const geometry=await p.evaluate(ground=>{
  const body=document.querySelector('.body-base').getBoundingClientRect(),face=document.querySelector('.face-open').getBoundingClientRect(),root=document.getElementById('char-container').getBoundingClientRect(),stage=document.getElementById('stage').getBoundingClientRect();
- return {drift:Math.abs(body.x-face.x)+Math.abs(body.y-face.y)+Math.abs(body.width-face.width)+Math.abs(body.height-face.height),bottom:root.bottom,ground:stage.bottom-stage.height*.02};
- });assert(geometry.drift<.05);assert(Math.abs(geometry.bottom-geometry.ground)<2);
- const back=await p.locator('.rig-hair-back').evaluate(e=>getComputedStyle(e).transform),front=await p.locator('.rig-hair-front').evaluate(e=>getComputedStyle(e).transform);
- await p.waitForTimeout(400);assert.notEqual(back,await p.locator('.rig-hair-back').evaluate(e=>getComputedStyle(e).transform));assert.notEqual(front,await p.locator('.rig-hair-front').evaluate(e=>getComputedStyle(e).transform));
+ return {drift:Math.abs(body.x-face.x)+Math.abs(body.y-face.y)+Math.abs(body.width-face.width)+Math.abs(body.height-face.height),bottom:root.bottom-(1-ground.floor)*root.height,ground:stage.bottom-stage.height*.02};
+ },c.ground);assert(geometry.drift<.05);assert(Math.abs(geometry.bottom-geometry.ground)<2);
+ for(const selector of ['.rig-hair-back','.rig-hair-front']){
+ const states=await p.locator(selector).evaluate(e=>{const a=e.getAnimations()[0];a.pause();a.currentTime=700;const first=getComputedStyle(e).transform;a.currentTime=2600;const second=getComputedStyle(e).transform;a.play();return [first,second];});assert.notEqual(states[0],states[1]);
+ }
  await p.evaluate(()=>CharacterAnimation.react());await p.waitForTimeout(100);
  assert.equal(await p.locator('#char-container').evaluate(e=>getComputedStyle(e).transform),'none');
  if(width===390)await p.screenshot({path:`/home/user/true-tier${t}.png`});
@@ -35,7 +36,7 @@ for(const [key,env] of Object.entries(scenes)){
  const blink=await p.evaluate(()=>{
  const a=document.querySelector('.face-open'),b=document.querySelector('.face-closed');
  const anim=[a.getAnimations()[0],b.getAnimations()[0]];anim.forEach(x=>x.pause());
- const pairs=[0,4400,4500].map(t=>{anim.forEach(x=>x.currentTime=t);return [getComputedStyle(a).opacity,getComputedStyle(b).opacity];});anim.forEach(x=>x.play());return pairs;
+ const pairs=[0,4300,4500].map(t=>{anim.forEach(x=>x.currentTime=t);return [getComputedStyle(a).opacity,getComputedStyle(b).opacity];});anim.forEach(x=>x.play());return pairs;
  });assert.deepEqual(blink,[['1','0'],['0','1'],['1','0']]);
  const hairStates=await p.locator('.rig-hair-front').evaluate(e=>{
  const a=e.getAnimations()[0];a.pause();a.currentTime=0;const first=getComputedStyle(e).transform;

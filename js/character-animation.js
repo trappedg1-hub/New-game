@@ -14,8 +14,10 @@
   const [w,h]=currentMeta.size;const s=Math.min(wrap.clientWidth/w,wrap.clientHeight/h);
   root.style.width=w*s+'px';root.style.height=h*s+'px';
   const gap=(1-currentMeta.floor)*h*s;
-  const shadow=document.getElementById('char-shadow');shadow.style.width=Math.min(200,w*s*.7)+'px';shadow.style.bottom=gap-5+'px';
-  const contacts=document.getElementById('contact-shadows');contacts.style.width=w*s+'px';contacts.style.bottom=gap+'px';
+  // Register the opaque foot baseline, not the transparent canvas edge.
+  root.style.bottom=-gap+'px';
+  const shadow=document.getElementById('char-shadow');shadow.style.width=Math.min(200,w*s*.7)+'px';shadow.style.bottom='-5px';
+  const contacts=document.getElementById('contact-shadows');contacts.style.width=w*s+'px';contacts.style.bottom='0px';
  }
  function ground(meta){
   currentMeta=meta;const contacts=document.getElementById('contact-shadows');contacts.replaceChildren();
@@ -36,12 +38,13 @@
    const [x,y]=config.hairPivot,[w,h]=config.canvas;
    scene.style.setProperty('--hair-pivot',`${x/w*100}% ${y/h*100}%`);
   }
-  const breath=document.createElement('div');breath.className='rig-breath';scene.append(breath);
-  const group=(cls,src,part)=>{const react=document.createElement('div');react.className='rig-react '+cls+'-react';const idle=document.createElement('div');idle.className=cls;idle.append(image(src,part));react.append(idle);return react;};
+  const tapGroup=document.createElement('div');tapGroup.className='rig-tap-synced';scene.append(tapGroup);
+  const breath=document.createElement('div');breath.className='rig-breath';tapGroup.append(breath);
+  const group=(cls,src,part)=>{const react=document.createElement('div');react.className='rig-react '+cls+'-react';const idle=document.createElement('div');idle.className=cls;idle.append(image(src,part));const synced=document.createElement('div');synced.className='rig-hair-breath layer-synced '+cls+'-stack';react.append(idle);synced.append(react);return synced;};
   breath.append(group('rig-hair-back',config.layers.hair_back,'hair-back'));
-  breath.append(image(config.layers.body_base,'body-base'));
+  breath.append(image(config.layers.body_base,'body-base layer-synced'));
   const faces=document.createElement('div');faces.className='rig-faces';
-  faces.append(image(config.layers.face_open,'face-open'),image(config.layers.face_closed,'face-closed'));breath.append(faces);
+  faces.append(image(config.layers.face_open,'face-open layer-synced'),image(config.layers.face_closed,'face-closed layer-synced'));breath.append(faces);
   breath.append(group('rig-hair-front',config.layers.hair_front,'hair-front'));
   return scene;
  }
@@ -70,7 +73,12 @@
  }
  function react(){
   if(!motion())return;const root=document.getElementById('character-surface');
-  for(const [selector,angle,duration] of [['.rig-hair-front-react',2,650],['.rig-hair-back-react',.8,850]]){
+  const synced=root.querySelector('.rig-tap-synced');
+  if(synced){
+   for(const a of synced.getAnimations())a.cancel();
+   reactions.push(synced.animate([{transform:'translateY(0)'},{transform:'translateY(3px)',offset:.25},{transform:'translateY(-3px)',offset:.65},{transform:'translateY(0)'}],{duration:450,easing:'ease-out'}));
+  }
+  for(const [selector,angle,duration] of [['.rig-hair-front-react',2,550]]){
    const e=root.querySelector(selector);if(!e)continue;
    for(const a of e.getAnimations())a.cancel();
    reactions.push(e.animate([{transform:'rotate(0)'},{transform:`rotate(${-angle}deg)`,offset:.25},{transform:`rotate(${angle*.5}deg)`,offset:.6},{transform:'rotate(0)'}],{duration,easing:'ease-out'}));

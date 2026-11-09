@@ -1,14 +1,14 @@
 {
   "status": "reviewed",
   "canvas": [
-    560,
-    1871
+    420,
+    1323
   ],
   "blinkChangeBounds": [
-    148,
-    97,
-    341,
-    182
+    115,
+    68,
+    255,
+    130
   ],
   "identicalAlpha": true,
   "nonEyePixelsLocked": true,
@@ -16,5 +16,19 @@
   "browserTests": [
     390,
     1280
-  ]
+  ],
+  "canonicalTransform": {
+    "sourceCanvas": [
+      560,
+      1871
+    ],
+    "viewport": [
+      12,
+      0,
+      396,
+      1323
+    ],
+    "uniformFit": true
+  },
+  "styleRefresh": false
 }

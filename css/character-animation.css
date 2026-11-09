@@ -3,23 +3,26 @@
 #character-wrap {bottom:2%;height:91%;animation:none;}
 .character-wrapper {position:absolute;left:50%;bottom:0;translate:-50% 0;z-index:2;pointer-events:none;}
 .character-surface {position:relative;width:100%;height:100%;filter:var(--scene-light);}
-.rig-scene,.rig-breath,.rig-react,.rig-hair-back,.rig-hair-front,.rig-faces,.rig-part {position:absolute;inset:0;width:100%;height:100%;}
+.rig-scene,.rig-breath,.rig-tap-synced,.rig-hair-breath,.rig-react,.rig-hair-back,.rig-hair-front,.rig-faces,.rig-part {position:absolute;inset:0;width:100%;height:100%;}
 .rig-scene {isolation:isolate;}
 .rig-part {object-fit:contain;object-position:bottom;filter:none;animation:none;pointer-events:none;}
-.rig-breath {transform-origin:50% 100%;animation:layerBreathe 3.8s ease-in-out infinite;}
+.rig-part.layer-synced,.rig-hair-breath.layer-synced {animation:breatheSync 3.8s ease-in-out infinite;transform-origin:center bottom;will-change:transform;}
+.rig-hair-back-stack {z-index:1;}
+.rig-hair-front-stack {z-index:5;}
 .rig-hair-back-react {z-index:1;transform-origin:var(--hair-pivot,50% 0%);}
 .body-base {z-index:2;}
 .rig-faces {z-index:4;}
 .rig-hair-front-react {z-index:5;transform-origin:var(--hair-pivot,50% 0%);}
-.rig-hair-back {transform-origin:var(--hair-pivot,50% 0%);animation:hairSwayBack 5.5s ease-in-out infinite;}
-.rig-hair-front {transform-origin:var(--hair-pivot,50% 0%);animation:hairSwayFront 4.2s ease-in-out infinite;}
-.rig-part.face-open {opacity:1;animation:blinkOpen 4.5s steps(1,end) infinite;}
-.rig-part.face-closed {opacity:0;animation:blinkClosed 4.5s steps(1,end) infinite;}
-@keyframes blinkOpen {0%,100%{opacity:1;}96.666666%{opacity:0;}}
-@keyframes blinkClosed {0%,100%{opacity:0;}96.666666%{opacity:1;}}
+.rig-hair-back {transform-origin:var(--hair-pivot,50% 0%);animation:hairBackSway 5.2s ease-in-out infinite;}
+.rig-hair-front {transform-origin:var(--hair-pivot,50% 0%);animation:hairFrontSway 4s ease-in-out .6s infinite reverse;animation-fill-mode:both;}
+.rig-part.face-open.layer-synced {opacity:1;animation:blinkOpen 4.5s steps(1,end) infinite,breatheSync 3.8s ease-in-out infinite;}
+.rig-part.face-closed.layer-synced {opacity:0;animation:blinkClosed 4.5s steps(1,end) infinite,breatheSync 3.8s ease-in-out infinite;}
+@keyframes blinkOpen {0%,97%,100%{opacity:1;}95%{opacity:0;}}
+@keyframes blinkClosed {0%,97%,100%{opacity:0;}95%{opacity:1;}}
+@keyframes breatheSync {0%,100%{transform:translateY(0) scaleY(1);}50%{transform:translateY(-2px) scaleY(1.006);}}
 @keyframes layerBreathe {0%,100%{transform:scaleY(1);}50%{transform:scaleY(1.006);}}
-@keyframes hairSwayBack {0%,100%{transform:rotate(-.4deg);}50%{transform:rotate(.4deg);}}
-@keyframes hairSwayFront {0%,100%{transform:rotate(.8deg) translateX(-1.5px);}50%{transform:rotate(-.8deg) translateX(1.5px);}}
+@keyframes hairBackSway {0%,100%{transform:rotate(-.4deg) translateX(-.5px);}50%{transform:rotate(.4deg) translateX(.5px);}}
+@keyframes hairFrontSway {0%,100%{transform:rotate(.6deg) translateX(1px);}50%{transform:rotate(-.6deg) translateX(-1px);}}
 .char-single-img {display:block;width:100%;height:100%;object-fit:contain;object-position:bottom;}
 .character-surface[data-mode="single"] {transform-origin:bottom center;animation:layerBreathe 3.8s ease-in-out infinite;}
 body {--scene-light:drop-shadow(0 8px 24px #0006) contrast(1.02);--rim-color:#fff2ce;}
