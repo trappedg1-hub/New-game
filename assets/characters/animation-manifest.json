@@ -1,10 +1,13 @@
 {
-  "version": 1,
+  "version": 2,
   "generatorLimit": 10,
   "tiers": {
     "1": {
       "status": "layered",
-      "canvas": [420, 1323],
+      "canvas": [
+        420,
+        1323
+      ],
       "source": "assets/characters/tier1.webp",
       "layers": {
         "body_base": "assets/characters/tier1/body_base.png",
@@ -22,10 +25,13 @@
     },
     "2": {
       "status": "fallback",
-      "canvas": [421, 1185],
+      "canvas": [
+        421,
+        1185
+      ],
       "source": "assets/characters/tier2.webp",
       "layers": {},
-      "reason": "Incomplete generation: 10-image per-turn service limit reached.",
+      "reason": "Four existing candidates retained; generated closed-eye face still pending next image budget.",
       "candidateLayers": [
         "assets/characters/tier2/body_base.png",
         "assets/characters/tier2/hair_back.png",
@@ -34,25 +40,60 @@
       ]
     },
     "3": {
-      "status": "fallback",
-      "canvas": [411, 1290],
+      "status": "layered",
+      "canvas": [
+        420,
+        1323
+      ],
       "source": "assets/characters/tier3.webp",
-      "layers": {},
-      "reason": "Generation unavailable after service limit; no synthetic parts substituted."
+      "layers": {
+        "body_base": "assets/characters/tier3/body_base.png",
+        "hair_back": "assets/characters/tier3/hair_back.png",
+        "hair_front": "assets/characters/tier3/hair_front.png",
+        "face": "assets/characters/tier3/face.png",
+        "face_blink": "assets/characters/tier3/face_blink.png"
+      },
+      "optionalCloth": {
+        "enabled": false,
+        "reason": "Not generated; optional fabric omitted to prioritize complete five-part rigs."
+      },
+      "registration": "Independent AI components keyed and manually registered. Generated closed eyelids blended over unchanged open-face silhouette."
     },
     "4": {
-      "status": "fallback",
-      "canvas": [701, 1178],
+      "status": "layered",
+      "canvas": [
+        420,
+        1323
+      ],
       "source": "assets/characters/tier4.webp",
-      "layers": {},
-      "reason": "Generation unavailable after service limit; no synthetic parts substituted."
+      "layers": {
+        "body_base": "assets/characters/tier4/body_base.png",
+        "hair_back": "assets/characters/tier4/hair_back.png",
+        "hair_front": "assets/characters/tier4/hair_front.png",
+        "face": "assets/characters/tier4/face.png",
+        "face_blink": "assets/characters/tier4/face_blink.png"
+      },
+      "optionalCloth": {
+        "enabled": false,
+        "reason": "Not generated; optional fabric omitted to prioritize complete five-part rigs."
+      },
+      "registration": "Independent AI components keyed and manually registered. Generated closed eyelids blended over unchanged open-face silhouette.",
+      "viewport": [
+        0,
+        617,
+        420,
+        706
+      ]
     },
     "5": {
       "status": "fallback",
-      "canvas": [403, 1323],
+      "canvas": [
+        403,
+        1323
+      ],
       "source": "assets/characters/tier5.webp",
       "layers": {},
-      "reason": "Generation unavailable after service limit; no synthetic parts substituted."
+      "reason": "Pending next image budget; Tier 3 and Tier 4 completed first per priority."
     }
   },
   "costumes": {
@@ -61,49 +102,70 @@
       "source": "assets/characters/costume_cardigan.webp",
       "ssr": false,
       "reason": "No independently generated costume rig.",
-      "canvas": [395, 1320]
+      "canvas": [
+        395,
+        1320
+      ]
     },
     "track": {
       "status": "fallback",
       "source": "assets/characters/costume_track.webp",
       "ssr": false,
       "reason": "No independently generated costume rig.",
-      "canvas": [584, 1321]
+      "canvas": [
+        584,
+        1321
+      ]
     },
     "apron": {
       "status": "fallback",
       "source": "assets/characters/costume_apron.webp",
       "ssr": false,
       "reason": "No independently generated costume rig.",
-      "canvas": [500, 1379]
+      "canvas": [
+        500,
+        1379
+      ]
     },
     "maid": {
       "status": "fallback",
       "source": "assets/characters/costume_maid.webp",
       "ssr": false,
       "reason": "No independently generated costume rig.",
-      "canvas": [396, 1177]
+      "canvas": [
+        396,
+        1177
+      ]
     },
     "pool": {
       "status": "fallback",
       "source": "assets/characters/costume_pool.webp",
       "ssr": false,
       "reason": "No independently generated costume rig.",
-      "canvas": [360, 1216]
+      "canvas": [
+        360,
+        1216
+      ]
     },
     "gown": {
       "status": "fallback",
       "source": "assets/characters/costume_gown.webp",
       "ssr": true,
       "reason": "No independently generated costume rig.",
-      "canvas": [393, 1292]
+      "canvas": [
+        393,
+        1292
+      ]
     },
     "bunny": {
       "status": "fallback",
       "source": "assets/characters/costume_bunny.webp",
       "ssr": true,
       "reason": "No independently generated costume rig.",
-      "canvas": [341, 1354]
+      "canvas": [
+        341,
+        1354
+      ]
     }
   },
   "notes": "AI components require registration and matte cleanup; these are not Live2D meshes."

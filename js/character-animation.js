@@ -88,7 +88,19 @@
     return root;
   }
   function layered(config) {
-    const { root, canvas } = frame(config.canvas);
+    const view = config.viewport;
+    const { root, canvas } = frame(view ? [view[2], view[3]] : config.canvas);
+    const scene = document.createElement("div");
+    scene.className = "rig-scene";
+    scene.style.cssText = "position:absolute;inset:0";
+    if (view) {
+      scene.style.inset = "auto";
+      scene.style.left = (-view[0] / view[2]) * 100 + "%";
+      scene.style.top = (-view[1] / view[3]) * 100 + "%";
+      scene.style.width = (config.canvas[0] / view[2]) * 100 + "%";
+      scene.style.height = (config.canvas[1] / view[3]) * 100 + "%";
+    }
+    canvas.append(scene);
     root.dataset.animationMode = "layered";
     const backReact = document.createElement("div");
     backReact.className = "rig-back-react";
@@ -122,7 +134,7 @@
     frontReact.append(frontSway);
     breath.append(frontReact);
     reactor.append(breath);
-    canvas.append(backReact, reactor);
+    scene.append(backReact, reactor);
     return root;
   }
   function configFor(src) {

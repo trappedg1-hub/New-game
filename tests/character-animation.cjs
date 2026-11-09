@@ -48,7 +48,15 @@ const fs = require("node:fs");
     ];
     w.CharacterAnimation.mount(el, `assets/characters/tier${tier}.webp`);
     await new Promise((r) => setTimeout(r, 5));
-    assert.equal(el.firstElementChild.dataset.animationMode, "fallback");
+    assert.equal(el.firstElementChild.dataset.animationMode, manifest.tiers[tier].status);
+    if (manifest.tiers[tier].status === "layered") {
+      assert.equal(el.querySelectorAll(".rig-layer").length, 5);
+      assert(el.querySelector(".rig-hair-front"));
+      assert(el.querySelector(".face-closed"));
+      if (manifest.tiers[tier].viewport) {
+        assert(el.querySelector(".rig-scene").style.top.startsWith("-"));
+      }
+    }
     assert(w.document.body.classList.contains("tier-" + tier));
   }
   // Incoming rendering cannot be overwritten by an older asynchronous preload.
