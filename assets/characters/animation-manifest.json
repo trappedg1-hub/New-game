@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 8,
   "renderer": "single",
   "tiers": {
     "1": {
@@ -15,7 +15,9 @@
         420,
         1323
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "classroom",
+      "proceduralLandmarks": "data/character-presentation.js"
     },
     "2": {
       "type": "single",
@@ -30,7 +32,9 @@
         421,
         1185
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "cafe",
+      "proceduralLandmarks": "data/character-presentation.js"
     },
     "3": {
       "type": "single",
@@ -45,7 +49,9 @@
         411,
         1290
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "pool",
+      "proceduralLandmarks": "data/character-presentation.js"
     },
     "4": {
       "type": "single",
@@ -60,7 +66,9 @@
         701,
         1178
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "bedroom",
+      "proceduralLandmarks": "data/character-presentation.js"
     },
     "5": {
       "type": "single",
@@ -75,7 +83,9 @@
         403,
         1323
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "beach",
+      "proceduralLandmarks": "data/character-presentation.js"
     }
   },
   "costumes": {
@@ -92,7 +102,9 @@
         500,
         1379
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "cafe",
+      "proceduralLandmarks": "data/character-presentation.js"
     },
     "bunny": {
       "type": "single",
@@ -107,7 +119,9 @@
         341,
         1354
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "beach",
+      "proceduralLandmarks": "data/character-presentation.js"
     },
     "cardigan": {
       "type": "single",
@@ -122,7 +136,9 @@
         395,
         1320
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "classroom",
+      "proceduralLandmarks": "data/character-presentation.js"
     },
     "gown": {
       "type": "single",
@@ -137,7 +153,9 @@
         393,
         1292
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "bedroom",
+      "proceduralLandmarks": "data/character-presentation.js"
     },
     "maid": {
       "type": "single",
@@ -152,7 +170,9 @@
         396,
         1177
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "cafe",
+      "proceduralLandmarks": "data/character-presentation.js"
     },
     "pool": {
       "type": "single",
@@ -167,7 +187,9 @@
         360,
         1216
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "pool",
+      "proceduralLandmarks": "data/character-presentation.js"
     },
     "track": {
       "type": "single",
@@ -182,7 +204,9 @@
         584,
         1321
       ],
-      "upscaled": true
+      "upscaled": true,
+      "environment": "classroom",
+      "proceduralLandmarks": "data/character-presentation.js"
     }
   },
   "notes": "Whole original illustrations only. 4096px-high PNGs are Lanczos upscales of native originals, not newly generated native 4K detail."

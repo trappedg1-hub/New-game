@@ -147,12 +147,26 @@ function showBg(src){
 function currentArt(){
   if(S.equip!=='base'){
     const c = COSTUMES.find(c=>c.id===S.equip);
-    if(c && c.img) return {src:c.img, ssr:c.ssrAnim};
+    if(c && c.img && S.owned.includes(c.id)) return {src:c.img, ssr:c.ssrAnim};
   }
   const t = tierOf(S.level);
   return {src:t.art, ssr:false};
 }
-function refreshArt(){ const a = currentArt(); showArt(a.src, a.ssr); }
+function sceneTier(){
+  const costume=S.owned.includes(S.equip)?S.equip:'base';
+  const id=costume==='track' && tierOf(S.level).id===3 ? 3 : window.CONTENT.COSTUME_CONTEXT[costume];
+  return id?TIERS.find(t=>t.id===id):tierOf(S.level);
+}
+function syncEnvironment(){
+  const scene=sceneTier();
+  document.body.dataset.environment=window.CONTENT.ENVIRONMENTS[scene.id];
+  document.body.dataset.sceneTier=String(scene.id);
+  if(document.body.dataset.sceneBg!==scene.bg){
+    document.body.dataset.sceneBg=scene.bg;
+    showBg(scene.bg);
+  }
+}
+function refreshArt(){ const a = currentArt(); showArt(a.src, a.ssr); syncEnvironment(); }
 
 function showTierEvent(t){ navigator.vibrate?.(50);
   $('te-tier').textContent = t.name;
@@ -164,7 +178,7 @@ function showTierEvent(t){ navigator.vibrate?.(50);
 }
 function crossfade(t){
   showArt(currentArt().src, currentArt().ssr);
-  showBg(t.bg);
+  syncEnvironment();
 }
 
 /* ---------------- Dialogue ---------------- */
@@ -176,7 +190,7 @@ function say(text, ms=4000){
   bubbleT = setTimeout(()=>$('bubble').classList.remove('show'), ms);
 }
 function idleTalk(){
-  const t = tierOf(S.level);
+  const t = sceneTier();
   say(t.lines[Math.floor(Math.random()*t.lines.length)]);
 }
 
@@ -199,7 +213,7 @@ function tap(x, y){
   S.tapTalk++;
   if(S.tapTalk % 25 === 0) idleTalk();
   else if(Math.random()<0.12){
-    const t = tierOf(S.level);
+    const t = sceneTier();
     say(t.lines[Math.floor(Math.random()*t.lines.length)], 2600);
   }
   save();
@@ -292,7 +306,7 @@ function doPrestige(){
     friend:S.friend, energy:S.energy, energyTs:S.energyTs, lastSeen:Date.now() };
   S = Object.assign(def(), keep);
   S.tier = 1;
-  refreshArt(); showBg(TIERS[0].bg);
+  refreshArt();
   say("It's... really okay? Then — from the start. But closer this time.", 5000);
   toast(`💞 Confession complete! <b>+${g} 💎</b>`);
   renderAll(); saveNow();
@@ -459,7 +473,7 @@ function costumeThumb(c, small){
   el.innerHTML = `<img src="${src}" alt="${c.name}" loading="lazy" decoding="async">
     ${owned?'':'<div class="lock">🔒</div>'}
     <div class="rar ${c.rarity}">${c.rarity}</div>`;
-  el.title = c.name + (owned?'':' (locked)');
+  el.title = c.name + (owned?'':' (locked)') + ' · ' + (TIERS.find(t=>t.id===window.CONTENT.COSTUME_CONTEXT[c.id])||tierOf(S.level)).place;
   el.onclick = ()=>equip(c, owned);
   return el;
 }
@@ -668,8 +682,7 @@ function boot(){
   const t = tierOf(S.level);
   const a = currentArt();
   mountArt($('char-container'),a.src);
-  $('bg-a').style.backgroundImage = `url('${t.bg}')`;
-  $('bg-a').classList.add('show');
+  syncEnvironment();
   $('auto-state').textContent = autoOn()?'ON':'OFF';
   $('btn-auto').classList.toggle('on', autoOn());
   $('friend-code').textContent = S.friend;
@@ -677,7 +690,7 @@ function boot(){
   [...TIERS.map(t=>t.art), ...TIERS.map(t=>t.bg)]
     .forEach(src=>{ const i=new Image(); i.src=src; });
   renderAll();
-  setTimeout(()=>say(`...you came back. Don't just stand there.`, 4500), 700);
+  setTimeout(()=>idleTalk(), 700);
   setInterval(save, CONFIG.SAVE_MS);
   setInterval(newDayCheck, 60000);
   requestAnimationFrame(loop);

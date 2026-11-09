@@ -1,3 +1,18 @@
+# Current presentation: grounded single-PNG scenes + localized procedural effects
+
+- Still exactly one complete `img#character-art`; no body/hair/face image stack. Its measured surface contains tiny CSS eyelids, not duplicate facial PNGs.
+- Ground plane: 3% above stage floor at all breakpoints. Alpha-derived contact points and bottom bounds from each native original drive contact shadows. ResizeObserver fits the original aspect ratio. `overflow: clip` prevents hidden stage scrolling when interacting with rails (previously could move the character/background by 15px).
+- Environments: base tiers = classroom / café / newly generated private pool / existing warm bedroom / private sunset beach. Rooftop no longer appears in the default progression. Outfit tags select their matching environment, lighting and contextual idle/tap dialogue without changing XP, ownership or relationship level. Track Star uses the pool/resort when the relationship is Tier 3, otherwise the school context. Owning an outfit permits choosing it at any level, but never in an unrelated background.
+- All seven costume choices plus the base wardrobe entry remain available through normal ownership rules; no imaginary eighth non-base costume or event dress was created.
+- Hair sway uses one SVG displacement filter whose noise is spatially restricted to a feathered upper-hair zone and excludes the face; a neutral map leaves the remainder unchanged. Approximation, not individual strand simulation.
+- Eyelids: manually recorded visible-eye landmarks for all 12 full illustrations, skin-tinted ovals with a closed-lash curve, 150ms every 4.5 seconds. Eyes hidden by hair are not duplicated. These are a stylized procedural approximation, not newly painted blink frames. Skin color was tuned after visual review; exact native painted anatomy is not certified by opacity tests.
+- Breathing (3.8s) and eyelids share one surface, with tap bounce on its parent; all share scene lighting. Ambient rim tint is clipped to the full illustration alpha via CSS mask. No rectangular glow/image clone.
+- New pool background: `assets/backgrounds/bg3_private_pool.{png,webp}`. Landmarks: `data/character-presentation.js`, reproducible with `tools/build_presentation.py`. Manifest v8 adds environment/procedural metadata; full PNGs remain the same upscaled originals.
+- Tests: four-width presentation grounding/matrix/lighting/blink-cycle suite; stale-load and failed-load protection; all-tier/outfit single-art/tap tests; gacha/SSR and local admin regressions; DOM smoke checks. Browser/headless tests, not native-device performance certification.
+
+---
+## Earlier implementation notes (historical)
+
 # Current renderer: SINGLE ART ONLY (supersedes all historical layered notes below)
 
 - All five tiers and seven costumes use `type: "single"` in manifest v7.

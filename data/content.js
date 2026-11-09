@@ -5,10 +5,10 @@ window.CONTENT = (() => {
       place:'Classroom' },
     { id:2, min:11, max:25, name:'Friend', art:'assets/characters/tier2', bg:'assets/backgrounds/bg2_cafe',
       place:'Café' },
-    { id:3, min:26, max:50, name:'Close', art:'assets/characters/tier3', bg:'assets/backgrounds/bg3_bedroom',
-      place:'Bedroom' },
-    { id:4, min:51, max:75, name:'Intimate', art:'assets/characters/tier4', bg:'assets/backgrounds/bg4_rooftop',
-      place:'Rooftop · Night' },
+    { id:3, min:26, max:50, name:'Close', art:'assets/characters/tier3', bg:'assets/backgrounds/bg3_private_pool',
+      place:'Private Pool · Summer Resort' },
+    { id:4, min:51, max:75, name:'Intimate', art:'assets/characters/tier4', bg:'assets/backgrounds/bg3_bedroom',
+      place:'Private Bedroom · Dusk' },
     { id:5, min:76, max:100, name:'Devoted', art:'assets/characters/tier5', bg:'assets/backgrounds/bg5_beach',
       place:'Private Beach · Sunset' },
   ];
@@ -83,5 +83,8 @@ window.CONTENT = (() => {
     { id:'gold',   pink:'#ffb347', soft:'#ffd98a', label:'Gold' },
   ];
 
-  return { TIERS, COSTUMES, UPGRADES, BOOSTS, PERMS, MISSIONS, RARITY_RATE, DUP_COINS, CONFIG, THEMES };
+  // Every owned outfit selects a coherent scene, without changing relationship XP.
+  const COSTUME_CONTEXT = {cardigan:1,track:1,apron:2,maid:2,pool:3,gown:4,bunny:5};
+  const ENVIRONMENTS = {1:'classroom',2:'cafe',3:'pool',4:'bedroom',5:'beach'};
+  return { COSTUME_CONTEXT, ENVIRONMENTS, TIERS, COSTUMES, UPGRADES, BOOSTS, PERMS, MISSIONS, RARITY_RATE, DUP_COINS, CONFIG, THEMES };
 })();

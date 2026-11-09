@@ -24,15 +24,15 @@ const manifest=require('../assets/characters/animation-manifest.json');
   assert.equal(await p.locator('#character-art').getAttribute('src'),item.source);
   assert.equal(await p.locator('#character-wrap img').count(),1);
   assert.equal(await p.locator('.rig-layer,.character-rig,.layer-face,.layer-hair-front').count(),0);
-  const geometry=await p.locator('#character-art').evaluate(el=>({height:el.naturalHeight,fit:getComputedStyle(el).objectFit,animation:getComputedStyle(el).animationName}));
+  const geometry=await p.locator('#character-art').evaluate(el=>({height:el.naturalHeight,fit:getComputedStyle(el).objectFit,animation:getComputedStyle(document.getElementById('character-surface')).animationName}));
   assert.equal(geometry.height,4096);assert.equal(geometry.fit,'contain');assert.equal(geometry.animation,'singleBreathe');
  }
  // Real wardrobe interactions, not direct renderer calls.
  for(const [key,item] of Object.entries(manifest.costumes)){
-  if(width<768)await p.locator('#toggle-right').click();
+  await p.locator('#toggle-right').click();
   const idx=await p.evaluate(key=>CONTENT.COSTUMES.findIndex(c=>c.id===key),key);
   await p.locator('.costume-thumb').nth(idx).click();
-  if(width<768)await p.locator('#toggle-right').click();
+  await p.locator('#toggle-right').click();
   await p.waitForFunction(src=>document.getElementById('character-art').getAttribute('src')===src,item.source);
   await p.waitForTimeout(320);
   assert.equal(await p.locator('#character-wrap img').count(),1);

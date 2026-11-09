@@ -1,27 +1,34 @@
-/* A single full illustration: breathing and tap transforms never compete. */
-.character-wrapper {
-  position:absolute;
-  inset:0;
-  z-index:2;
-  pointer-events:none;
-  transform-origin:bottom center;
-}
-.char-single-img {
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  object-position:center bottom;
-  transform-origin:bottom center;
-  animation:singleBreathe 4s ease-in-out infinite;
-  user-select:none;
-  -webkit-user-drag:none;
-  filter:drop-shadow(0 8px 12px #0006);
-}
-@keyframes singleBreathe {
-  0%,100% {transform:translateY(0) scale(1);}
-  50% {transform:translateY(-3px) scale(1.005);}
-}
-body.no-motion .char-single-img {animation:none;}
-body.animation-paused .char-single-img {animation-play-state:paused;}
-@media(prefers-reduced-motion:reduce){.char-single-img{animation:none;}}
+/* One complete PNG, one shared facial coordinate system. */
+#character-wrap {bottom:3%;height:91%;animation:none;}
+.character-wrapper {position:absolute;left:50%;bottom:0;translate:-50% 0;z-index:2;pointer-events:none;transform-origin:bottom center;}
+.character-surface {position:relative;width:100%;height:100%;transform-origin:bottom center;animation:singleBreathe 3.8s ease-in-out infinite;filter:var(--scene-light);}
+.char-single-img {display:block;width:100%;height:100%;object-fit:contain;object-position:center bottom;user-select:none;-webkit-user-drag:none;filter:url(#procedural-sway);}
+@keyframes singleBreathe {0%,100%{transform:translateY(0) scaleY(1);}50%{transform:translateY(-2px) scaleY(1.006);}}
+/* Skin ovals cover only manually registered visible eyes for 150ms / 4.5s.
+   They inherit surface lighting, breathing, and the parent's tap bounce. */
+#eyelids {position:absolute;inset:0;pointer-events:none;}
+.eyelid-mask {position:absolute;translate:-50% -50%;rotate:var(--eye-angle);border-radius:50%;background:linear-gradient(var(--skin) 50%,color-mix(in srgb,var(--skin),#c18c7d 16%));box-shadow:inset 0 -1px #653b42;opacity:0;animation:singleBlink 4.5s step-end infinite;}
+@keyframes singleBlink {0%,96.666%,100%{opacity:0;}96.667%,99.999%{opacity:1;}}
+/* Colored light is clipped to the exact full-art silhouette, never a rectangle. */
+.character-surface::after {content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 40%,var(--rim-color) 100%);mask-image:var(--art-mask);mask-size:100% 100%;mask-repeat:no-repeat;mix-blend-mode:screen;opacity:.16;}
+body {--scene-light:drop-shadow(0 10px 20px #0006) contrast(1.02) brightness(1);--rim-color:#fff2ce;}
+body[data-environment="classroom"]{--scene-light:drop-shadow(0 10px 20px #0006) contrast(1.02) brightness(1);--rim-color:#fff4d1;}
+body[data-environment="cafe"]{--scene-light:drop-shadow(0 10px 20px #0006) sepia(.12) saturate(1.1) brightness(.98);--rim-color:#ffd19b;}
+body[data-environment="pool"]{--scene-light:drop-shadow(0 10px 20px #0006) contrast(1.02) saturate(1.06) brightness(1.02);--rim-color:#b5efff;}
+body[data-environment="bedroom"]{--scene-light:drop-shadow(0 10px 25px #0008) hue-rotate(-10deg) saturate(1.05) brightness(.95);--rim-color:#ffb480;}
+body[data-environment="rooftop"]{--scene-light:drop-shadow(0 12px 30px #0d0d1acc) hue-rotate(15deg) brightness(.88) contrast(1.1);--rim-color:#a0b8ff;}
+body[data-environment="beach"]{--scene-light:drop-shadow(0 10px 25px #0006) sepia(.2) hue-rotate(-15deg) saturate(1.25) brightness(.95);--rim-color:#ffc28c;}
+#char-shadow {position:absolute;left:50%;right:auto;translate:-50% 0;bottom:0;width:180px;height:18px;background:radial-gradient(ellipse at center,#000a 0%,transparent 75%);border-radius:50%;z-index:1;filter:blur(4px);}
+#char-shadow.pop {transform:scale(1.08);}
+#contact-shadows {position:absolute;left:50%;translate:-50% 0;bottom:0;height:3px;z-index:1;pointer-events:none;}
+.contact-shadow {position:absolute;bottom:0;translate:-50% 0;height:3px;border-radius:50%;background:#000d;filter:blur(1px);}
+body.no-motion .character-surface,body.no-motion .eyelid-mask {animation:none;}
+body.animation-paused .character-surface,body.animation-paused .eyelid-mask {animation-play-state:paused;}
+body.no-motion .char-single-img {filter:none;}
+@media(prefers-reduced-motion:reduce){.character-surface,.eyelid-mask{animation:none;}.char-single-img{filter:none;}}
+@media(max-width:767px){#character-wrap{height:92%;bottom:3%;}}
+/* Negative-inset backgrounds must not create a programmatically scrollable stage. */
+#stage {overflow:clip;}
+/* A closed lash curve, not an empty eye-shaped skin patch. */
+.eyelid-mask {box-shadow:none;background:linear-gradient(color-mix(in srgb,var(--skin),#f4cfc0 12%),var(--skin));}
+.eyelid-mask::after {content:"";position:absolute;left:5%;right:5%;top:15%;height:50%;border-bottom:1.2px solid #52323a;border-radius:0 0 65% 50%;}

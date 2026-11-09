@@ -6,10 +6,9 @@ window.DIALOGUE = (() => {
     2: ["You're back again~", "I saved you a seat, dummy.", "Your hair's messy. Here—hold still.",
         "Today felt less boring with you around.", "Don't tell anyone I smile this much.",
         "Want to walk home together?"],
-    3: ["I wore this for you~", "Does it look good? Be honest.", "You're blushing. Cute.",
-        "Closer. I don't bite... much.", "I picked this out just for tonight.",
-        "My heart's going fast. Because of you."],
-    4: ["Come closer...", "The night's still young, you know.", "Touch my hand — it's warm, right?",
+    3: ["Like what you see?", "Race you to the pool!", "The water's perfect today.",
+        "Don't forget your sunscreen.", "Let's try the deep end together.", "Summer looks good on us."],
+    4: ["Come sit next to me...", "The night's still young, you know.", "Touch my hand — it's warm, right?",
         "Stay until the city goes quiet.", "You can look. I don't mind anymore.",
         "Sleep here tonight... please?"],
     5: ["I'm yours forever.", "Every version of me chooses you.", "Say it again — I love hearing it.",
@@ -32,8 +31,8 @@ window.DIALOGUE = (() => {
 
   const TIER_UP_TEXT = {
     2: "She waves you over from the corner table.",
-    3: "The door clicks shut. It's just you two now.",
-    4: "City lights below. Her voice drops to a whisper.",
+    3: "Sunlight dances across the private pool.",
+    4: "Warm lamplight. A quiet room, just for you two.",
     5: "Salt wind, sunset gold — she reaches for your hand.",
   };
 
