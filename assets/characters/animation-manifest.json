@@ -1,5 +1,5 @@
 {
-  "version": 22,
+  "version": 23,
   "renderer": "canonical-420x1323-registered-png",
   "tiers": {
     "1": {
@@ -53,7 +53,26 @@
           303.9,
           137.0
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/tier1/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/tier1/tan/tone_sunkissed.png",
+          "golden": "assets/characters/tier1/tan/tone_golden.png",
+          "bronze": "assets/characters/tier1/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/tier1/tan/tanline_bikini.png",
+          "straps": "assets/characters/tier1/tan/tanline_straps.png",
+          "heart": "assets/characters/tier1/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/tier1/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/tier1/tan/slip_stage1.png",
+          "assets/characters/tier1/tan/slip_stage2.png",
+          "assets/characters/tier1/tan/slip_stage3.png"
+        ]
+      }
     },
     "2": {
       "status": "layered",
@@ -106,7 +125,26 @@
           257.6,
           126.0
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/tier2/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/tier2/tan/tone_sunkissed.png",
+          "golden": "assets/characters/tier2/tan/tone_golden.png",
+          "bronze": "assets/characters/tier2/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/tier2/tan/tanline_bikini.png",
+          "straps": "assets/characters/tier2/tan/tanline_straps.png",
+          "heart": "assets/characters/tier2/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/tier2/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/tier2/tan/slip_stage1.png",
+          "assets/characters/tier2/tan/slip_stage2.png",
+          "assets/characters/tier2/tan/slip_stage3.png"
+        ]
+      }
     },
     "3": {
       "status": "layered",
@@ -159,7 +197,26 @@
           196.0,
           137.6
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/tier3/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/tier3/tan/tone_sunkissed.png",
+          "golden": "assets/characters/tier3/tan/tone_golden.png",
+          "bronze": "assets/characters/tier3/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/tier3/tan/tanline_bikini.png",
+          "straps": "assets/characters/tier3/tan/tanline_straps.png",
+          "heart": "assets/characters/tier3/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/tier3/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/tier3/tan/slip_stage1.png",
+          "assets/characters/tier3/tan/slip_stage2.png",
+          "assets/characters/tier3/tan/slip_stage3.png"
+        ]
+      }
     },
     "4": {
       "status": "layered",
@@ -218,7 +275,26 @@
           212.2,
           705.0
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/tier4/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/tier4/tan/tone_sunkissed.png",
+          "golden": "assets/characters/tier4/tan/tone_golden.png",
+          "bronze": "assets/characters/tier4/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/tier4/tan/tanline_bikini.png",
+          "straps": "assets/characters/tier4/tan/tanline_straps.png",
+          "heart": "assets/characters/tier4/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/tier4/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/tier4/tan/slip_stage1.png",
+          "assets/characters/tier4/tan/slip_stage2.png",
+          "assets/characters/tier4/tan/slip_stage3.png"
+        ]
+      }
     },
     "5": {
       "status": "layered",
@@ -271,7 +347,26 @@
           192.0,
           130.9
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/tier5/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/tier5/tan/tone_sunkissed.png",
+          "golden": "assets/characters/tier5/tan/tone_golden.png",
+          "bronze": "assets/characters/tier5/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/tier5/tan/tanline_bikini.png",
+          "straps": "assets/characters/tier5/tan/tanline_straps.png",
+          "heart": "assets/characters/tier5/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/tier5/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/tier5/tan/slip_stage1.png",
+          "assets/characters/tier5/tan/slip_stage2.png",
+          "assets/characters/tier5/tan/slip_stage3.png"
+        ]
+      }
     }
   },
   "costumes": {
@@ -334,7 +429,26 @@
           184.5,
           291.2
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/costume_apron/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/costume_apron/tan/tone_sunkissed.png",
+          "golden": "assets/characters/costume_apron/tan/tone_golden.png",
+          "bronze": "assets/characters/costume_apron/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/costume_apron/tan/tanline_bikini.png",
+          "straps": "assets/characters/costume_apron/tan/tanline_straps.png",
+          "heart": "assets/characters/costume_apron/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/costume_apron/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/costume_apron/tan/slip_stage1.png",
+          "assets/characters/costume_apron/tan/slip_stage2.png",
+          "assets/characters/costume_apron/tan/slip_stage3.png"
+        ]
+      }
     },
     "bunny": {
       "type": "layered",
@@ -395,7 +509,26 @@
           282.0,
           244.0
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/costume_bunny/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/costume_bunny/tan/tone_sunkissed.png",
+          "golden": "assets/characters/costume_bunny/tan/tone_golden.png",
+          "bronze": "assets/characters/costume_bunny/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/costume_bunny/tan/tanline_bikini.png",
+          "straps": "assets/characters/costume_bunny/tan/tanline_straps.png",
+          "heart": "assets/characters/costume_bunny/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/costume_bunny/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/costume_bunny/tan/slip_stage1.png",
+          "assets/characters/costume_bunny/tan/slip_stage2.png",
+          "assets/characters/costume_bunny/tan/slip_stage3.png"
+        ]
+      }
     },
     "cardigan": {
       "type": "layered",
@@ -456,7 +589,26 @@
           220.0,
           94.2
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/costume_cardigan/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/costume_cardigan/tan/tone_sunkissed.png",
+          "golden": "assets/characters/costume_cardigan/tan/tone_golden.png",
+          "bronze": "assets/characters/costume_cardigan/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/costume_cardigan/tan/tanline_bikini.png",
+          "straps": "assets/characters/costume_cardigan/tan/tanline_straps.png",
+          "heart": "assets/characters/costume_cardigan/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/costume_cardigan/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/costume_cardigan/tan/slip_stage1.png",
+          "assets/characters/costume_cardigan/tan/slip_stage2.png",
+          "assets/characters/costume_cardigan/tan/slip_stage3.png"
+        ]
+      }
     },
     "gown": {
       "type": "layered",
@@ -517,7 +669,26 @@
           233.8,
           128.8
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/costume_gown/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/costume_gown/tan/tone_sunkissed.png",
+          "golden": "assets/characters/costume_gown/tan/tone_golden.png",
+          "bronze": "assets/characters/costume_gown/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/costume_gown/tan/tanline_bikini.png",
+          "straps": "assets/characters/costume_gown/tan/tanline_straps.png",
+          "heart": "assets/characters/costume_gown/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/costume_gown/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/costume_gown/tan/slip_stage1.png",
+          "assets/characters/costume_gown/tan/slip_stage2.png",
+          "assets/characters/costume_gown/tan/slip_stage3.png"
+        ]
+      }
     },
     "maid": {
       "type": "layered",
@@ -582,7 +753,26 @@
           239.0,
           207.8
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/costume_maid/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/costume_maid/tan/tone_sunkissed.png",
+          "golden": "assets/characters/costume_maid/tan/tone_golden.png",
+          "bronze": "assets/characters/costume_maid/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/costume_maid/tan/tanline_bikini.png",
+          "straps": "assets/characters/costume_maid/tan/tanline_straps.png",
+          "heart": "assets/characters/costume_maid/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/costume_maid/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/costume_maid/tan/slip_stage1.png",
+          "assets/characters/costume_maid/tan/slip_stage2.png",
+          "assets/characters/costume_maid/tan/slip_stage3.png"
+        ]
+      }
     },
     "pool": {
       "type": "layered",
@@ -643,7 +833,26 @@
           233.6,
           135.1
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/costume_pool/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/costume_pool/tan/tone_sunkissed.png",
+          "golden": "assets/characters/costume_pool/tan/tone_golden.png",
+          "bronze": "assets/characters/costume_pool/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/costume_pool/tan/tanline_bikini.png",
+          "straps": "assets/characters/costume_pool/tan/tanline_straps.png",
+          "heart": "assets/characters/costume_pool/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/costume_pool/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/costume_pool/tan/slip_stage1.png",
+          "assets/characters/costume_pool/tan/slip_stage2.png",
+          "assets/characters/costume_pool/tan/slip_stage3.png"
+        ]
+      }
     },
     "track": {
       "type": "layered",
@@ -704,7 +913,26 @@
           235.0,
           478.8
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/costume_track/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/costume_track/tan/tone_sunkissed.png",
+          "golden": "assets/characters/costume_track/tan/tone_golden.png",
+          "bronze": "assets/characters/costume_track/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/costume_track/tan/tanline_bikini.png",
+          "straps": "assets/characters/costume_track/tan/tanline_straps.png",
+          "heart": "assets/characters/costume_track/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/costume_track/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/costume_track/tan/slip_stage1.png",
+          "assets/characters/costume_track/tan/slip_stage2.png",
+          "assets/characters/costume_track/tan/slip_stage3.png"
+        ]
+      }
     },
     "ribbon": {
       "status": "layered",
@@ -760,7 +988,26 @@
           249.6,
           135.4
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/costume_ribbon/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/costume_ribbon/tan/tone_sunkissed.png",
+          "golden": "assets/characters/costume_ribbon/tan/tone_golden.png",
+          "bronze": "assets/characters/costume_ribbon/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/costume_ribbon/tan/tanline_bikini.png",
+          "straps": "assets/characters/costume_ribbon/tan/tanline_straps.png",
+          "heart": "assets/characters/costume_ribbon/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/costume_ribbon/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/costume_ribbon/tan/slip_stage1.png",
+          "assets/characters/costume_ribbon/tan/slip_stage2.png",
+          "assets/characters/costume_ribbon/tan/slip_stage3.png"
+        ]
+      }
     },
     "barefoot": {
       "status": "layered",
@@ -816,7 +1063,26 @@
           243.6,
           140.2
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/costume_barefoot/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/costume_barefoot/tan/tone_sunkissed.png",
+          "golden": "assets/characters/costume_barefoot/tan/tone_golden.png",
+          "bronze": "assets/characters/costume_barefoot/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/costume_barefoot/tan/tanline_bikini.png",
+          "straps": "assets/characters/costume_barefoot/tan/tanline_straps.png",
+          "heart": "assets/characters/costume_barefoot/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/costume_barefoot/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/costume_barefoot/tan/slip_stage1.png",
+          "assets/characters/costume_barefoot/tan/slip_stage2.png",
+          "assets/characters/costume_barefoot/tan/slip_stage3.png"
+        ]
+      }
     },
     "cat": {
       "status": "layered",
@@ -882,7 +1148,26 @@
           242.1,
           163.5
         ]
-      ]
+      ],
+      "tanAssets": {
+        "mask": "assets/characters/costume_cat/tan/skin_mask.png",
+        "tone": {
+          "sunkissed": "assets/characters/costume_cat/tan/tone_sunkissed.png",
+          "golden": "assets/characters/costume_cat/tan/tone_golden.png",
+          "bronze": "assets/characters/costume_cat/tan/tone_bronze.png"
+        },
+        "pattern": {
+          "bikini": "assets/characters/costume_cat/tan/tanline_bikini.png",
+          "straps": "assets/characters/costume_cat/tan/tanline_straps.png",
+          "heart": "assets/characters/costume_cat/tan/tanline_heart.png"
+        },
+        "gloss": "assets/characters/costume_cat/tan/gloss_specular.png",
+        "slip": [
+          "assets/characters/costume_cat/tan/slip_stage1.png",
+          "assets/characters/costume_cat/tan/slip_stage2.png",
+          "assets/characters/costume_cat/tan/slip_stage3.png"
+        ]
+      }
     }
   },
   "notes": "No displacement/warp filters. Five cleaned tier rigs visually reviewed; seven costume rigs incomplete and remain single images, not simulated parts."

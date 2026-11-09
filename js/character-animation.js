@@ -48,8 +48,14 @@
   faces.append(image(config.layers.face_open,'face-open layer-synced'),image(config.layers.face_closed,'face-closed layer-synced'));breath.append(faces);
   breath.append(group('rig-hair-front',config.layers.hair_front,'hair-front'));
   const fx=document.createElement('div');fx.className='rig-fx';
-  const mask=`url("${config.layers.body_base}")`;
-  for(const cls of ['fx-tone','fx-tan','fx-gloss']){const o=document.createElement('div');o.className=cls;o.style.webkitMaskImage=mask;o.style.maskImage=mask;fx.append(o);}
+  if(config.tanAssets){
+   const A=config.tanAssets;
+   const art=(cls,src)=>{const o=document.createElement('div');o.className='fx-art '+cls;o.style.backgroundImage=`url("${src}")`;fx.append(o);};
+   art('fx-tone-sunkissed',A.tone.sunkissed); art('fx-tone-golden',A.tone.golden); art('fx-tone-bronze',A.tone.bronze);
+   art('fx-tanline-bikini',A.pattern.bikini); art('fx-tanline-straps',A.pattern.straps); art('fx-tanline-heart',A.pattern.heart);
+   art('fx-glossart',A.gloss);
+   A.slip.forEach((src,i)=>art('fx-slip-'+(i+1),src));
+  }
   if(config.eyes){
    const [Wc,Hc]=config.canvas;const [[lx,ly],[rx,ry]]=config.eyes;const mx=(lx+rx)/2,my=(ly+ry)/2,dist=rx-lx;
    const at=(e,x,y)=>{e.style.left=x/Wc*100+'%';e.style.top=y/Hc*100+'%';return e;};
@@ -59,7 +65,6 @@
    const lid=document.createElement('div');lid.className='fx-eyelid';at(lid,lx-dist*.62,my-36);lid.style.width=dist*2.24/Wc*100+'%';lid.style.height=46/Hc*100+'%';fx.append(lid);
    const lip=document.createElement('div');lip.className='fx-lip';at(lip,mx,my+92);fx.append(lip);
    for(const [ex,ey] of config.eyes){const s=document.createElement('span');s.className='fx-pupil';s.textContent='\u2665';at(s,ex,ey);fx.append(s);}
-   const heart=document.createElement('span');heart.className='fx-tan-heart';heart.textContent='\u2665';at(heart,mx-dist*1.2,my+430);fx.append(heart);
   }
   breath.append(fx);
   return scene;

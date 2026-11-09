@@ -28,6 +28,7 @@ const assert = require("node:assert/strict");
     assert.deepEqual(st, { c: 150, s: 1 });
     assert.equal(await surface(p).evaluate((e) => e.classList.contains("stage-1")), true);
     assert.match(await p.locator("#bubble-text").textContent(), /doing so fast/);
+    await p.waitForFunction(() => getComputedStyle(document.querySelector(".fx-slip-1")).opacity === "1");
     await p.waitForFunction(() => getComputedStyle(document.querySelector(".fx-blush")).opacity === "0.35");
     assert.match(await p.locator("#combo-count").textContent(), /150 COMBO/);
     await p.evaluate(() => __fanservice.setCombo(299)); await tapChar();
@@ -38,7 +39,8 @@ const assert = require("node:assert/strict");
     assert.equal(await p.evaluate(() => __fanservice.stage), 3);
     assert.match(await p.locator("#bubble-text").textContent(), /keep up with you/);
     await p.waitForFunction(() => getComputedStyle(document.querySelector(".fx-blush")).opacity === "0.9");
-    assert.equal(await p.locator(".body-base").evaluate((e) => e.getAnimations()[0].effect.getTiming().duration), 2920);
+    await p.waitForFunction(() => getComputedStyle(document.querySelector(".fx-slip-3")).opacity === "1");
+    assert.equal(await p.locator(".body-base").evaluate((e) => e.getAnimations()[0].effect.getTiming().duration), 3800); /* body no longer shifts wholesale */
     /* x4 coin bonus at stage 3 */
     const coinsBefore = await p.evaluate(() => +document.getElementById("coins").textContent.replace(/[^0-9]/g, "") || 0);
     await tapChar(); await p.waitForTimeout(600);
@@ -85,6 +87,10 @@ const assert = require("node:assert/strict");
     await p.waitForTimeout(150);
     let skin = await surface(p).evaluate((e) => ({ cls: e.className, gloss: e.style.getPropertyValue("--gloss") }));
     assert(skin.cls.includes("tone-golden") && skin.cls.includes("tan-heart"), skin.cls);
+    await p.waitForFunction(() => getComputedStyle(document.querySelector(".fx-tone-golden")).opacity === "1");
+    await p.waitForFunction(() => getComputedStyle(document.querySelector(".fx-tanline-heart")).opacity === "1");
+    const glossOp = await p.locator(".fx-glossart").evaluate((e) => parseFloat(getComputedStyle(e).opacity));
+    assert(Math.abs(glossOp - 0.855) < 0.02, "gloss slider must drive specular art opacity, got " + glossOp);
     assert.equal(skin.gloss, "0.9");
     assert.match(await p.locator("#tan-perk").textContent(), /\+5% COINS/);
     await p.waitForTimeout(3200); /* save throttle */
