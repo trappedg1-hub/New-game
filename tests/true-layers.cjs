@@ -28,12 +28,28 @@ for(const [t,c] of Object.entries(m.tiers)){
 const scenes={cardigan:'classroom',track:'classroom',apron:'cafe',maid:'cafe',pool:'pool',gown:'bedroom',bunny:'beach'};
 for(const [key,env] of Object.entries(scenes)){
  await p.locator('#toggle-right').click();const idx=await p.evaluate(k=>CONTENT.COSTUMES.findIndex(c=>c.id===k),key);await p.locator('.costume-thumb').nth(idx).click();await p.locator('#toggle-right').click();
+ if(m.costumes[key].type==='layered'){
+ await p.waitForFunction(src=>document.querySelector('.body-base')?.getAttribute('src')===src,m.costumes[key].layers.body_base);
+ assert.equal(await p.locator('#character-surface img').count(),5);
+ assert.equal(await p.locator('.face-open,.face-closed').count(),2);
+ const blink=await p.evaluate(()=>{
+ const a=document.querySelector('.face-open'),b=document.querySelector('.face-closed');
+ const anim=[a.getAnimations()[0],b.getAnimations()[0]];anim.forEach(x=>x.pause());
+ const pairs=[0,4400,4500].map(t=>{anim.forEach(x=>x.currentTime=t);return [getComputedStyle(a).opacity,getComputedStyle(b).opacity];});anim.forEach(x=>x.play());return pairs;
+ });assert.deepEqual(blink,[['1','0'],['0','1'],['1','0']]);
+ const hairStates=await p.locator('.rig-hair-front').evaluate(e=>{
+ const a=e.getAnimations()[0];a.pause();a.currentTime=0;const first=getComputedStyle(e).transform;
+ a.currentTime=1050;const second=getComputedStyle(e).transform;a.play();return [first,second];
+ });assert.notEqual(hairStates[0],hairStates[1]);
+ if(width===390){await p.waitForTimeout(500);await p.screenshot({path:`/home/user/${key}-runtime.png`});}
+ }else{
  await p.waitForFunction(src=>document.querySelector('#character-art')?.getAttribute('src')===src,m.costumes[key].source);
- assert.equal(await p.locator('#character-surface img').count(),1);assert.equal(await p.locator('.face-open,.face-closed').count(),0);assert.equal(await p.locator('body').getAttribute('data-environment'),env);
+ assert.equal(await p.locator('#character-surface img').count(),1);assert.equal(await p.locator('.face-open,.face-closed').count(),0);
+ }assert.equal(await p.locator('body').getAttribute('data-environment'),env);
 }
 // Atomic cancellation: quickly queued rig loads must not mount obsolete faces.
 await p.evaluate(async()=>{await Promise.all([1,2,3,4,5].map(t=>CharacterAnimation.mount(null,`assets/characters/tier${t}.webp`)));});assert.equal(await p.locator('.face-open').count(),1);
 await p.emulateMedia({reducedMotion:'reduce'});assert.equal(await p.locator('.face-closed').evaluate(e=>getComputedStyle(e).opacity),'0');assert.deepEqual(errors,[]);
-console.log(`PASS ${width}: 5 true rigs, exclusive blink, shared face/body registration, independent hair, ground plane, 7 safe outfit fallbacks and scene logic`);await p.close();
+console.log(`PASS ${width}: 5 true rigs, exclusive blink, shared face/body registration, independent hair, ground plane, 7 layered costumes; no outfit fallbacks and scene logic`);await p.close();
 }
 }finally{await b.close();}})().catch(e=>{console.error(e);process.exit(1)});

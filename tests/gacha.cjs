@@ -99,8 +99,8 @@ const assert = require("node:assert/strict");
       .filter({ hasText: "Silk Nightgown" })
       .click();
     await p.waitForTimeout(900);
-    await p.waitForFunction(()=>document.getElementById('character-art').getAttribute('src')==='assets/characters/single/costume_gown.png');
-    assert.equal(await p.locator('#character-wrap img').count(),1,'SSR uses exactly one complete illustration');
+    await p.waitForFunction(()=>document.querySelector('.body-base')?.getAttribute('src')==='assets/characters/costume_gown/body_base.png');
+    assert.equal(await p.locator('#character-surface img').count(),5,'SSR equips registered five-layer nightgown rig');
     await p.close();
     console.log(
       "PASS SSR@50 priority, gold card, confetti, decoded costume art",

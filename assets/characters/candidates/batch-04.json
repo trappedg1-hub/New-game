@@ -1,0 +1,132 @@
+{
+  "assets/characters/candidates/keyed/bunny/body_base.png": {
+    "size": [
+      512,
+      2033
+    ],
+    "alpha_bbox": [
+      6,
+      9,
+      506,
+      2024
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/bunny/face_closed.png": {
+    "size": [
+      512,
+      2033
+    ],
+    "alpha_bbox": [
+      160,
+      259,
+      367,
+      515
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/bunny/face_open.png": {
+    "size": [
+      512,
+      2033
+    ],
+    "alpha_bbox": [
+      161,
+      257,
+      366,
+      511
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/bunny/hair_back.png": {
+    "size": [
+      512,
+      2033
+    ],
+    "alpha_bbox": [
+      21,
+      228,
+      398,
+      832
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/bunny/hair_front.png": {
+    "size": [
+      512,
+      2033
+    ],
+    "alpha_bbox": [
+      125,
+      9,
+      504,
+      650
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/cardigan-v2/body_base.png": {
+    "size": [
+      560,
+      1871
+    ],
+    "alpha_bbox": [
+      7,
+      12,
+      554,
+      1863
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/cardigan-v2/face_closed.png": {
+    "size": [
+      560,
+      1871
+    ],
+    "alpha_bbox": [
+      79,
+      123,
+      484,
+      550
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/cardigan-v2/face_open.png": {
+    "size": [
+      560,
+      1871
+    ],
+    "alpha_bbox": [
+      80,
+      122,
+      481,
+      546
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/cardigan-v2/hair_back.png": {
+    "size": [
+      560,
+      1871
+    ],
+    "alpha_bbox": [
+      105,
+      9,
+      445,
+      514
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/cardigan-v2/hair_front.png": {
+    "size": [
+      1376,
+      768
+    ],
+    "alpha_bbox": [
+      236,
+      66,
+      588,
+      562
+    ],
+    "status": "unregistered_candidate"
+  }
+}

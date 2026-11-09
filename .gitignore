@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 _diag_*
 node_modules/
+
+# Generated source candidates / keyed intermediates; ship only reviewed runtime layers.
+/assets/characters/candidates/**/*.png

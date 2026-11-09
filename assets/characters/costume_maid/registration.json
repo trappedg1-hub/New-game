@@ -1,0 +1,20 @@
+{
+  "status": "reviewed",
+  "canvas": [
+    592,
+    1760
+  ],
+  "blinkChangeBounds": [
+    207,
+    156,
+    373,
+    222
+  ],
+  "identicalAlpha": true,
+  "nonEyePixelsLocked": true,
+  "visualReview": "Open and closed head composites reviewed. Removed detached front-hair scraps and spurious cheek bridge. Blink covers full iris; alpha and non-eye pixels locked. Skull removed behind face; neck retained.",
+  "browserTests": [
+    390,
+    1280
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "status": "reviewed",
+  "canvas": [
+    560,
+    1892
+  ],
+  "blinkChangeBounds": [
+    171,
+    170,
+    356,
+    218
+  ],
+  "identicalAlpha": true,
+  "nonEyePixelsLocked": true,
+  "visualReview": "Open/closed composite reviewed. Removed duplicate blank skull and cheek bridge from independent front hair. Full iris covered by blink, identical alpha and non-eye pixels. Expression follows generated face, not original full art.",
+  "browserTests": [
+    390,
+    1280
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "status": "reviewed",
+  "canvas": [
+    560,
+    1871
+  ],
+  "blinkChangeBounds": [
+    148,
+    97,
+    341,
+    182
+  ],
+  "identicalAlpha": true,
+  "nonEyePixelsLocked": true,
+  "visualReview": "Open and closed composite reviewed; no duplicate skull, continuous neck, independent hair. Body skull removed behind complete face layer.",
+  "browserTests": [
+    390,
+    1280
+  ]
+}

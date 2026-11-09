@@ -1,0 +1,20 @@
+{
+  "status": "reviewed",
+  "canvas": [
+    624,
+    1721
+  ],
+  "blinkChangeBounds": [
+    159,
+    161,
+    311,
+    233
+  ],
+  "identicalAlpha": true,
+  "nonEyePixelsLocked": true,
+  "visualReview": "Open and closed composite inspected. Removed duplicate blank skull and generated dark bridge from front hair opening; independent hair layers. Generated expression differs from original full art.",
+  "browserTests": [
+    390,
+    1280
+  ]
+}

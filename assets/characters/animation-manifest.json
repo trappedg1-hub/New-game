@@ -1,5 +1,5 @@
 {
-  "version": 9,
+  "version": 16,
   "renderer": "validated-layered-with-single-fallback",
   "tiers": {
     "1": {
@@ -206,12 +206,12 @@
   },
   "costumes": {
     "apron": {
-      "type": "single",
-      "status": "fallback",
+      "type": "layered",
+      "status": "layered",
       "source": "assets/characters/single/costume_apron.png",
       "canvas": [
-        1485,
-        4096
+        624,
+        1721
       ],
       "original": "assets/characters/costume_apron.png",
       "nativeCanvas": [
@@ -221,15 +221,42 @@
       "upscaled": true,
       "environment": "cafe",
       "proceduralLandmarks": "data/character-presentation.js",
-      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
+      "layers": {
+        "body_base": "assets/characters/costume_apron/body_base.png",
+        "hair_back": "assets/characters/costume_apron/hair_back.png",
+        "face_open": "assets/characters/costume_apron/face_open.png",
+        "face_closed": "assets/characters/costume_apron/face_closed.png",
+        "hair_front": "assets/characters/costume_apron/hair_front.png"
+      },
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/costume_apron/registration.json"
+      },
+      "ground": {
+        "size": [
+          624,
+          1721
+        ],
+        "floor": 0.9959325973271353,
+        "contacts": [
+          {
+            "x": 0.21,
+            "width": 0.15
+          },
+          {
+            "x": 0.5,
+            "width": 0.16
+          }
+        ]
+      }
     },
     "bunny": {
-      "type": "single",
-      "status": "fallback",
+      "type": "layered",
+      "status": "layered",
       "source": "assets/characters/single/costume_bunny.png",
       "canvas": [
-        1032,
-        4096
+        512,
+        2033
       ],
       "original": "assets/characters/costume_bunny.png",
       "nativeCanvas": [
@@ -239,15 +266,42 @@
       "upscaled": true,
       "environment": "beach",
       "proceduralLandmarks": "data/character-presentation.js",
-      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
+      "layers": {
+        "body_base": "assets/characters/costume_bunny/body_base.png",
+        "hair_back": "assets/characters/costume_bunny/hair_back.png",
+        "face_open": "assets/characters/costume_bunny/face_open.png",
+        "face_closed": "assets/characters/costume_bunny/face_closed.png",
+        "hair_front": "assets/characters/costume_bunny/hair_front.png"
+      },
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/costume_bunny/registration.json"
+      },
+      "ground": {
+        "size": [
+          512,
+          2033
+        ],
+        "floor": 0.9955730447614363,
+        "contacts": [
+          {
+            "x": 0.2,
+            "width": 0.14
+          },
+          {
+            "x": 0.58,
+            "width": 0.18
+          }
+        ]
+      }
     },
     "cardigan": {
-      "type": "single",
-      "status": "fallback",
+      "type": "layered",
+      "status": "layered",
       "source": "assets/characters/single/costume_cardigan.png",
       "canvas": [
-        1226,
-        4096
+        560,
+        1871
       ],
       "original": "assets/characters/costume_cardigan.png",
       "nativeCanvas": [
@@ -257,15 +311,42 @@
       "upscaled": true,
       "environment": "classroom",
       "proceduralLandmarks": "data/character-presentation.js",
-      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
+      "layers": {
+        "body_base": "assets/characters/costume_cardigan/body_base.png",
+        "hair_back": "assets/characters/costume_cardigan/hair_back.png",
+        "face_open": "assets/characters/costume_cardigan/face_open.png",
+        "face_closed": "assets/characters/costume_cardigan/face_closed.png",
+        "hair_front": "assets/characters/costume_cardigan/hair_front.png"
+      },
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/costume_cardigan/registration.json"
+      },
+      "ground": {
+        "size": [
+          560,
+          1871
+        ],
+        "floor": 0.9957242116515232,
+        "contacts": [
+          {
+            "x": 0.38,
+            "width": 0.22
+          },
+          {
+            "x": 0.78,
+            "width": 0.2
+          }
+        ]
+      }
     },
     "gown": {
-      "type": "single",
-      "status": "fallback",
+      "type": "layered",
+      "status": "layered",
       "source": "assets/characters/single/costume_gown.png",
       "canvas": [
-        1246,
-        4096
+        560,
+        1841
       ],
       "original": "assets/characters/costume_gown.png",
       "nativeCanvas": [
@@ -275,15 +356,38 @@
       "upscaled": true,
       "environment": "bedroom",
       "proceduralLandmarks": "data/character-presentation.js",
-      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
+      "layers": {
+        "body_base": "assets/characters/costume_gown/body_base.png",
+        "hair_back": "assets/characters/costume_gown/hair_back.png",
+        "face_open": "assets/characters/costume_gown/face_open.png",
+        "face_closed": "assets/characters/costume_gown/face_closed.png",
+        "hair_front": "assets/characters/costume_gown/hair_front.png"
+      },
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/costume_gown/registration.json"
+      },
+      "ground": {
+        "size": [
+          560,
+          1841
+        ],
+        "floor": 1,
+        "contacts": [
+          {
+            "x": 0.48,
+            "width": 0.18
+          }
+        ]
+      }
     },
     "maid": {
-      "type": "single",
-      "status": "fallback",
+      "type": "layered",
+      "status": "layered",
       "source": "assets/characters/single/costume_maid.png",
       "canvas": [
-        1378,
-        4096
+        592,
+        1760
       ],
       "original": "assets/characters/costume_maid.png",
       "nativeCanvas": [
@@ -293,15 +397,42 @@
       "upscaled": true,
       "environment": "cafe",
       "proceduralLandmarks": "data/character-presentation.js",
-      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
+      "layers": {
+        "body_base": "assets/characters/costume_maid/body_base.png",
+        "hair_back": "assets/characters/costume_maid/hair_back.png",
+        "face_open": "assets/characters/costume_maid/face_open.png",
+        "face_closed": "assets/characters/costume_maid/face_closed.png",
+        "hair_front": "assets/characters/costume_maid/hair_front.png"
+      },
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/costume_maid/registration.json"
+      },
+      "ground": {
+        "size": [
+          592,
+          1760
+        ],
+        "floor": 1,
+        "contacts": [
+          {
+            "x": 0.44,
+            "width": 0.17
+          },
+          {
+            "x": 0.75,
+            "width": 0.17
+          }
+        ]
+      }
     },
     "pool": {
-      "type": "single",
-      "status": "fallback",
+      "type": "layered",
+      "status": "layered",
       "source": "assets/characters/single/costume_pool.png",
       "canvas": [
-        1213,
-        4096
+        560,
+        1892
       ],
       "original": "assets/characters/costume_pool.png",
       "nativeCanvas": [
@@ -311,15 +442,38 @@
       "upscaled": true,
       "environment": "pool",
       "proceduralLandmarks": "data/character-presentation.js",
-      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
+      "layers": {
+        "body_base": "assets/characters/costume_pool/body_base.png",
+        "hair_back": "assets/characters/costume_pool/hair_back.png",
+        "face_open": "assets/characters/costume_pool/face_open.png",
+        "face_closed": "assets/characters/costume_pool/face_closed.png",
+        "hair_front": "assets/characters/costume_pool/hair_front.png"
+      },
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/costume_pool/registration.json"
+      },
+      "ground": {
+        "size": [
+          560,
+          1892
+        ],
+        "floor": 0.9947145877378436,
+        "contacts": [
+          {
+            "x": 0.43,
+            "width": 0.19
+          }
+        ]
+      }
     },
     "track": {
-      "type": "single",
-      "status": "fallback",
+      "type": "layered",
+      "status": "layered",
       "source": "assets/characters/single/costume_track.png",
       "canvas": [
-        1811,
-        4096
+        688,
+        1556
       ],
       "original": "assets/characters/costume_track.png",
       "nativeCanvas": [
@@ -329,7 +483,34 @@
       "upscaled": true,
       "environment": "classroom",
       "proceduralLandmarks": "data/character-presentation.js",
-      "reason": "No complete independently generated registered body/hair/open-face/closed-face set. No fake layers, warps or skin-oval blinking."
+      "layers": {
+        "body_base": "assets/characters/costume_track/body_base.png",
+        "hair_back": "assets/characters/costume_track/hair_back.png",
+        "face_open": "assets/characters/costume_track/face_open.png",
+        "face_closed": "assets/characters/costume_track/face_closed.png",
+        "hair_front": "assets/characters/costume_track/hair_front.png"
+      },
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/costume_track/registration.json"
+      },
+      "ground": {
+        "size": [
+          688,
+          1556
+        ],
+        "floor": 0.9955012853470437,
+        "contacts": [
+          {
+            "x": 0.18,
+            "width": 0.14
+          },
+          {
+            "x": 0.72,
+            "width": 0.19
+          }
+        ]
+      }
     }
   },
   "notes": "No displacement/warp filters. Five cleaned tier rigs visually reviewed; seven costume rigs incomplete and remain single images, not simulated parts."

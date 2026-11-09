@@ -1,0 +1,20 @@
+{
+  "status": "reviewed",
+  "canvas": [
+    688,
+    1556
+  ],
+  "blinkChangeBounds": [
+    226,
+    137,
+    386,
+    219
+  ],
+  "identicalAlpha": true,
+  "nonEyePixelsLocked": true,
+  "visualReview": "Open and closed head composites reviewed. Original faceless skull removed behind face; neck retained. Independent ponytail and front locks.",
+  "browserTests": [
+    390,
+    1280
+  ]
+}

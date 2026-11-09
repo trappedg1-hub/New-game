@@ -1,0 +1,20 @@
+{
+  "status": "reviewed",
+  "canvas": [
+    560,
+    1841
+  ],
+  "blinkChangeBounds": [
+    186,
+    149,
+    359,
+    220
+  ],
+  "identicalAlpha": true,
+  "nonEyePixelsLocked": true,
+  "visualReview": "Open/closed head composites inspected. Generated front-hair bridge under mouth removed. Blank skull removed behind face, original neck retained; eye-only patch, identical alpha/non-eye pixels. Generated expression differs from original full art.",
+  "browserTests": [
+    390,
+    1280
+  ]
+}

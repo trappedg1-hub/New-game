@@ -1,0 +1,82 @@
+{
+  "assets/characters/candidates/cardigan/body_base.png": {
+    "size": [
+      560,
+      1871
+    ],
+    "mode": "RGB",
+    "status": "generated_candidate_not_registered_or_enabled"
+  },
+  "assets/characters/candidates/cardigan/face_closed.png": {
+    "size": [
+      560,
+      1871
+    ],
+    "mode": "RGB",
+    "status": "generated_candidate_not_registered_or_enabled"
+  },
+  "assets/characters/candidates/cardigan/face_open.png": {
+    "size": [
+      560,
+      1871
+    ],
+    "mode": "RGB",
+    "status": "generated_candidate_not_registered_or_enabled"
+  },
+  "assets/characters/candidates/cardigan/hair_back.png": {
+    "size": [
+      560,
+      1871
+    ],
+    "mode": "RGB",
+    "status": "generated_candidate_not_registered_or_enabled"
+  },
+  "assets/characters/candidates/cardigan/hair_front.png": {
+    "size": [
+      560,
+      1871
+    ],
+    "mode": "RGB",
+    "status": "generated_candidate_not_registered_or_enabled"
+  },
+  "assets/characters/candidates/track/body_base.png": {
+    "size": [
+      688,
+      1556
+    ],
+    "mode": "RGB",
+    "status": "generated_candidate_not_registered_or_enabled"
+  },
+  "assets/characters/candidates/track/face_closed.png": {
+    "size": [
+      688,
+      1556
+    ],
+    "mode": "RGB",
+    "status": "generated_candidate_not_registered_or_enabled"
+  },
+  "assets/characters/candidates/track/face_open.png": {
+    "size": [
+      688,
+      1556
+    ],
+    "mode": "RGB",
+    "status": "generated_candidate_not_registered_or_enabled"
+  },
+  "assets/characters/candidates/track/hair_back.png": {
+    "size": [
+      688,
+      1556
+    ],
+    "mode": "RGB",
+    "status": "generated_candidate_not_registered_or_enabled"
+  },
+  "assets/characters/candidates/track/hair_front.png": {
+    "size": [
+      688,
+      1556
+    ],
+    "mode": "RGB",
+    "status": "generated_candidate_not_registered_or_enabled"
+  }
+}

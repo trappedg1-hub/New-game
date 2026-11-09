@@ -1,0 +1,20 @@
+{
+  "status": "reviewed",
+  "canvas": [
+    512,
+    2033
+  ],
+  "blinkChangeBounds": [
+    174,
+    354,
+    367,
+    438
+  ],
+  "identicalAlpha": true,
+  "nonEyePixelsLocked": true,
+  "visualReview": "Open/closed head composites reviewed. Ears and blank skull removed from body; ears exist only on front-hair layer. Eye-only blink with identical alpha and non-eye pixels.",
+  "browserTests": [
+    390,
+    1280
+  ]
+}

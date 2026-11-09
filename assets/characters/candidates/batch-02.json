@@ -1,0 +1,132 @@
+{
+  "assets/characters/candidates/keyed/apron/body_base.png": {
+    "size": [
+      624,
+      1721
+    ],
+    "alpha_bbox": [
+      72,
+      59,
+      616,
+      1714
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/apron/face_closed.png": {
+    "size": [
+      624,
+      1721
+    ],
+    "alpha_bbox": [
+      138,
+      72,
+      342,
+      305
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/apron/face_open.png": {
+    "size": [
+      624,
+      1721
+    ],
+    "alpha_bbox": [
+      138,
+      72,
+      342,
+      306
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/apron/hair_back.png": {
+    "size": [
+      624,
+      1721
+    ],
+    "alpha_bbox": [
+      7,
+      8,
+      563,
+      842
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/apron/hair_front.png": {
+    "size": [
+      624,
+      1721
+    ],
+    "alpha_bbox": [
+      8,
+      8,
+      414,
+      770
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/maid/body_base.png": {
+    "size": [
+      592,
+      1760
+    ],
+    "alpha_bbox": [
+      6,
+      46,
+      587,
+      1760
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/maid/face_closed.png": {
+    "size": [
+      1456,
+      720
+    ],
+    "alpha_bbox": [
+      540,
+      125,
+      901,
+      520
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/maid/face_open.png": {
+    "size": [
+      1456,
+      720
+    ],
+    "alpha_bbox": [
+      539,
+      124,
+      901,
+      520
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/maid/hair_back.png": {
+    "size": [
+      592,
+      1760
+    ],
+    "alpha_bbox": [
+      25,
+      25,
+      567,
+      1666
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/maid/hair_front.png": {
+    "size": [
+      592,
+      1760
+    ],
+    "alpha_bbox": [
+      87,
+      10,
+      543,
+      694
+    ],
+    "status": "unregistered_candidate"
+  }
+}

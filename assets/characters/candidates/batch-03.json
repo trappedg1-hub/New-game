@@ -1,0 +1,132 @@
+{
+  "assets/characters/candidates/keyed/pool/body_base.png": {
+    "size": [
+      560,
+      1892
+    ],
+    "alpha_bbox": [
+      39,
+      48,
+      551,
+      1882
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/pool/face_closed.png": {
+    "size": [
+      560,
+      1892
+    ],
+    "alpha_bbox": [
+      18,
+      154,
+      546,
+      751
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/pool/face_open.png": {
+    "size": [
+      560,
+      1892
+    ],
+    "alpha_bbox": [
+      18,
+      154,
+      546,
+      752
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/pool/hair_back.png": {
+    "size": [
+      560,
+      1892
+    ],
+    "alpha_bbox": [
+      9,
+      21,
+      498,
+      772
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/pool/hair_front.png": {
+    "size": [
+      560,
+      1892
+    ],
+    "alpha_bbox": [
+      70,
+      9,
+      427,
+      504
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/gown/body_base.png": {
+    "size": [
+      560,
+      1841
+    ],
+    "alpha_bbox": [
+      4,
+      31,
+      516,
+      1841
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/gown/face_closed.png": {
+    "size": [
+      560,
+      1841
+    ],
+    "alpha_bbox": [
+      148,
+      395,
+      416,
+      711
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/gown/face_open.png": {
+    "size": [
+      560,
+      1841
+    ],
+    "alpha_bbox": [
+      151,
+      388,
+      414,
+      699
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/gown/hair_back.png": {
+    "size": [
+      560,
+      1841
+    ],
+    "alpha_bbox": [
+      88,
+      9,
+      556,
+      834
+    ],
+    "status": "unregistered_candidate"
+  },
+  "assets/characters/candidates/keyed/gown/hair_front.png": {
+    "size": [
+      560,
+      1841
+    ],
+    "alpha_bbox": [
+      132,
+      9,
+      452,
+      493
+    ],
+    "status": "unregistered_candidate"
+  }
+}
