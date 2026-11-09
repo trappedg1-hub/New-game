@@ -24,6 +24,7 @@
     <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/character-animation.css" />
+    <link rel="stylesheet" href="css/premium-polish.css" />
   </head>
   <body>
     <svg
@@ -192,7 +193,7 @@
           <span class="ico"
             ><svg class="ui-icon" aria-hidden="true">
               <use href="#i-gacha" /></svg></span
-          >Gacha 🎰
+          >Gacha
         </button>
         <button class="rail-btn" data-modal="inventory">
           <span class="ico"
@@ -220,10 +221,11 @@
       <!-- right rail: costumes -->
       <aside id="right-rail">
         <div class="rail-head">WARDROBE<small>EVERY SIDE OF HER</small></div>
+        <div id="wardrobe-summary" class="wardrobe-summary" aria-live="polite"></div>
         <div id="costume-list"></div>
       </aside>
 
-      <!-- One full illustration; no layered parts or outgoing duplicate. -->
+      <!-- Registered PNG rig; only the winning decoded set becomes visible. -->
       <div
         id="character-wrap"
         role="button"
@@ -242,6 +244,8 @@
           <span id="bubble-text">…</span>
         </div>
       </div>
+
+      <div id="character-loading" class="outfit-loading" role="status" hidden><span class="outfit-loading-dot" aria-hidden="true"></span>Preparing outfit</div>
 
       <!-- tier-up event -->
       <div id="tier-event" class="hidden">
@@ -647,7 +651,7 @@
       <button id="install-dismiss" aria-label="Dismiss">✕</button>
     </div>
 
-    <div id="toast"></div>
+    <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
     <div id="level-fx" class="hidden">+1 LV</div>
 
     <script src="data/content.js"></script>

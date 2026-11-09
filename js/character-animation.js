@@ -21,6 +21,10 @@
   currentMeta=meta;const contacts=document.getElementById('contact-shadows');contacts.replaceChildren();
   for(const c of meta.contacts||[]){const e=document.createElement('i');e.className='contact-shadow';e.style.cssText=`left:${c.x*100}%;width:${c.width*100}%`;contacts.append(e);}fit();
  }
+ function pending(value){
+  document.getElementById('character-surface')?.setAttribute('aria-busy',String(value));
+  const indicator=document.getElementById('character-loading');if(indicator)indicator.hidden=!value;
+ }
  function image(src,cls){const e=new Image();e.src=src;e.className='rig-part '+cls;e.alt='';e.draggable=false;return e;}
  function rig(config){
   const scene=document.createElement('div');scene.className='rig-scene';
@@ -45,10 +49,11 @@
  async function mount(_container,src,onCommit){
   const token=++revision;await ready;if(token!==revision)return false;
   const config=configFor(src),surface=document.getElementById('character-surface');
-  if(currentPath===src&&surface.dataset.mode){onCommit?.();return true;}
+  if(currentPath===src&&surface.dataset.mode){pending(false);onCommit?.();return true;}
   const layered=config?.type==='layered'&&config.contentAudit?.status==='faceless-head-repaint-and-visual-review'&&required.every(k=>config.layers?.[k]);
   const fallback=config?.source||src.replace('assets/characters/','assets/characters/single/').replace(/\.webp$/,'.png');
-  try{await Promise.all((layered?required.map(k=>config.layers[k]):[fallback]).map(load));}catch(_){return false;}
+  pending(true);
+  try{await Promise.all((layered?required.map(k=>config.layers[k]):[fallback]).map(load));}catch(_){if(token===revision)pending(false);return false;}
   if(token!==revision)return false;stop();currentPath=src;
   let content;
   if(layered){content=rig(config);ground(config.ground);}
@@ -58,6 +63,7 @@
    ground(meta||{size:config?.canvas||[420,1323],floor:1,contacts:[]});
   }
   surface.dataset.mode=layered?'layered':'single';surface.style.removeProperty('--art-mask');surface.replaceChildren(content);
+  pending(false);
   onCommit?.();
   if(motion())reactions.push(surface.animate([{opacity:.5},{opacity:1}],{duration:300,easing:'ease-out'}));
   return true;

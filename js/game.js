@@ -469,6 +469,9 @@ function costumeThumb(c, small){
   const owned = S.owned.includes(c.id);
   const equipped = S.equip===c.id;
   const el = document.createElement('div');
+  el.dataset.costumeId=c.id;
+  el.tabIndex=0;el.setAttribute('role','button');
+  el.setAttribute('aria-pressed',String(equipped));
   el.className = 'costume-thumb'+(owned?'':' locked')+(equipped?' equipped':'');
   const src = c.id==='base' ? tierOf(S.level).art : c.img;
   el.innerHTML = `<img src="${src}" alt="${c.name}" loading="lazy" decoding="async">
@@ -479,18 +482,40 @@ function costumeThumb(c, small){
   return el;
 }
 function renderRails(){
+  // Equipping rebuilds the lists; preserve keyboard position instead of
+  // sending focus back to the page underneath an open wardrobe/modal.
+  const active=document.activeElement;
+  const focusKey=active?.dataset.costumeId;
+  const focusList=active?.closest('#costume-list,#inv-grid')?.id;
   const list = $('costume-list'); list.innerHTML='';
   for(const c of COSTUMES) list.appendChild(costumeThumb(c));
   const inv = $('inv-grid'); inv.innerHTML='';
   for(const c of COSTUMES){
     const owned = S.owned.includes(c.id);
     const el = document.createElement('div');
+    el.dataset.costumeId=c.id;
+    el.setAttribute('role','button');el.tabIndex=0;
+    el.setAttribute('aria-pressed',String(S.equip===c.id));
+    el.setAttribute('aria-label',c.name+(owned?'':' · Locked'));
     el.className = 'inv-item'+(owned?'':' locked')+(S.equip===c.id?' equipped':'');
     const src = c.id==='base' ? tierOf(S.level).art : c.img;
     el.innerHTML = `<div class="inv-img"><img src="${src}" alt="${c.name}" loading="lazy" decoding="async"></div>
       <div class="inv-name">${owned?c.name:'🔒 ???'}<br><small class="rar ${c.rarity}" style="color:${c.rarity==='SSR'?'#ffd700':c.rarity==='SR'?'#c44dff':c.rarity==='R'?'#6bb6ff':'#c9c9d6'}">${c.rarity}</small></div>`;
     el.onclick = ()=>equip(c, owned);
     inv.appendChild(el);
+  }
+  const summary=$('wardrobe-summary');
+  if(summary){
+    const collected=COSTUMES.filter(c=>c.id!=='base'&&S.owned.includes(c.id)).length;
+    const total=COSTUMES.filter(c=>c.id!=='base').length;
+    summary.replaceChildren();
+    const count=document.createElement('span');count.textContent=`${collected} / ${total} collected`;
+    const hint=document.createElement('span');hint.textContent='Select a look';
+    summary.append(count,hint);
+  }
+  if(focusKey&&focusList){
+    const target=[...$(focusList).children].find(el=>el.dataset.costumeId===focusKey);
+    target?.focus({preventScroll:true});
   }
 }
 function equip(c, owned){
@@ -637,7 +662,7 @@ function bind(){
   });
   // keyboard
   document.addEventListener('keydown', e=>{
-    if(e.code==='Space' && !document.querySelector('.modal.open')){
+    if(e.code==='Space' && !document.querySelector('.modal.open') && !e.target.closest?.('button,input,textarea,select,[role="button"],[contenteditable="true"]')){
       e.preventDefault();
       const r = $('tap-btn').getBoundingClientRect();
       tap(r.left+r.width/2, r.top-30);

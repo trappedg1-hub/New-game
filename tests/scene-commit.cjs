@@ -14,16 +14,21 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
   await page.locator('#toggle-right').click();
   const select=async name=>page.locator('.costume-thumb').filter({has:page.locator(`img[alt="${name}"]`)}).click();
   await select('Silk Nightgown');await seen;
+  assert.equal(await page.locator('#character-surface').getAttribute('aria-busy'),'true');
+  assert.equal(await page.locator('#character-loading').evaluate(e=>e.hidden),false);
   assert.equal(await page.locator('body').getAttribute('data-environment'),'classroom','do not change lighting while layers are pending');
   assert.equal(await page.locator('.body-base').getAttribute('src'),'assets/characters/tier1/body_base.png');
   // Newer selection wins before older layers complete.
   await select('Poolside');
   await page.waitForFunction(()=>document.body.dataset.environment==='pool'&&document.querySelector('.body-base')?.getAttribute('src')==='assets/characters/costume_pool/body_base.png');
+  assert.equal(await page.locator('#character-surface').getAttribute('aria-busy'),'false');
+  assert.equal(await page.locator('#character-loading').evaluate(e=>e.hidden),true);
   const poolBG=await page.locator('body').getAttribute('data-scene-bg');
   release();await page.waitForTimeout(300);
   assert.equal(await page.locator('body').getAttribute('data-environment'),'pool');
   assert.equal(await page.locator('.body-base').getAttribute('src'),'assets/characters/costume_pool/body_base.png');
   await select('Café Apron');await page.waitForTimeout(300);
+  assert.equal(await page.locator('#character-loading').evaluate(e=>e.hidden),true);
   assert.equal(await page.locator('body').getAttribute('data-environment'),'pool','failed decode must preserve lighting/ambient context');
   assert.equal(await page.locator('body').getAttribute('data-scene-bg'),poolBG);
   assert.equal(await page.locator('.body-base').getAttribute('src'),'assets/characters/costume_pool/body_base.png');

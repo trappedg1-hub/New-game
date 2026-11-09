@@ -1,0 +1,123 @@
+/* Atelier refinement: readable hierarchy, restrained materials, clear states. */
+:root {
+  --atelier-line: #e6d9ff24;
+  --atelier-muted: #c0b5d0;
+  --atelier-ease: cubic-bezier(.2,.75,.2,1);
+}
+#coins, #gems, #energy, #stat-cps, #stat-tap, #heart-text {
+  font-variant-numeric: tabular-nums;
+}
+#right-rail {
+  background: linear-gradient(155deg,#252233f5,#151421f5 65%);
+  border: 1px solid var(--atelier-line);
+  box-shadow: 0 24px 70px #07061180, inset 0 1px #ffffff0a;
+  scrollbar-width: thin;
+  scrollbar-color: #71627c transparent;
+}
+#right-rail .rail-head { margin-bottom: 12px; letter-spacing: .18em; }
+#right-rail .rail-head small { color: var(--atelier-muted); letter-spacing: .12em; }
+.wardrobe-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px 14px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--atelier-muted);
+  font-variant-numeric: tabular-nums;
+}
+.wardrobe-summary span:first-child { color: #eee5f6; }
+.costume-thumb {
+  border: 1px solid #e8dbff29;
+  background: linear-gradient(145deg,#393346,#211e2c);
+  box-shadow: 0 4px 12px #08061038;
+  transition: border-color .2s var(--atelier-ease), box-shadow .2s var(--atelier-ease), transform .2s var(--atelier-ease);
+  -webkit-tap-highlight-color: transparent;
+  scroll-margin-block: 12px;
+}
+.costume-thumb:after { inset: 42% 0 0; background: linear-gradient(transparent,#100c18e8); }
+.costume-thumb .costume-name { bottom: 13px; font-size: 12px; font-weight: 650; letter-spacing: .015em; text-shadow: 0 1px 4px #000; }
+.costume-thumb .rar {
+  z-index: 3;
+  width: auto;
+  height: auto;
+  min-width: 22px;
+  padding: 3px 6px;
+  top: 9px;
+  left: 9px;
+  border: 1px solid #ffffff26;
+  border-radius: 5px;
+  background: #191522d9;
+  color: #ddd3e7;
+  box-shadow: none;
+  font: 700 9px/1.2 var(--font);
+  letter-spacing: .06em;
+}
+.costume-thumb .rar.R { background:#152c40e8; color:#b7dfff; }
+.costume-thumb .rar.SR { background:#342042e8; color:#e4b9ff; }
+.costume-thumb .rar.SSR { background:#392e1be8; color:#ffe2a2; border-color:#eac57b66; }
+.costume-thumb.equipped { transform: none; border-color:var(--pink); outline:none; box-shadow:0 0 0 1px var(--pink),0 6px 20px #e985ae18; }
+.costume-thumb.equipped:before {
+  content:'✓';
+  position:absolute;
+  top:9px;
+  right:9px;
+  z-index:4;
+  display:grid;
+  place-items:center;
+  width:21px;
+  height:21px;
+  border-radius:50%;
+  background:#f3dbe8;
+  color:#372233;
+  font:800 12px/1 var(--font);
+  box-shadow:0 2px 6px #0005;
+}
+.costume-thumb.locked .lock { backdrop-filter:blur(1.5px); background:#09081055; }
+.costume-thumb.locked .costume-name { opacity:.75; }
+.costume-thumb:focus-visible, .inv-item:focus-visible {
+  outline:2px solid #f3dbe8;
+  outline-offset:3px;
+  box-shadow:0 0 0 5px #16121f;
+}
+.inv-item.equipped { border-color:var(--pink); box-shadow:inset 0 0 0 1px var(--pink); }
+.rail-toggle:focus-visible, #tap-btn:focus-visible { outline:2px solid #fff0f8; outline-offset:4px; }
+#tap-btn { box-shadow:0 8px 24px #b53b8d30,inset 0 1px #ffffff55,inset 0 -2px #75267126; }
+#tap-btn small { opacity:.85; }
+#toast { max-width:min(420px,calc(100vw - 32px)); border:1px solid var(--atelier-line); box-shadow:0 8px 28px #08061166; }
+.outfit-loading {
+  position:absolute;
+  z-index:8;
+  top:76px;
+  left:50%;
+  translate:-50% 0;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 13px;
+  border:1px solid var(--atelier-line);
+  border-radius:999px;
+  background:#1d1829ed;
+  color:#e5ddeb;
+  font:500 11px/1.4 var(--font);
+  letter-spacing:.03em;
+  pointer-events:none;
+  animation:outfitPending .2s .16s both;
+}
+.outfit-loading[hidden] { display:none; }
+.outfit-loading-dot { width:5px; height:5px; border-radius:50%; background:var(--pink); }
+@keyframes outfitPending { from{opacity:0;} to{opacity:1;} }
+@media(hover:hover) and (pointer:fine) {
+  .costume-thumb:not(.equipped):hover { border-color:#dbc4e980; transform:translateY(-2px); box-shadow:0 8px 18px #08061066; }
+}
+@media(max-width:767px) {
+  .wardrobe-summary { font-size:10px; padding-bottom:12px; }
+  #right-rail { padding-top:20px; }
+  .outfit-loading { top:72px; }
+}
+/* Locked art is veiled, but its name/rarity stay legible above the veil. */
+.costume-thumb .rar, .costume-thumb .costume-name { z-index:5; }
+.costume-thumb.equipped:before { z-index:6; }
+.costume-thumb:has(.SSR) { animation:none; box-shadow:0 4px 14px #08061040; }
+.costume-thumb.equipped:has(.SSR) { box-shadow:0 0 0 1px var(--pink),0 6px 20px #e985ae18; }
