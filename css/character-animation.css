@@ -1,0 +1,456 @@
+/* Independent-part animation rig. Nested transform groups avoid animation collisions. */
+body.tier-1 {
+  --breath-lift: -1.5px;
+  --breath-scale: 1.004;
+  --breath-time: 4s;
+  --hair-angle: 0.4deg;
+  --hair-x: 0.5px;
+  --tap-scale: 0.98;
+  --tap-y: -2px;
+  --tap-angle: 0deg;
+  --hip-angle: 0deg;
+}
+body.tier-2 {
+  --breath-lift: -2.4px;
+  --breath-scale: 1.0064;
+  --breath-time: 3.8s;
+  --hair-angle: 0.64deg;
+  --hair-x: 0.8px;
+  --tap-scale: 1.01;
+  --tap-y: -3px;
+  --tap-angle: 0deg;
+  --hip-angle: 0deg;
+}
+body.tier-3 {
+  --breath-lift: -3px;
+  --breath-scale: 1.008;
+  --breath-time: 3.5s;
+  --hair-angle: 0.8deg;
+  --hair-x: 1px;
+  --tap-scale: 1.01;
+  --tap-y: 2px;
+  --tap-angle: 1deg;
+  --hip-angle: 0.2deg;
+}
+body.tier-4 {
+  --breath-lift: -3.6px;
+  --breath-scale: 1.0096;
+  --breath-time: 3.25s;
+  --hair-angle: 0.96deg;
+  --hair-x: 1.2px;
+  --tap-scale: 1.03;
+  --tap-y: 3px;
+  --tap-angle: 0.8deg;
+  --hip-angle: 0.3deg;
+}
+body.tier-5 {
+  --breath-lift: -4px;
+  --breath-scale: 1.011;
+  --breath-time: 3s;
+  --hair-angle: 1.2deg;
+  --hair-x: 1.5px;
+  --tap-scale: 1.04;
+  --tap-y: 3px;
+  --tap-angle: 1.2deg;
+  --hip-angle: 0.4deg;
+}
+/* Cancel the legacy whole-stack squash; each part now has its own reaction group. */
+#character-wrap.char-tap,
+.char-tap .character-stack.show {
+  animation: none !important;
+}
+.character-rig {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  isolation: isolate;
+}
+.rig-canvas {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  height: 100%;
+  max-width: 100%;
+  translate: -50% 0;
+  isolation: isolate;
+}
+.rig-reactor,
+.rig-breath,
+.rig-back-react,
+.rig-front-react,
+.rig-hair-back,
+.rig-hair-front,
+.rig-face,
+.rig-cloth,
+.fallback-sway {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+  transform-origin: 50% 100%;
+}
+.character-rig .rig-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+  will-change: transform, opacity;
+  animation: none;
+  filter: none;
+  -webkit-box-reflect: unset;
+  pointer-events: none;
+}
+.rig-breath {
+  animation: rigBreathing var(--breath-time, 3.5s) ease-in-out infinite;
+}
+.rig-hair-back {
+  transform-origin: 61% 4%;
+  animation: rigHairBack 4.2s ease-in-out infinite;
+}
+.rig-hair-front {
+  transform-origin: 61% 4%;
+  animation: rigHairFront 4.5s ease-in-out infinite;
+}
+.rig-face {
+  transform-origin: 61% 10%;
+}
+.character-rig .face-open {
+  animation: rigBlinkOpen 5s linear infinite;
+}
+.character-rig .face-closed {
+  opacity: 0;
+  animation: rigBlinkClosed 5s linear infinite;
+}
+.rig-cloth {
+  transform-origin: 50% 65%;
+  animation: rigCloth 5s ease-in-out infinite;
+}
+.fallback-sway {
+  animation: rigFallbackSway 7s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+/* No real eyelids exist in fallback paintings: this is only a subtle synthetic pulse. */
+.character-rig[data-animation-mode="fallback"] .rig-breath {
+  animation:
+    rigBreathing var(--breath-time, 3.5s) ease-in-out infinite,
+    rigFallbackBlink 5s linear infinite;
+}
+.tier-1 .rig-cloth {
+  animation: none;
+}
+.tier-3 .rig-reactor,
+.tier-4 .rig-reactor,
+.tier-5 .rig-reactor {
+  animation: rigHip 8s ease-in-out infinite;
+}
+.tier-4 .rig-face,
+.tier-5 .rig-face {
+  animation: rigHeadTilt 8s ease-in-out infinite;
+}
+.rig-back-react,
+.rig-front-react {
+  transform-origin: 61% 4%;
+}
+.rig-reacting .rig-reactor {
+  animation: rigTapBody 0.6s ease-out !important;
+}
+.rig-reacting .rig-back-react {
+  animation: rigTapHair 0.65s ease-out;
+}
+.rig-reacting .rig-front-react {
+  animation: rigTapHair 0.6s ease-out reverse;
+}
+.rig-reacting .rig-face {
+  animation: rigTapFace 0.4s ease-out;
+}
+.rig-reacting .face-open {
+  animation: rigTapOpen 0.6s linear !important;
+}
+.rig-reacting .face-closed {
+  animation: rigTapClosed 0.6s linear !important;
+}
+.rig-enter {
+  animation: rigAppear 0.3s ease both;
+}
+/* Gold is UI lighting behind the rig, not painted magical effects on the art. */
+.character-stack.ssr-anim .rig-canvas:before {
+  content: "";
+  position: absolute;
+  inset: 15% -25% 5%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #ffd70030, transparent 65%);
+  animation: rigSSRGlow 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+.character-stack.ssr-anim .rig-canvas:after {
+  content: "✦";
+  position: absolute;
+  right: 5%;
+  top: 28%;
+  color: #ffe2a9;
+  font-size: 16px;
+  opacity: 0.45;
+  animation: rigSSRSpark 4s ease-in-out infinite;
+  pointer-events: none;
+}
+.character-stack.ssr-anim .rig-reacting .rig-canvas:before {
+  animation: rigSSRGlow 0.6s ease-out;
+}
+@keyframes rigBreathing {
+  0%,
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(var(--breath-lift, -3px))
+      scaleY(var(--breath-scale, 1.008));
+  }
+}
+@keyframes rigHairBack {
+  0%,
+  100% {
+    transform: rotate(calc(var(--hair-angle, 0.8deg) * -0.625))
+      translateX(calc(var(--hair-x, 1px) * -1));
+  }
+  50% {
+    transform: rotate(var(--hair-angle, 0.8deg)) translateX(var(--hair-x, 1px))
+      translateY(-1px);
+  }
+}
+@keyframes rigHairFront {
+  0%,
+  100% {
+    transform: rotate(calc(var(--hair-angle, 0.8deg) * 0.5))
+      translateX(var(--hair-x, 1px));
+  }
+  50% {
+    transform: rotate(calc(var(--hair-angle, 0.8deg) * -0.75))
+      translateX(calc(var(--hair-x, 1px) * -1)) translateY(-1px);
+  }
+}
+@keyframes rigCloth {
+  0%,
+  100% {
+    transform: skewX(0) translateX(0);
+  }
+  33% {
+    transform: skewX(var(--hair-angle, 0.8deg)) translateX(1px);
+  }
+  66% {
+    transform: skewX(calc(var(--hair-angle, 0.8deg) * -0.75)) translateX(-1px);
+  }
+}
+@keyframes rigBlinkOpen {
+  0%,
+  94%,
+  98%,
+  100% {
+    opacity: 1;
+  }
+  95%,
+  97% {
+    opacity: 0;
+  }
+}
+@keyframes rigBlinkClosed {
+  0%,
+  94%,
+  98%,
+  100% {
+    opacity: 0;
+  }
+  95%,
+  97% {
+    opacity: 1;
+  }
+}
+@keyframes rigFallbackSway {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(var(--hip-angle, 0deg));
+  }
+}
+@keyframes rigFallbackBlink {
+  0%,
+  94%,
+  98%,
+  100% {
+    opacity: 1;
+  }
+  95%,
+  97% {
+    opacity: 0.97;
+  }
+}
+@keyframes rigHip {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(var(--hip-angle, 0deg));
+  }
+}
+@keyframes rigHeadTilt {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(0.25deg);
+  }
+}
+@keyframes rigTapBody {
+  0%,
+  100% {
+    transform: translateY(0) scale(1) rotate(0);
+  }
+  20% {
+    transform: translateY(2px) scale(0.985);
+  }
+  50% {
+    transform: translateY(var(--tap-y, -4px)) scale(var(--tap-scale, 1.01))
+      rotate(var(--tap-angle, 0deg));
+  }
+}
+@keyframes rigTapHair {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  30% {
+    transform: rotate(-1.5deg) translateY(2px);
+  }
+  60% {
+    transform: rotate(1deg) translateY(-1px);
+  }
+}
+@keyframes rigTapFace {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.012);
+    opacity: 0.96;
+  }
+}
+@keyframes rigTapOpen {
+  0%,
+  15%,
+  48%,
+  100% {
+    opacity: 1;
+  }
+  20%,
+  42% {
+    opacity: 0;
+  }
+}
+@keyframes rigTapClosed {
+  0%,
+  15%,
+  48%,
+  100% {
+    opacity: 0;
+  }
+  20%,
+  42% {
+    opacity: 1;
+  }
+}
+@keyframes rigAppear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes rigSSRGlow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+@keyframes rigSSRSpark {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+  50% {
+    opacity: 0.65;
+    transform: translateY(-12px) scale(1);
+  }
+}
+/* Browser background suspension is explicit, including nested groups and pseudo-elements. */
+.animation-paused .character-rig *,
+.animation-paused .character-rig *:before,
+.animation-paused .character-rig *:after {
+  animation-play-state: paused !important;
+}
+.animation-low-end .rig-hair-back,
+.animation-low-end .rig-hair-front,
+.animation-low-end .rig-reactor,
+.animation-low-end .rig-face,
+.animation-low-end .rig-cloth,
+.animation-low-end .fallback-sway,
+.animation-low-end .face-open,
+.animation-low-end .face-closed {
+  animation: none !important;
+}
+.animation-low-end .face-open {
+  opacity: 1 !important;
+}
+.animation-low-end .face-closed {
+  opacity: 0 !important;
+}
+.animation-low-end .character-rig[data-animation-mode="fallback"] .rig-breath {
+  animation: rigBreathing 5s ease-in-out infinite;
+}
+.animation-low-end .rig-canvas:before,
+.animation-low-end .rig-canvas:after {
+  display: none;
+}
+.no-motion .character-rig *,
+.no-motion .character-rig *:before,
+.no-motion .character-rig *:after {
+  animation: none !important;
+  transition: none !important;
+}
+.no-motion .face-open {
+  opacity: 1 !important;
+}
+.no-motion .face-closed {
+  opacity: 0 !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .character-rig *,
+  .character-rig *:before,
+  .character-rig *:after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .face-open {
+    opacity: 1 !important;
+  }
+  .face-closed {
+    opacity: 0 !important;
+  }
+}
+/* Incoming/outgoing layers remain aligned; invisible stacks do not spend animation time. */
+.character-stack:not(.show) .character-rig *,
+.character-stack:not(.show) .character-rig *:before,
+.character-stack:not(.show) .character-rig *:after {
+  animation-play-state: paused !important;
+}

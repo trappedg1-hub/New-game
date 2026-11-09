@@ -615,10 +615,9 @@ function openModal(name){
 
 function applyTheme(){ const t=THEMES.find(t=>t.id===S.settings.theme)||THEMES[0];document.documentElement.style.setProperty('--pink',t.pink);document.documentElement.style.setProperty('--pink-soft',t.soft); }
 function mountArt(el,src){
-  // Flat paintings have no recoverable occluded pixels: use the safe whole-art
-  // fallback instead of moving rectangular slices and exposing seams.
-  el.innerHTML=''; const img=new Image();img.className='layer character-single';img.alt='B';img.src=src;el.appendChild(img);
+  window.CharacterAnimation.mount(el,src);
 }
+
 let installEvent;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;$('install-bar').classList.remove('hidden');});
 window.addEventListener('load',()=>{

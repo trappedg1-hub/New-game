@@ -1,0 +1,110 @@
+{
+  "version": 1,
+  "generatorLimit": 10,
+  "tiers": {
+    "1": {
+      "status": "layered",
+      "canvas": [420, 1323],
+      "source": "assets/characters/tier1.webp",
+      "layers": {
+        "body_base": "assets/characters/tier1/body_base.png",
+        "hair_back": "assets/characters/tier1/hair_back.png",
+        "hair_front": "assets/characters/tier1/hair_front.png",
+        "face": "assets/characters/tier1/face.png",
+        "face_blink": "assets/characters/tier1/face_blink.png"
+      },
+      "optionalCloth": {
+        "path": "assets/characters/tier1/cloth_loose.png",
+        "enabled": false,
+        "reason": "Stranger has no cloth flutter; waistband registration did not pass seam check."
+      },
+      "registration": "Generated separately; keyed, rescaled and manually registered. Closed eyelid patch composited over unchanged open-face silhouette."
+    },
+    "2": {
+      "status": "fallback",
+      "canvas": [421, 1185],
+      "source": "assets/characters/tier2.webp",
+      "layers": {},
+      "reason": "Incomplete generation: 10-image per-turn service limit reached.",
+      "candidateLayers": [
+        "assets/characters/tier2/body_base.png",
+        "assets/characters/tier2/hair_back.png",
+        "assets/characters/tier2/hair_front.png",
+        "assets/characters/tier2/face.png"
+      ]
+    },
+    "3": {
+      "status": "fallback",
+      "canvas": [411, 1290],
+      "source": "assets/characters/tier3.webp",
+      "layers": {},
+      "reason": "Generation unavailable after service limit; no synthetic parts substituted."
+    },
+    "4": {
+      "status": "fallback",
+      "canvas": [701, 1178],
+      "source": "assets/characters/tier4.webp",
+      "layers": {},
+      "reason": "Generation unavailable after service limit; no synthetic parts substituted."
+    },
+    "5": {
+      "status": "fallback",
+      "canvas": [403, 1323],
+      "source": "assets/characters/tier5.webp",
+      "layers": {},
+      "reason": "Generation unavailable after service limit; no synthetic parts substituted."
+    }
+  },
+  "costumes": {
+    "cardigan": {
+      "status": "fallback",
+      "source": "assets/characters/costume_cardigan.webp",
+      "ssr": false,
+      "reason": "No independently generated costume rig.",
+      "canvas": [395, 1320]
+    },
+    "track": {
+      "status": "fallback",
+      "source": "assets/characters/costume_track.webp",
+      "ssr": false,
+      "reason": "No independently generated costume rig.",
+      "canvas": [584, 1321]
+    },
+    "apron": {
+      "status": "fallback",
+      "source": "assets/characters/costume_apron.webp",
+      "ssr": false,
+      "reason": "No independently generated costume rig.",
+      "canvas": [500, 1379]
+    },
+    "maid": {
+      "status": "fallback",
+      "source": "assets/characters/costume_maid.webp",
+      "ssr": false,
+      "reason": "No independently generated costume rig.",
+      "canvas": [396, 1177]
+    },
+    "pool": {
+      "status": "fallback",
+      "source": "assets/characters/costume_pool.webp",
+      "ssr": false,
+      "reason": "No independently generated costume rig.",
+      "canvas": [360, 1216]
+    },
+    "gown": {
+      "status": "fallback",
+      "source": "assets/characters/costume_gown.webp",
+      "ssr": true,
+      "reason": "No independently generated costume rig.",
+      "canvas": [393, 1292]
+    },
+    "bunny": {
+      "status": "fallback",
+      "source": "assets/characters/costume_bunny.webp",
+      "ssr": true,
+      "reason": "No independently generated costume rig.",
+      "canvas": [341, 1354]
+    }
+  },
+  "notes": "AI components require registration and matte cleanup; these are not Live2D meshes."
+}
