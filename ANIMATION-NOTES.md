@@ -1,3 +1,11 @@
+# Visible motion correction
+
+- Hair no longer depends on SMIL/baseFrequency playback. One requestAnimationFrame driver advances the SVG noise offset at ~30 updates/s; fixed displacement scale 10 keeps the neutral map outside the hair perfectly stationary.
+- Wind survives costume changes, motion toggle, reduced-motion preference changes and tab visibility changes. No motion override of user accessibility preferences.
+- Shared surface breathing now uses bottom-anchored scaleY 1.012 and -1px vertical rise over 3.8s, visibly stronger without moving facial parts independently.
+- tests/visible-motion.cjs verifies real elapsed transform/wind changes for all 12 illustrations at mobile/desktop widths, including stop/resume. A browser screenshot pixel comparison with breathing/overlays/background disabled found changed pixels in the hair region and exactly zero changes in the lower half.
+- Cache v14 refreshes the corrected CSS/JS/SVG together. Single image, facial registration and ground plane remain intact.
+
 # Current presentation: grounded single-PNG scenes + localized procedural effects
 
 - Still exactly one complete `img#character-art`; no body/hair/face image stack. Its measured surface contains tiny CSS eyelids, not duplicate facial PNGs.

@@ -3,7 +3,7 @@
 .character-wrapper {position:absolute;left:50%;bottom:0;translate:-50% 0;z-index:2;pointer-events:none;transform-origin:bottom center;}
 .character-surface {position:relative;width:100%;height:100%;transform-origin:bottom center;animation:singleBreathe 3.8s ease-in-out infinite;filter:var(--scene-light);}
 .char-single-img {display:block;width:100%;height:100%;object-fit:contain;object-position:center bottom;user-select:none;-webkit-user-drag:none;filter:url(#procedural-sway);}
-@keyframes singleBreathe {0%,100%{transform:translateY(0) scaleY(1);}50%{transform:translateY(-2px) scaleY(1.006);}}
+@keyframes singleBreathe {0%,100%{transform:translateY(0) scaleY(1);}50%{transform:translateY(-1px) scaleY(1.012);}}
 /* Skin ovals cover only manually registered visible eyes for 150ms / 4.5s.
    They inherit surface lighting, breathing, and the parent's tap bounce. */
 #eyelids {position:absolute;inset:0;pointer-events:none;}
@@ -32,3 +32,9 @@ body.no-motion .char-single-img {filter:none;}
 /* A closed lash curve, not an empty eye-shaped skin patch. */
 .eyelid-mask {box-shadow:none;background:linear-gradient(color-mix(in srgb,var(--skin),#f4cfc0 12%),var(--skin));}
 .eyelid-mask::after {content:"";position:absolute;left:5%;right:5%;top:15%;height:50%;border-bottom:1.2px solid #52323a;border-radius:0 0 65% 50%;}
+
+/* Keep breathing on the shared surface, never on an element used by tap/fade. */
+#character-surface {animation:singleBreathe 3.8s ease-in-out infinite;transform-origin:50% 100%;will-change:transform;}
+body.no-motion #character-surface {animation:none;}
+body.animation-paused #character-surface {animation-play-state:paused;}
+@media(prefers-reduced-motion:reduce){#character-surface{animation:none;}}

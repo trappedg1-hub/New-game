@@ -4,7 +4,7 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let revision = 0, bounce = null, fade = null;
   const motion = () => !reduced.matches && !document.body.classList.contains('no-motion') && !document.hidden;
-  let currentMeta = null, lastMotion = null;
+  let currentMeta = null;
   const ready = Promise.resolve();
   function landmarks(path) {
     const key=path.split('/').pop().replace(/\.png$/,'');
@@ -99,15 +99,33 @@
     document.body.classList.toggle('animation-paused',document.hidden);
     if(document.hidden)stop();
   });
-  reduced.addEventListener?.('change',stop);
-  new MutationObserver(()=>{
-    if(!motion())stop();
-    if(lastMotion===motion())return;
-    lastMotion=motion();
-    const frequency=document.getElementById('sway-frequency');
-    const displacement=document.getElementById('hair-displacement');
-    displacement?.setAttribute('scale',motion()?'2':'0');
-    if(frequency) {if(motion())frequency.beginElement?.();else frequency.endElement?.();}
-  }).observe(document.body,{attributes:true,attributeFilter:['class']});
+  // Drive wind explicitly: SMIL baseFrequency animations can freeze when filters
+  // are nested under CSS lighting/masks, especially after visibility changes.
+  // Only the neutral-masked hair noise moves; the PNG and face never move apart.
+  let windFrame = null, lastWind = 0, windTime = 0;
+  function windTick(now) {
+    windFrame = null;
+    if(!motion())return;
+    const elapsed = lastWind ? Math.min(now-lastWind,80) : 0;
+    if(!lastWind || now-lastWind>=32){
+      windTime+=elapsed;lastWind=now;
+      const wind=document.getElementById('hair-wind');
+      const displacement=document.getElementById('hair-displacement');
+      wind?.setAttribute('dx',String((Math.sin(windTime/1250)*18).toFixed(3)));
+      wind?.setAttribute('dy',String((Math.sin(windTime/1900)*5).toFixed(3)));
+      displacement?.setAttribute('scale',String('10'));
+    }
+    windFrame=requestAnimationFrame(windTick);
+  }
+  function syncMotion(){
+    if(windFrame!==null)cancelAnimationFrame(windFrame);
+    windFrame=null;lastWind=0;
+    if(motion())windFrame=requestAnimationFrame(windTick);
+    else {stop();document.getElementById('hair-displacement')?.setAttribute('scale','0');}
+  }
+  reduced.addEventListener?.('change',syncMotion);
+  document.addEventListener('visibilitychange',syncMotion);
+  document.addEventListener('DOMContentLoaded',syncMotion);
+  new MutationObserver(syncMotion).observe(document.body,{attributes:true,attributeFilter:['class']});
   window.CharacterAnimation = {mount,ready,react};
 })();
