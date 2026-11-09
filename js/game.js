@@ -528,6 +528,30 @@ function renderGachaTimers(){
 
 /* ---------------- Events ---------------- */
 function bind(){
+  // Local debug tools, not an authentication boundary or a server admin role.
+  function adminUpdate(message){
+    renderAll();
+    $('admin-balance').textContent=String(S.gems);
+    $('admin-status').textContent=message;
+    saveNow();
+  }
+  function adminAddGems(amount){
+    if(!Number.isSafeInteger(amount)||amount<1||amount>1000000 ||
+       !Number.isSafeInteger(S.gems)||S.gems<0||!Number.isSafeInteger(S.gems+amount)){
+      $('admin-status').textContent='Введите целое число от 1 до 1 000 000.';
+      return;
+    }
+    S.gems+=amount;
+    adminUpdate('Добавлено '+amount+' 💎. Сохранено в этом браузере.');
+  }
+  $('admin-gems-form').onsubmit=e=>{e.preventDefault();adminAddGems(Number($('admin-gems').value));};
+  document.querySelectorAll('[data-admin-gems]').forEach(b=>b.onclick=()=>adminAddGems(Number(b.dataset.adminGems)));
+  $('admin-panel').ontoggle=()=>{$('admin-balance').textContent=String(S.gems);};
+  $('admin-free').onclick=()=>{S.freePull=0;adminUpdate('Бесплатная попытка снова доступна.');};
+  $('admin-gacha').onclick=()=>{
+    $('modal-settings').classList.remove('open');
+    openModal('gacha');
+  };
   // character + tap button
   $('character-wrap').onclick = e => tap(e.clientX, e.clientY);
   $('tap-btn').onclick = e => {

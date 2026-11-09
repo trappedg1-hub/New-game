@@ -5061,3 +5061,12 @@ button:active:not(:disabled),
 @keyframes gachaConfetti { from {transform:translate(0,0) rotate(0);opacity:1} to {transform:translate(var(--drift),65vh) rotate(var(--spin));opacity:0} }
 @media (prefers-reduced-motion:reduce) { .gacha-confetti {display:none} .reveal-card {transition:none} }
 .reveal-card:not(.dup) .inner:after { content:none; }
+
+/* Local gacha testing tools */
+.admin-panel{margin:16px 0;padding:14px;border:1px solid var(--pink,#ef8caf);border-radius:12px;}
+.admin-panel summary{cursor:pointer;font-weight:700;}
+.admin-panel p{font-size:12px;line-height:1.6;margin:10px 0;}
+.admin-panel form,.admin-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px;}
+.admin-panel label{width:100%;font-size:13px;}
+.admin-panel input{min-width:0;width:140px;max-width:100%;padding:10px;border:1px solid #a77890;border-radius:8px;background:#231e2a;color:#fff;font:inherit;}
+.admin-panel .btn-mini{white-space:normal;min-height:40px;}

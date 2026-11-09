@@ -600,6 +600,24 @@
           <span>Import save</span
           ><button class="btn-mini" id="set-import">PASTE & LOAD</button>
         </div>
+        <details class="admin-panel" id="admin-panel">
+          <summary>🛠 Админ-панель · тест гачи</summary>
+          <p>Локальные инструменты тестирования. Меняют только сохранение в этом браузере; это не защищённая серверная админка.</p>
+          <p>Алмазы: <output id="admin-balance">0</output> 💎</p>
+          <form id="admin-gems-form">
+            <label for="admin-gems">Сколько алмазов добавить</label>
+            <input id="admin-gems" type="number" min="1" max="1000000" step="1" value="10000" required inputmode="numeric" />
+            <button class="btn-mini" type="submit">Добавить 💎</button>
+          </form>
+          <div class="admin-actions">
+            <button class="btn-mini" type="button" data-admin-gems="1000">+1 000 💎</button>
+            <button class="btn-mini" type="button" data-admin-gems="10000">+10 000 💎</button>
+            <button class="btn-mini" type="button" data-admin-gems="100000">+100 000 💎</button>
+            <button class="btn-mini" type="button" id="admin-free">Сбросить таймер бесплатной попытки</button>
+            <button class="btn-mini" type="button" id="admin-gacha">Открыть гачу →</button>
+          </div>
+          <p id="admin-status" role="status" aria-live="polite">Обычные цены, шансы и гарантии гачи сохраняются.</p>
+        </details>
         <div class="set-row danger">
           <span>Hard reset</span
           ><button class="btn-mini red" id="set-reset">WIPE SAVE</button>
