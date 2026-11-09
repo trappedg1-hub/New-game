@@ -168,8 +168,10 @@ const assert = require("node:assert/strict");
         });
         for (const pair of blink)
           assert(
-            pair[0] === 1 && pair[1] >= 0 && pair[1] <= 1,
-            "open face must remain opaque under the eyelid crossfade",
+            [0, 1].includes(pair[0]) &&
+              [0, 1].includes(pair[1]) &&
+              pair[0] + pair[1] === 1,
+            "exactly one full face must be visible",
           );
       }
       // Atomic tier switch still works after spam.

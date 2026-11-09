@@ -139,21 +139,7 @@
       config.layers.face_blink,
       "layer-face-blink face-closed",
     );
-    if (config.blinkRegions) {
-      // Fade only the eyelids over a permanently opaque registered open face.
-      // Crossfading TWO complete faces would expose blank body skin at mid-blink.
-      const rects = config.blinkRegions
-        .map(
-          ([x, y, r, b]) =>
-            `<rect x="${x}" y="${y}" width="${r - x}" height="${b - y}" fill="white"/>`,
-        )
-        .join("");
-      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${config.canvas[0]} ${config.canvas[1]}" preserveAspectRatio="none">${rects}</svg>`;
-      const mask = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-      closedFace.style.maskImage = mask;
-      closedFace.style.webkitMaskImage = mask;
-      closedFace.style.maskSize = closedFace.style.webkitMaskSize = "100% 100%";
-    }
+    // Exactly one FULL registered face is visible. Never overlay two eye states.
     face.append(image(config.layers.face, "layer-face face-open"), closedFace);
     reactor.append(face);
     const frontReact = document.createElement("div");
@@ -200,13 +186,18 @@
         if (renderTokens.get(el) !== token || !el.isConnected) return;
         const rig = layered(config);
         el.replaceChildren(rig);
-        rig.classList.add("rig-enter");
       } catch (_) {
         // No partial rig is ever mounted; retain the already-visible whole-art fallback.
         if (renderTokens.get(el) === token)
           el.firstElementChild.dataset.layerError = "true";
       }
     });
+  }
+  function unmount(el) {
+    // Invalidate pending decode callbacks as well as removing inactive faces.
+    renderTokens.set(el, {});
+    activeMount.delete(el);
+    el.replaceChildren();
   }
   const reactions = new Map();
   function animateReaction(el, frames, duration) {
@@ -296,5 +287,5 @@
     });
     window.addEventListener("resize", syncTier, { passive: true });
   });
-  window.CharacterAnimation = { mount, ready, react };
+  window.CharacterAnimation = { mount, unmount, ready, react };
 })();

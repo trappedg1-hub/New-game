@@ -70,6 +70,17 @@ const fs = require("node:fs");
     el.firstElementChild.dataset.animationMode,
     manifest.tiers[5].status,
   );
+  w.CharacterAnimation.mount(el, "assets/characters/tier3.webp");
+  w.CharacterAnimation.unmount(el);
+  await new Promise((r) => setTimeout(r, 20));
+  assert.equal(
+    el.childElementCount,
+    0,
+    "unmounted faces must not return after decode",
+  );
+  w.CharacterAnimation.mount(el, "assets/characters/tier3.webp");
+  await new Promise((r) => setTimeout(r, 20));
+  assert.equal(el.querySelectorAll(".layer-face,.layer-face-blink").length, 2);
   dom.window.close();
   console.log(
     "PASS layered rendering, explicit fallbacks, tier classes, same-src preload, stale-load cancellation",

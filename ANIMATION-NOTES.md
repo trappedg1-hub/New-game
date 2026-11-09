@@ -1,3 +1,13 @@
+## Latest bugfix: exclusive face visibility
+
+The current renderer supersedes the earlier masked-eyelid overlay: it uses **one full open face OR one full closed face**, never both. `.layer-face-blink` defaults to opacity 0. Complementary five-second step-end animations close for 150ms (94–97% of the cycle) with no overlapping crossfade frames. Both PNGs retain identical registration, alpha silhouette and non-eye pixels; the shared body/breath/tap chain stays unchanged. A discrete eye-state switch is deliberate: a linear crossfade necessarily renders both sets of eye features at once.
+
+Startup no longer mounts a second rig in the inactive character slot. `CharacterAnimation.unmount` clears inactive DOM and invalidates pending decode callbacks. Wardrobe/tier character swaps are atomic (background crossfades remain), so outgoing and incoming heads cannot overlap; only one open/closed pair exists globally while a layered character is active. Whole-image costumes have zero extra face layers. No entrance opacity fade runs on full-rig replacement.
+
+`tests/single-face.cjs` checks exact [1,0]/[0,1] states at default, blink boundaries and the next loop across all five tiers; exactly one open/closed pair; taps; all seven real wardrobe costume swaps; return to the base outfit; and no stale inactive images. Renderer unit tests verify unmount cancels pending async installation. Body/face registration tests still report 0px relative geometry drift. Rapid-tap, touch, low-end, pixel, hair, gacha and smoke suites pass. All collectible costumes currently use whole-art fallbacks, so there are no complete layered costume rigs to claim tested.
+
+---
+
 # Current delivery status — final tiers and gem gacha
 
 All five relationship tiers now use five independently generated registered components, RGBA **420×1323**. Tier 2's four existing candidates were reprocessed and registered; its old face candidate contained a dressed figure, so only the head of that independently generated component was retained. A newly generated closed face supplies the eyelid patch. Tier 5 has five new independent components. Original whole-character art was not sliced into parts. `tools/register_final_tiers.py` reproduces preparation. Browser review corrected a Tier 2 scalp gap; new tiers retain distinct front/back motion and masks.

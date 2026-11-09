@@ -115,13 +115,13 @@ body.tier-5 {
   transform: none;
   animation: none;
 }
-.character-rig .face-open {
+.character-rig .layer-face {
   opacity: 1;
-  animation: none;
+  animation: rigBlinkOpen 5s steps(1, end) infinite;
 }
-.character-rig .face-closed {
+.character-rig .layer-face-blink {
   opacity: 0;
-  animation: rigBlinkClosed 5s linear infinite;
+  animation: rigBlinkClosed 5s steps(1, end) infinite;
 }
 .rig-cloth {
   transform-origin: 50% 65%;
@@ -149,9 +149,7 @@ body.tier-5 {
 .rig-front-react {
   transform-origin: var(--rig-hair-origin, center top);
 }
-.rig-enter {
-  animation: rigAppear 0.3s ease both;
-}
+
 /* Gold is UI lighting behind the rig, not painted magical effects on the art. */
 .character-stack.ssr-anim .rig-canvas:before {
   content: "";
@@ -214,15 +212,25 @@ body.tier-5 {
     transform: skewX(calc(var(--hair-angle, 0.8deg) * -0.75)) translateX(-1px);
   }
 }
+/* Exclusive state switch: no crossfade frames with double eyes or blank heads.
+   Closed for 150ms every 5s; identical positions/non-eye pixels prevent a jump. */
+@keyframes rigBlinkOpen {
+  0%,
+  97%,
+  100% {
+    opacity: 1;
+  }
+  94% {
+    opacity: 0;
+  }
+}
 @keyframes rigBlinkClosed {
   0%,
-  94%,
-  98%,
+  97%,
   100% {
     opacity: 0;
   }
-  95%,
-  97% {
+  94% {
     opacity: 1;
   }
 }
@@ -254,14 +262,6 @@ body.tier-5 {
   }
   50% {
     transform: rotate(var(--hip-angle, 0deg));
-  }
-}
-@keyframes rigAppear {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }
 @keyframes rigSSRGlow {
@@ -385,4 +385,15 @@ body.tier-5 {
 .character-rig .layer-face-blink {
   z-index: 4;
   transform: none;
+}
+
+/* Character swaps are atomic, unlike background fades: never draw two heads. */
+.character-stack {
+  transition: none;
+}
+.character-stack:not(.show) {
+  visibility: hidden;
+}
+.character-stack.show {
+  visibility: visible;
 }

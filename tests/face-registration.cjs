@@ -82,7 +82,7 @@ const assert = require("node:assert/strict");
       assert.equal(result.faceAnimation, "none");
       assert.equal(result.faceTransform, "none");
       assert.equal(result.faceFilter, "none");
-      assert(result.blinkMask.includes("data:image/svg+xml"));
+      assert.equal(result.blinkMask, "none");
       assert(result.sameParent && result.synced);
       assert.deepEqual(result.z, ["4", "4"]);
       console.log(

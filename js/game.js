@@ -138,9 +138,11 @@ function showArt(src, ssr){
   const a = $('char-a'), b = $('char-b');
   const inc = artFlip ? a : b, out = artFlip ? b : a;
   artFlip = !artFlip;
+  out.classList.remove('show');
+  window.CharacterAnimation.unmount(out);
   mountArt(inc,src);
   inc.classList.toggle('ssr-anim', !!ssr);
-  requestAnimationFrame(()=>{ inc.classList.add('show'); out.classList.remove('show'); });
+  inc.classList.add('show');
 }
 let bgFlip = false;
 function showBg(src){
@@ -653,7 +655,7 @@ function boot(){
   const t = tierOf(S.level);
   const a = currentArt();
   mountArt($('char-a'),a.src); $('char-a').classList.add('show'); $('char-a').classList.toggle('ssr-anim', !!a.ssr);
-  mountArt($('char-b'),a.src);
+  window.CharacterAnimation.unmount($('char-b'));
   $('bg-a').style.backgroundImage = `url('${t.bg}')`;
   $('bg-a').classList.add('show');
   $('auto-state').textContent = autoOn()?'ON':'OFF';
