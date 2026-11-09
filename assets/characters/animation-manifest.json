@@ -1,5 +1,5 @@
 {
-  "version": 18,
+  "version": 19,
   "renderer": "canonical-420x1323-registered-png",
   "tiers": {
     "1": {
@@ -584,6 +584,52 @@
         373,
         420,
         950
+      ]
+    },
+    "ribbon": {
+      "status": "layered",
+      "canvas": [
+        420,
+        1323
+      ],
+      "source": "assets/characters/single/costume_ribbon.png",
+      "original": "assets/characters/costume_ribbon.png",
+      "layers": {
+        "body_base": "assets/characters/costume_ribbon/body_base.png",
+        "hair_back": "assets/characters/costume_ribbon/hair_back.png",
+        "face_open": "assets/characters/costume_ribbon/face_open.png",
+        "face_closed": "assets/characters/costume_ribbon/face_closed.png",
+        "hair_front": "assets/characters/costume_ribbon/hair_front.png"
+      },
+      "registration": "Independent generated components placed once on the shared 420x1323 canvas; eye-locked blink; measured ground/viewport/pivot.",
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/costume_ribbon/registration.json"
+      },
+      "type": "layered",
+      "environment": "cafe",
+      "viewport": [
+        18,
+        10,
+        372,
+        921
+      ],
+      "ground": {
+        "size": [
+          372,
+          921
+        ],
+        "floor": 1.0,
+        "contacts": [
+          {
+            "x": 0.45161,
+            "width": 0.11559
+          }
+        ]
+      },
+      "hairPivot": [
+        210.0,
+        42
       ]
     }
   },

@@ -25,6 +25,7 @@ window.DIALOGUE = (() => {
     pool:    "Sunscreen. Now. Don't make me ask twice.",
     gown:    "Do you like the silk better than me? ...Kidding. Mostly.",
     bunny:   "D-don't stare at the ears! ...You may stare a little.",
+    ribbon:  "One ribbon came loose... kneel down and tie it back for me? Slowly. 😈",
     cardigan:"It's cold out... stay a little closer? Just a little.",
     base:    null,
   };

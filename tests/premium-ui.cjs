@@ -6,7 +6,7 @@ const {chromium}=require('playwright');const assert=require('node:assert/strict'
   await p.addInitScript(()=>localStorage.setItem('waifuB_save_v1',JSON.stringify({v:1,level:11,coins:0,owned:['base','cardigan','maid','gown'],settings:{motion:false,music:0},streak:{last:new Date().toISOString().slice(0,10),count:1},lastSeen:Date.now()})));
   await p.goto(process.env.GAME_URL||'http://localhost:8765');await p.waitForFunction(()=>document.querySelector('.face-open'));
   await p.keyboard.press('Escape');await p.locator('#toggle-right').click();
-  assert.match(await p.locator('#wardrobe-summary').textContent(),/3 \/ 7 collected/);
+  assert.match(await p.locator('#wardrobe-summary').textContent(),/3 \/ 8 collected/);
   const card=p.locator('.costume-thumb[data-costume-id="cardigan"]');
   await card.focus();const coins=await p.locator('#coins').textContent(),energy=await p.locator('#energy').textContent();
   await p.keyboard.press('Space');
