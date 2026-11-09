@@ -27,6 +27,7 @@ window.DIALOGUE = (() => {
     bunny:   "D-don't stare at the ears! ...You may stare a little.",
     ribbon:  "One ribbon came loose... kneel down and tie it back for me? Slowly. 😈",
     barefoot:"No sandals today. I like the way you watch my steps... try to keep up. 😈",
+    cat:     "Hmph! Keep staring and I'll step on you... I-I didn't say you could look away either! 😈",
     cardigan:"It's cold out... stay a little closer? Just a little.",
     base:    null,
   };

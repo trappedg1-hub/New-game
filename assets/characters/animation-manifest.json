@@ -1,5 +1,5 @@
 {
-  "version": 20,
+  "version": 21,
   "renderer": "canonical-420x1323-registered-png",
   "tiers": {
     "1": {
@@ -676,6 +676,62 @@
       "hairPivot": [
         210.0,
         42
+      ]
+    },
+    "cat": {
+      "status": "layered",
+      "canvas": [
+        420,
+        1323
+      ],
+      "source": "assets/characters/single/costume_cat.png",
+      "original": "assets/characters/costume_cat.png",
+      "layers": {
+        "body_base": "assets/characters/costume_cat/body_base.png",
+        "hair_back": "assets/characters/costume_cat/hair_back.png",
+        "face_open": "assets/characters/costume_cat/face_open.png",
+        "face_closed": "assets/characters/costume_cat/face_closed.png",
+        "hair_front": "assets/characters/costume_cat/hair_front.png"
+      },
+      "prop": {
+        "src": "assets/characters/costume_cat/prop_bone.png",
+        "box": [
+          45,
+          830,
+          210,
+          105
+        ],
+        "animation": "tap-stomp-squash"
+      },
+      "registration": "Independent generated components placed once on the shared 420x1323 canvas; eye-locked blink; rubber-bone prop under raised foot; measured ground/viewport/pivot.",
+      "contentAudit": {
+        "status": "faceless-head-repaint-and-visual-review",
+        "report": "assets/characters/costume_cat/registration.json"
+      },
+      "type": "layered",
+      "environment": "bedroom",
+      "viewport": [
+        40,
+        10,
+        310,
+        925
+      ],
+      "ground": {
+        "size": [
+          310,
+          925
+        ],
+        "floor": 0.9989189189189189,
+        "contacts": [
+          {
+            "x": 0.62097,
+            "width": 0.14194
+          }
+        ]
+      },
+      "hairPivot": [
+        210.0,
+        88
       ]
     }
   },

@@ -47,7 +47,7 @@ const assert = require("node:assert/strict");
     assert(s.owned.includes("cardigan"));
     assert.equal(s.freePull, 0);
     assert.equal(await p.locator(".new-badge").count(), 1);
-    assert.equal(await p.locator(".costume-thumb.locked").count(), 8);
+    assert.equal(await p.locator(".costume-thumb.locked").count(), 9);
     await p.locator("#reveal-close").click();
     await p.locator("#pull-x1").click();
     s = await state(p);

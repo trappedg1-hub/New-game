@@ -42,6 +42,7 @@
   const breath=document.createElement('div');breath.className='rig-breath';tapGroup.append(breath);
   const group=(cls,src,part)=>{const react=document.createElement('div');react.className='rig-react '+cls+'-react';const idle=document.createElement('div');idle.className=cls;idle.append(image(src,part));const synced=document.createElement('div');synced.className='rig-hair-breath layer-synced '+cls+'-stack';react.append(idle);synced.append(react);return synced;};
   breath.append(group('rig-hair-back',config.layers.hair_back,'hair-back'));
+  if(config.prop){const [px,py,pw,ph]=config.prop.box;const prop=image(config.prop.src,'rig-prop');prop.style.cssText=`left:${px/config.canvas[0]*100}%;top:${py/config.canvas[1]*100}%;width:${pw/config.canvas[0]*100}%;height:${ph/config.canvas[1]*100}%;transform-origin:50% 100%`;breath.append(prop);}
   breath.append(image(config.layers.body_base,'body-base layer-synced'));
   const faces=document.createElement('div');faces.className='rig-faces';
   faces.append(image(config.layers.face_open,'face-open layer-synced'),image(config.layers.face_closed,'face-closed layer-synced'));breath.append(faces);
@@ -56,7 +57,7 @@
   const layered=config?.type==='layered'&&config.contentAudit?.status==='faceless-head-repaint-and-visual-review'&&required.every(k=>config.layers?.[k]);
   const fallback=config?.source||src.replace('assets/characters/','assets/characters/single/').replace(/\.webp$/,'.png');
   pending(true);
-  try{await Promise.all((layered?required.map(k=>config.layers[k]):[fallback]).map(load));}catch(_){if(token===revision)pending(false);return false;}
+  try{await Promise.all((layered?[...required.map(k=>config.layers[k]),...(config.prop?[config.prop.src]:[])]:[fallback]).map(load));}catch(_){if(token===revision)pending(false);return false;}
   if(token!==revision)return false;stop();currentPath=src;
   let content;
   if(layered){content=rig(config);ground(config.ground);}
@@ -76,7 +77,9 @@
   const synced=root.querySelector('.rig-tap-synced');
   if(synced){
    for(const a of synced.getAnimations())a.cancel();
-   reactions.push(synced.animate([{transform:'translateY(0)'},{transform:'translateY(3px)',offset:.25},{transform:'translateY(-3px)',offset:.65},{transform:'translateY(0)'}],{duration:450,easing:'ease-out'}));
+   const prop=root.querySelector('.rig-prop');const dip=prop?7:3;
+   reactions.push(synced.animate([{transform:'translateY(0)'},{transform:`translateY(${dip}px)`,offset:.25},{transform:'translateY(-3px)',offset:.65},{transform:'translateY(0)'}],{duration:450,easing:'ease-out'}));
+   if(prop)reactions.push(prop.animate([{transform:'scaleY(1)'},{transform:'scaleY(.55)',offset:.3},{transform:'scaleY(1.08)',offset:.65},{transform:'scaleY(1)'}],{duration:450,easing:'ease-out'}));
   }
   for(const [selector,angle,duration] of [['.rig-hair-front-react',2,550]]){
    const e=root.querySelector(selector);if(!e)continue;
