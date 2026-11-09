@@ -569,6 +569,7 @@ function bind(){
   }
   for(const kind of ['sfx','music']){
     $('set-'+kind).value=S.settings[kind]??(kind==='sfx'?70:40);
+    $(kind+'-val').textContent=$('set-'+kind).value+'%';
     $('set-'+kind).oninput=e=>{S.settings[kind]=+e.target.value;$(kind+'-val').textContent=e.target.value+'%';save();};
   }
   document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{S.settings.theme=b.dataset.theme;applyTheme();save();});
