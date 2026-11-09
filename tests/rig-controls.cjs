@@ -42,7 +42,10 @@ const rigs=[...Object.entries(manifest.tiers).map(([key,c])=>({src:`assets/chara
  await page.goto(process.env.GAME_URL||'http://localhost:8765');
  await page.evaluate(()=>CharacterAnimation.mount(null,'assets/characters/tier1.webp'));
  const previous=await page.locator('.body-base').getAttribute('src');
- await page.evaluate(()=>CharacterAnimation.mount(null,'assets/characters/costume_gown.webp'));
+ const failed=await page.evaluate(async()=>{let commits=0;const mounted=await CharacterAnimation.mount(null,'assets/characters/costume_gown.webp',()=>commits++);return {mounted,commits};});
+ assert.deepEqual(failed,{mounted:false,commits:0});
+ const cached=await page.evaluate(async()=>{let commits=0;const mounted=await CharacterAnimation.mount(null,'assets/characters/tier1.webp',()=>commits++);return {mounted,commits};});
+ assert.deepEqual(cached,{mounted:true,commits:1});
  assert.equal(await page.locator('.body-base').getAttribute('src'),previous);
  assert.equal(await page.locator('#character-surface img').count(),5);
  await page.close();console.log('PASS failed layer decode retains previous complete rig');

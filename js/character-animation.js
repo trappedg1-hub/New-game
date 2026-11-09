@@ -42,14 +42,14 @@
   return scene;
  }
  function stop(){for(const a of reactions)a.cancel();reactions=[];}
- async function mount(_container,src){
-  const token=++revision;await ready;if(token!==revision)return;
+ async function mount(_container,src,onCommit){
+  const token=++revision;await ready;if(token!==revision)return false;
   const config=configFor(src),surface=document.getElementById('character-surface');
-  if(currentPath===src&&surface.dataset.mode)return;
+  if(currentPath===src&&surface.dataset.mode){onCommit?.();return true;}
   const layered=config?.type==='layered'&&config.contentAudit?.status==='faceless-head-repaint-and-visual-review'&&required.every(k=>config.layers?.[k]);
   const fallback=config?.source||src.replace('assets/characters/','assets/characters/single/').replace(/\.webp$/,'.png');
-  try{await Promise.all((layered?required.map(k=>config.layers[k]):[fallback]).map(load));}catch(_){return;}
-  if(token!==revision)return;stop();currentPath=src;
+  try{await Promise.all((layered?required.map(k=>config.layers[k]):[fallback]).map(load));}catch(_){return false;}
+  if(token!==revision)return false;stop();currentPath=src;
   let content;
   if(layered){content=rig(config);ground(config.ground);}
   else {
@@ -58,7 +58,9 @@
    ground(meta||{size:config?.canvas||[420,1323],floor:1,contacts:[]});
   }
   surface.dataset.mode=layered?'layered':'single';surface.style.removeProperty('--art-mask');surface.replaceChildren(content);
+  onCommit?.();
   if(motion())reactions.push(surface.animate([{opacity:.5},{opacity:1}],{duration:300,easing:'ease-out'}));
+  return true;
  }
  function react(){
   if(!motion())return;const root=document.getElementById('character-surface');

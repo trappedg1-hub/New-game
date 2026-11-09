@@ -10,9 +10,10 @@
 - Hair attachment pivots are measured from each registered face in canvas coordinates (`tools/update_hair_pivots.py`), shared by idle and tap wrappers. Bunny ears and Tier 4 viewport no longer cause rotation around the canvas edge. `tests/rig-controls.cjs` covers all 12 pivots, quick swaps, Motion OFF/reduced motion and failed layer loads preserving the previous complete rig. No new art generated for this refinement.
 - Ground: 2% stage-floor padding, alpha-derived contact points, 200px-max/16px radial shadow + tiny contact spots; resize preserves each rig's aspect, including Tier 4 viewport. Scene grading remains CSS color correction only.
 - Scene matrix kept: classroom/cafe/private pool/bedroom/private sunset beach; costume selections change background, lighting and contextual dialogue. Track uses resort in Tier 3. Outfit ownership enables selection at any level; it changes scene context, not XP. Nightgown always selects bedroom. No added fictional Lingerie or Event Dress inventory entry.
+- Scene/background/lighting/ambient profile commit only after the winning rig's five PNGs decode and mount. A pending, superseded or failed costume load does not change the previous visual scene. Cached same-art mounts still commit context (e.g. relationship-dependent Track scene). Equip-specific dialogue is deferred to commit. `tests/scene-commit.cjs` exercises delayed and aborted layers via actual wardrobe clicks at mobile/desktop widths.
 - Ambient audio: quiet synthesized noise profiles per environment, Music volume control, starts only after a user gesture; muted in hidden tabs. These are synthetic beds, not recorded cafe/wave soundtracks.
 - Tests: `tests/layer-pixels.py`, `tests/true-layers.cjs` (mobile/desktop true rigs, 2-frame blink, 0px shared registration, hair transforms, 2% ground, safe costume swaps, scene matching, cancellation, reduced motion), smoke/gacha/admin. Native device performance not certified.
-- Cache v24. Historical notes below are superseded.
+- Cache v25. Historical notes below are superseded.
 
 ---
 # Local secondary motion replaces whole-character jumping

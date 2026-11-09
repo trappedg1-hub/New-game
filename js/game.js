@@ -133,8 +133,8 @@ function checkTier(){
 }
 
 /* ---------------- Art / BG crossfade ---------------- */
-function showArt(src){
-  mountArt($('char-container'),src);
+function showArt(src,onCommit){
+  return mountArt($('char-container'),src,onCommit);
 }
 let bgFlip = false;
 function showBg(src){
@@ -166,7 +166,9 @@ function syncEnvironment(){
     showBg(scene.bg);
   }
 }
-function refreshArt(){ const a = currentArt(); showArt(a.src, a.ssr); syncEnvironment(); }
+function refreshArt(onCommit){
+  return showArt(currentArt().src,()=>{syncEnvironment();onCommit?.();});
+}
 
 function showTierEvent(t){ navigator.vibrate?.(50);
   $('te-tier').textContent = t.name;
@@ -177,8 +179,7 @@ function showTierEvent(t){ navigator.vibrate?.(50);
   ev.onclick = ()=>ev.classList.add('hidden');
 }
 function crossfade(t){
-  showArt(currentArt().src, currentArt().ssr);
-  syncEnvironment();
+  refreshArt();
 }
 
 /* ---------------- Dialogue ---------------- */
@@ -495,8 +496,7 @@ function renderRails(){
 function equip(c, owned){
   if(!owned){ toast('🔒 Locked — pull her from the gacha!'); return; }
   S.equip = c.id;
-  refreshArt();
-  if(c.line) say(c.line, 4200);
+  refreshArt(()=>{if(c.line) say(c.line, 4200);});
   renderAll(); save();
 }
 function renderSettings(){ applyTheme();
@@ -655,8 +655,8 @@ function openModal(name){
 }
 
 function applyTheme(){ const t=THEMES.find(t=>t.id===S.settings.theme)||THEMES[0];document.documentElement.style.setProperty('--pink',t.pink);document.documentElement.style.setProperty('--pink-soft',t.soft); }
-function mountArt(el,src){
-  window.CharacterAnimation.mount(el,src);
+function mountArt(el,src,onCommit){
+  return window.CharacterAnimation.mount(el,src,onCommit);
 }
 
 let installEvent;
@@ -681,8 +681,7 @@ function boot(){
   // art & bg
   const t = tierOf(S.level);
   const a = currentArt();
-  mountArt($('char-container'),a.src);
-  syncEnvironment();
+  refreshArt();
   $('auto-state').textContent = autoOn()?'ON':'OFF';
   $('btn-auto').classList.toggle('on', autoOn());
   $('friend-code').textContent = S.friend;
