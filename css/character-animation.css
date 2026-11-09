@@ -108,11 +108,16 @@ body.tier-5 {
   transform-origin: var(--rig-hair-origin, center top);
   animation: rigHairFront 4s ease-in-out 0.8s infinite reverse;
 }
+/* Body and both faces inherit the SAME breathing/hip/tap transform chain.
+   A face-local transform would slide the features across the static head. */
 .rig-face {
-  transform-origin: 61% 10%;
+  transform-origin: center bottom;
+  transform: none;
+  animation: none;
 }
 .character-rig .face-open {
-  animation: rigBlinkOpen 5s linear infinite;
+  opacity: 1;
+  animation: none;
 }
 .character-rig .face-closed {
   opacity: 0;
@@ -139,10 +144,6 @@ body.tier-5 {
 .tier-4 .rig-reactor,
 .tier-5 .rig-reactor {
   animation: rigHip 8s ease-in-out infinite;
-}
-.tier-4 .rig-face,
-.tier-5 .rig-face {
-  animation: rigHeadTilt 8s ease-in-out infinite;
 }
 .rig-back-react,
 .rig-front-react {
@@ -213,18 +214,6 @@ body.tier-5 {
     transform: skewX(calc(var(--hair-angle, 0.8deg) * -0.75)) translateX(-1px);
   }
 }
-@keyframes rigBlinkOpen {
-  0%,
-  94%,
-  98%,
-  100% {
-    opacity: 1;
-  }
-  95%,
-  97% {
-    opacity: 0;
-  }
-}
 @keyframes rigBlinkClosed {
   0%,
   94%,
@@ -265,15 +254,6 @@ body.tier-5 {
   }
   50% {
     transform: rotate(var(--hip-angle, 0deg));
-  }
-}
-@keyframes rigHeadTilt {
-  0%,
-  100% {
-    transform: rotate(0);
-  }
-  50% {
-    transform: rotate(0.25deg);
   }
 }
 @keyframes rigAppear {
@@ -398,4 +378,11 @@ body.tier-5 {
     transparent var(--back-hair-hidden, 0%),
     black var(--back-hair-visible, 0%)
   );
+}
+
+/* Faces are a single registered head surface; only blink opacity may differ. */
+.character-rig .layer-face,
+.character-rig .layer-face-blink {
+  z-index: 4;
+  transform: none;
 }

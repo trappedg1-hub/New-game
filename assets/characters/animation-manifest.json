@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "generatorLimit": 10,
   "tiers": {
     "1": {
@@ -19,7 +19,11 @@
         "reason": "Stranger has no cloth flutter; waistband registration did not pass seam check."
       },
       "registration": "Generated separately; keyed, rescaled and manually registered. Closed eyelid patch composited over unchanged open-face silhouette.",
-      "hairBackReveal": [156, 210]
+      "hairBackReveal": [156, 210],
+      "blinkRegions": [
+        [195, 118, 250, 159],
+        [278, 119, 330, 156]
+      ]
     },
     "2": {
       "status": "layered",
@@ -33,7 +37,11 @@
         "face_blink": "assets/characters/tier2/face_blink.png"
       },
       "hairBackReveal": [150, 200],
-      "registration": "Independent AI parts keyed and registered. Generated closed eyelids composited over open-face silhouette. Optional cloth omitted."
+      "registration": "Independent AI parts keyed and registered. Generated closed eyelids composited over open-face silhouette. Optional cloth omitted.",
+      "blinkRegions": [
+        [166, 117, 212, 149],
+        [234, 110, 282, 143]
+      ]
     },
     "3": {
       "status": "layered",
@@ -51,7 +59,11 @@
         "reason": "Not generated; optional fabric omitted to prioritize complete five-part rigs."
       },
       "registration": "Independent AI components keyed and manually registered. Generated closed eyelids blended over unchanged open-face silhouette.",
-      "hairBackReveal": [151, 197]
+      "hairBackReveal": [151, 197],
+      "blinkRegions": [
+        [113, 138, 156, 165],
+        [171, 122, 223, 154]
+      ]
     },
     "4": {
       "status": "layered",
@@ -70,7 +82,11 @@
       },
       "registration": "Independent AI components keyed and manually registered. Generated closed eyelids blended over unchanged open-face silhouette.",
       "viewport": [0, 617, 420, 706],
-      "hairBackReveal": [723, 759]
+      "hairBackReveal": [723, 759],
+      "blinkRegions": [
+        [153, 703, 184, 730],
+        [190, 690, 235, 721]
+      ]
     },
     "5": {
       "status": "layered",
@@ -84,7 +100,11 @@
         "face_blink": "assets/characters/tier5/face_blink.png"
       },
       "hairBackReveal": [145, 195],
-      "registration": "Independent AI parts keyed and registered. Generated closed eyelids composited over open-face silhouette. Optional cloth omitted."
+      "registration": "Independent AI parts keyed and registered. Generated closed eyelids composited over open-face silhouette. Optional cloth omitted.",
+      "blinkRegions": [
+        [112, 128, 153, 156],
+        [169, 116, 216, 147]
+      ]
     }
   },
   "costumes": {

@@ -80,7 +80,7 @@
     const sway = document.createElement("div");
     sway.className = "fallback-sway";
     const breath = document.createElement("div");
-    breath.className = "rig-breath";
+    breath.className = "rig-breath layer-synced";
     breath.append(image(src, "animation-fallback-image", "B"));
     sway.append(breath);
     react.append(sway);
@@ -125,7 +125,7 @@
     const reactor = document.createElement("div");
     reactor.className = "rig-reactor";
     const breath = document.createElement("div");
-    breath.className = "rig-breath";
+    breath.className = "rig-breath layer-synced";
     reactor.append(image(config.layers.body_base, "layer-body"));
     if (config.layers.cloth_loose) {
       const cloth = document.createElement("div");
@@ -135,10 +135,26 @@
     }
     const face = document.createElement("div");
     face.className = "rig-face";
-    face.append(
-      image(config.layers.face, "layer-face face-open"),
-      image(config.layers.face_blink, "layer-face-blink face-closed"),
+    const closedFace = image(
+      config.layers.face_blink,
+      "layer-face-blink face-closed",
     );
+    if (config.blinkRegions) {
+      // Fade only the eyelids over a permanently opaque registered open face.
+      // Crossfading TWO complete faces would expose blank body skin at mid-blink.
+      const rects = config.blinkRegions
+        .map(
+          ([x, y, r, b]) =>
+            `<rect x="${x}" y="${y}" width="${r - x}" height="${b - y}" fill="white"/>`,
+        )
+        .join("");
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${config.canvas[0]} ${config.canvas[1]}" preserveAspectRatio="none">${rects}</svg>`;
+      const mask = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+      closedFace.style.maskImage = mask;
+      closedFace.style.webkitMaskImage = mask;
+      closedFace.style.maskSize = closedFace.style.webkitMaskSize = "100% 100%";
+    }
+    face.append(image(config.layers.face, "layer-face face-open"), closedFace);
     reactor.append(face);
     const frontReact = document.createElement("div");
     frontReact.className = "rig-front-react";
@@ -260,15 +276,8 @@
         ],
         700,
       );
-      animateReaction(
-        root.querySelector(".rig-face"),
-        [
-          { filter: "brightness(1) saturate(1)" },
-          { filter: "brightness(1.1) saturate(1.25)", offset: 0.3 },
-          { filter: "brightness(1) saturate(1)" },
-        ],
-        400,
-      );
+      // Never animate the face separately: shared bounce/breath/hip wrappers
+      // already carry the body and both eye states as one registered surface.
     }
   }
   document.addEventListener("DOMContentLoaded", () => {

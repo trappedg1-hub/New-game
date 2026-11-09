@@ -82,6 +82,21 @@ const assert = require("node:assert/strict");
             ).opacity === "0"
           )
             badFrames.push("body hidden");
+          const body = root.querySelector(".layer-body");
+          if (body) {
+            const expected = body.getBoundingClientRect();
+            for (const face of root.querySelectorAll(
+              ".layer-face,.layer-face-blink",
+            )) {
+              const rect = face.getBoundingClientRect();
+              if (
+                ["x", "y", "width", "height"].some(
+                  (key) => Math.abs(rect[key] - expected[key]) > 0.01,
+                )
+              )
+                badFrames.push("face/body registration drift");
+            }
+          }
           const faces = [
             ...root.querySelectorAll(".layer-face,.layer-face-blink"),
           ];
@@ -153,8 +168,8 @@ const assert = require("node:assert/strict");
         });
         for (const pair of blink)
           assert(
-            Math.abs(pair[0] + pair[1] - 1) < 0.001,
-            "blink must never hide both faces",
+            pair[0] === 1 && pair[1] >= 0 && pair[1] <= 1,
+            "open face must remain opaque under the eyelid crossfade",
           );
       }
       // Atomic tier switch still works after spam.
