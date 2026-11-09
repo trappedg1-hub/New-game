@@ -18,6 +18,22 @@ eyes={
 'tier4':[(362,157,35,17,-15),(278,184,22,15,-15)],
 'tier5':[(181,126,31,15,-8)],
 }
+# Local motion zones (center x/y and elliptical radii), normalized to whole art.
+# These are deformation fields, never cut-out body/face PNGs.
+zones={
+ 'tier1': {'chest':[.54,.32,.28,.12],'hip':[.51,.57,.30,.13],'cloth':[.5,.74,.43,.19]},
+ 'tier2': {'chest':[.53,.30,.26,.12],'hip':[.53,.50,.30,.12],'cloth':[.5,.40,.43,.18]},
+ 'tier3': {'chest':[.49,.28,.30,.10],'hip':[.51,.49,.31,.14],'cloth':[.53,.49,.25,.09]},
+ 'tier4': {'chest':[.51,.31,.22,.11],'hip':[.51,.60,.30,.15],'cloth':[.65,.48,.25,.20]},
+ 'tier5': {'chest':[.47,.29,.28,.11],'hip':[.45,.48,.31,.13],'cloth':[.51,.68,.40,.22]},
+ 'costume_cardigan': {'chest':[.52,.29,.29,.12],'hip':[.50,.49,.31,.12],'cloth':[.5,.69,.42,.22]},
+ 'costume_track': {'chest':[.45,.27,.22,.10],'hip':[.50,.46,.24,.12],'cloth':[.51,.47,.30,.12]},
+ 'costume_apron': {'chest':[.49,.27,.26,.11],'hip':[.50,.46,.29,.13],'cloth':[.50,.57,.44,.20]},
+ 'costume_maid': {'chest':[.48,.27,.28,.11],'hip':[.50,.46,.30,.12],'cloth':[.50,.56,.43,.18]},
+ 'costume_pool': {'chest':[.48,.28,.29,.10],'hip':[.48,.47,.31,.13],'cloth':[.49,.48,.23,.09]},
+ 'costume_gown': {'chest':[.52,.29,.28,.11],'hip':[.50,.47,.30,.12],'cloth':[.5,.58,.40,.20]},
+ 'costume_bunny': {'chest':[.51,.34,.27,.10],'hip':[.51,.51,.31,.13],'cloth':[.50,.48,.27,.13]},
+}
 result={}
 for name,points in eyes.items():
  im=Image.open(root/f'assets/characters/{name}.png').convert('RGBA');w,h=im.size
@@ -31,7 +47,7 @@ for name,points in eyes.items():
   if not groups or x>groups[-1][-1]+2:groups.append([x])
   else:groups[-1].append(x)
  contacts=[{'x':(g[0]+g[-1])/2/w,'width':max(12,g[-1]-g[0])/w} for g in groups if len(g)>3]
- result[name]={'size':[w,h],'floor':floor/h,'contacts':contacts,'eyes':[]}
+ result[name]={'motionZones':zones[name],'size':[w,h],'floor':floor/h,'contacts':contacts,'eyes':[]}
  for x,y,ew,eh,angle in points:
   # Skin below visible eye, avoiding the dark iris itself.
   samples=[]

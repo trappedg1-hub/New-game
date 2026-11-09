@@ -642,7 +642,13 @@
           <feComposite in="windNoise" in2="region" operator="in" result="localNoise" />
           <feFlood flood-color="#808080" result="neutral" />
           <feMerge result="localizedMap"><feMergeNode in="neutral"/><feMergeNode in="localNoise"/></feMerge>
-          <feDisplacementMap id="hair-displacement" in="SourceGraphic" in2="localizedMap" scale="10" xChannelSelector="R" yChannelSelector="G" />
+          <feDisplacementMap id="hair-displacement" in="SourceGraphic" in2="localizedMap" scale="10" xChannelSelector="R" yChannelSelector="G" result="hairMotion" />
+          <feImage id="chest-motion-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="chestMap" />
+          <feDisplacementMap id="chest-displacement" in="hairMotion" in2="chestMap" scale="0" xChannelSelector="R" yChannelSelector="G" result="chestMotion" />
+          <feImage id="hip-motion-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="hipMap" />
+          <feDisplacementMap id="hip-displacement" in="chestMotion" in2="hipMap" scale="0" xChannelSelector="R" yChannelSelector="G" result="hipMotion" />
+          <feImage id="cloth-motion-map" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="clothMap" />
+          <feDisplacementMap id="cloth-displacement" in="hipMotion" in2="clothMap" scale="0" xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </defs>
     </svg>

@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  let revision = 0, bounce = null, fade = null;
+  let revision = 0, fade = null, reactionTimes = [];
   const motion = () => !reduced.matches && !document.body.classList.contains('no-motion') && !document.hidden;
   let currentMeta = null;
   const ready = Promise.resolve();
@@ -24,8 +24,19 @@
     const shadow=document.getElementById('char-shadow');
     if(shadow){shadow.style.width=Math.min(180,w*scale*.65)+'px';shadow.style.bottom=(bottomGap-5)+'px';}
   }
+  function buildMotionFields(){
+    const colors={chest:'#80e680',hip:'#e68080',cloth:'#dfad80'};
+    for(const [zone,coords] of Object.entries(currentMeta.motionZones||{})){
+      const [x,y,rx,ry]=coords;
+      const map=`<svg xmlns="http://www.w3.org/2000/svg" width="256" height="512" viewBox="0 0 100 100" preserveAspectRatio="none"><defs><radialGradient id="field"><stop offset="0" stop-color="${colors[zone]}"/><stop offset=".35" stop-color="${colors[zone]}"/><stop offset="1" stop-color="#808080"/></radialGradient></defs><rect width="100" height="100" fill="#808080"/><ellipse cx="${x*100}" cy="${y*100}" rx="${rx*100}" ry="${ry*100}" fill="url(#field)"/></svg>`;
+      document.getElementById(zone+'-motion-map')?.setAttribute('href','data:image/svg+xml,'+encodeURIComponent(map));
+      document.getElementById(zone+'-displacement')?.setAttribute('scale','0');
+    }
+  }
   function present(path) {
     currentMeta=landmarks(path);if(!currentMeta)return;
+    reactionTimes=[];
+    buildMotionFields();
     const surface=document.getElementById('character-surface');
     surface?.style.setProperty('--art-mask',`url("${path}")`);
     const eyelids=document.getElementById('eyelids');
@@ -74,7 +85,6 @@
       return; // Keep the last complete illustration if loading fails.
     }
     if(token !== revision) return;
-    bounce?.cancel(); bounce = null;
     fade?.cancel(); fade = null;
     img.src = path;
     present(path);
@@ -86,15 +96,12 @@
   }
   function react() {
     if(!motion()) return;
-    bounce?.cancel();
-    bounce = document.getElementById('char-container').animate([
-      {transform:'scale(1) translateY(0)'},
-      {transform:'scale(0.97) translateY(4px)',offset:0.3},
-      {transform:'scale(1.02) translateY(-3px)',offset:0.6},
-      {transform:'scale(1) translateY(0)'}
-    ],{duration:450,easing:'ease-in-out'});
+    // A bounded impulse replaces the old whole-character jump. Each local field
+    // has its own delay/frequency so hair, fabric and torso settle independently.
+    reactionTimes.push(performance.now());
+    reactionTimes=reactionTimes.slice(-6);
   }
-  function stop() {bounce?.cancel(); fade?.cancel(); bounce=null; fade=null;}
+  function stop() {fade?.cancel();fade=null;reactionTimes=[];}
   document.addEventListener('visibilitychange',()=>{
     document.body.classList.toggle('animation-paused',document.hidden);
     if(document.hidden)stop();
@@ -113,7 +120,24 @@
       const displacement=document.getElementById('hair-displacement');
       wind?.setAttribute('dx',String((Math.sin(windTime/1250)*18).toFixed(3)));
       wind?.setAttribute('dy',String((Math.sin(windTime/1900)*5).toFixed(3)));
-      displacement?.setAttribute('scale',String('10'));
+      const t=windTime/1000;
+      reactionTimes=reactionTimes.filter(start=>now-start<2200);
+      const spring=(delay,frequency)=>{
+        const sum=reactionTimes.reduce((value,start)=>{
+          const a=(now-start)/1000-delay;
+          return value+(a>=0 && a<2 ? Math.sin(a*frequency)*Math.exp(-a*3.5) : 0);
+        },0);
+        return Math.max(-1.2,Math.min(1.2,sum));
+      };
+      displacement?.setAttribute('scale',(11+spring(.03,15)*14).toFixed(3));
+      const values={
+        chest:Math.sin(t*1.65)*4+spring(0,17)*22,
+        hip:Math.sin(t*1.05+.7)*3+spring(.09,12)*18,
+        cloth:Math.sin(t*1.4+1.2)*6+spring(.16,10)*25
+      };
+      for(const [zone,value] of Object.entries(values)){
+        document.getElementById(zone+'-displacement')?.setAttribute('scale',value.toFixed(3));
+      }
     }
     windFrame=requestAnimationFrame(windTick);
   }
@@ -121,7 +145,7 @@
     if(windFrame!==null)cancelAnimationFrame(windFrame);
     windFrame=null;lastWind=0;
     if(motion())windFrame=requestAnimationFrame(windTick);
-    else {stop();document.getElementById('hair-displacement')?.setAttribute('scale','0');}
+    else {stop();for(const zone of ['hair','chest','hip','cloth'])document.getElementById(zone+'-displacement')?.setAttribute('scale','0');}
   }
   reduced.addEventListener?.('change',syncMotion);
   document.addEventListener('visibilitychange',syncMotion);

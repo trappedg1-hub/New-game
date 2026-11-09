@@ -1,3 +1,12 @@
+# Local secondary motion replaces whole-character jumping
+
+- Removed the parent WAAPI tap bounce entirely. Accepted taps now excite bounded damped local fields for hair, chest, hips and fabric. Hair/hips/fabric have different delays and frequencies; the character root never jumps.
+- Up to six recent impulses are retained with amplitude clamping, so rapid tapping does not restart every oscillator at zero or cause runaway deformation. Switching art clears previous impulses.
+- Per-art elliptical motion zones are recorded for all 12 illustrations in `tools/build_presentation.py` / `data/character-presentation.js`. Long skirts, short skirts, hoodies, sarong and swimwear have different fabric zones; swimwear has only subtle garment response.
+- Three static SVG displacement fields operate on the same single PNG, following the hair field. Idle torso/hip/fabric movement continues without taps. No sliced PNGs, second face or second DOM character image. This is stylized procedural 2D warping, NOT a skeletal/Live2D rig or actual simulated garment geometry.
+- `tests/local-motion.cjs`: independent time-varying response across all 12 art on mobile/desktop, zero parent jump, bounded ten-tap burst, motion off/on. Existing single-art, visible-motion, scene/grounding, smoke, gacha/admin tests retained.
+- Cache v15 refreshes the filter chain and per-outfit zone metadata together.
+
 # Visible motion correction
 
 - Hair no longer depends on SMIL/baseFrequency playback. One requestAnimationFrame driver advances the SVG noise offset at ~30 updates/s; fixed displacement scale 10 keeps the neutral map outside the hair perfectly stationary.
