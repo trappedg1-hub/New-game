@@ -48,4 +48,32 @@
  new MutationObserver(update).observe(document.body,{attributes:true,attributeFilter:['data-environment']});
  // Visibility may resume an existing, user-unlocked context; never creates one.
  document.addEventListener('visibilitychange',update);
+ /* ASMR-lite: a soft binaural sigh on crit taps / heart-eyes trance.
+    Reuses the ambience context; creates nothing at zero volume, while
+    hidden, or before the first user-unlocked context exists. */
+ let sighSide=1,lastSigh=0;
+ window.AmbientAudio={sigh(){
+  if(!context||context.state!=='running'||document.hidden||volume()===0)return;
+  const now=performance.now();if(now-lastSigh<900)return;lastSigh=now;
+  try{
+   const dur=.8,len=Math.floor(context.sampleRate*dur);
+   const buffer=context.createBuffer(1,len,context.sampleRate);
+   const d=buffer.getChannelData(0);let lp=0;
+   for(let i=0;i<len;i++){const w=Math.random()*2-1;lp+=(w-lp)*.18;d[i]=lp*1.4;}
+   const src=context.createBufferSource();src.buffer=buffer;
+   const bp=context.createBiquadFilter();bp.type='bandpass';bp.Q.value=1.1;
+   const t=context.currentTime;
+   bp.frequency.setValueAtTime(480,t);
+   bp.frequency.exponentialRampToValueAtTime(1050,t+dur*.55);
+   bp.frequency.exponentialRampToValueAtTime(520,t+dur);
+   const g=context.createGain();
+   g.gain.setValueAtTime(0,t);
+   g.gain.exponentialRampToValueAtTime(Math.max(.001,volume()*.14),t+.18);
+   g.gain.exponentialRampToValueAtTime(.0008,t+dur);
+   src.connect(bp);bp.connect(g);
+   if(context.createStereoPanner){const pan=context.createStereoPanner();pan.pan.value=.65*sighSide;sighSide*=-1;g.connect(pan);pan.connect(context.destination);}
+   else g.connect(context.destination);
+   src.start();src.stop(t+dur+.05);
+  }catch(_){}
+ }};
 })();

@@ -202,6 +202,7 @@ function idleTalk(){
 let lastTap=-Infinity;
 function tap(x, y){
   if(performance.now()-lastTap<CONFIG.TAP_MIN_MS)return; lastTap=performance.now();
+  if(x!=null) lastTapZone=tapZone(x,y);
   navigator.vibrate?.(10); $('bubble').classList.remove('show');
   window.CharacterAnimation?.react();
   $('coins').animate([{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:180});
@@ -214,7 +215,8 @@ function tap(x, y){
   addXp(1 + Math.floor(tapPower()/2));
   S.stats.taps++;
   if(S.daily.date===today()) S.daily.d_taps++;
-  if(x!=null){ if(crit) floatText(x, y-36, 'CRIT TAP! x20', 'crit'); floatText(x, y-14, '+'+fmt(gain)); burst(x,y); if(crit) burst(x,y); }
+  if(crit) window.AmbientAudio?.sigh?.();
+  if(x!=null){ if(crit) floatText(x, y-36, 'CRIT TAP! x20', 'crit'); floatText(x, y-14, '+'+fmt(gain)); burst(x,y); if(crit) burst(x,y); if(lastTapZone==='head') burst(x,y); }
   // squash
   const sh = $('char-shadow'); sh.classList.add('pop'); setTimeout(()=>sh.classList.remove('pop'),150);
   // dialogue pacing
@@ -222,6 +224,8 @@ function tap(x, y){
   if(stageUp) { /* stage line keeps the bubble this tap */ }
   else if(S.tapTalk % 25 === 0) idleTalk();
   else if(heartEyesActive() && Math.random()<.18) say(HEART_LINES[Math.floor(Math.random()*HEART_LINES.length)], 2600);
+  else if(lastTapZone==='head' && Math.random()<.30) say(ZONE_LINES.head[Math.floor(Math.random()*ZONE_LINES.head.length)], 2400);
+  else if(lastTapZone==='chest' && Math.random()<.22) say(ZONE_LINES.chest[Math.floor(Math.random()*ZONE_LINES.chest.length)], 2400);
   else if(Math.random()<0.12){
     const t = sceneTier();
     say(t.lines[Math.floor(Math.random()*t.lines.length)], 2600);
@@ -232,6 +236,17 @@ function tap(x, y){
 /* ---------------- Fanservice: combo dishevelment & heart-eyes ---------------- */
 const COMBO_STAGES=[{at:0,name:'PRISTINE',line:null},{at:150,name:'LIGHT SLIP',line:'W-what are you doing so fast...?'},{at:300,name:'MEDIUM SLIP',line:'Wait, my outfit is slipping...!'},{at:600,name:'DISHEVELED',line:"I can't keep up with you... don't look!"}];
 const HEART_LINES=["I can't look away from you...","My heart is overflowing...","Only look at me..."];
+/* Live2D-style hit areas: taps land differently per body zone */
+const ZONE_LINES={
+  head:["E-eh?! My head...?","H-hey, gentle with the headpat...","Mmm... okay, just a little.","D-don't mess up my hair... (she leans in anyway)"],
+  chest:["H-hey! Eyes up here...!","W-what do you think you're touching?!","T-too close... my heart's racing.","I-it's warm? ...D-don't say it out loud!"],
+};
+let lastTapZone='waist';
+function tapZone(x,y){
+  const r=$('character-wrap').getBoundingClientRect();
+  const ny=(y-r.top)/Math.max(1,r.height);
+  return ny<.26?'head':ny<.46?'chest':ny<.68?'waist':'legs';
+}
 let comboCount=0, comboLast=0, comboStage=0;
 const stageFor = n => n>=600?3 : n>=300?2 : n>=150?1 : 0;
 function heartEyesActive(){ return S.level>=50 || (S.boost.id && Date.now()<S.boost.until); }
@@ -267,9 +282,11 @@ function comboIdleReset(){
     updateComboMeter();
   }
 }
-let lastAura=0;
+let lastAura=0, wasHeart=false;
 function auraTick(now){
   const on=heartEyesActive();
+  if(on && !wasHeart) window.AmbientAudio?.sigh?.();
+  wasHeart=on;
   $('character-surface').classList.toggle('heart-eyes', on);
   if(!on || !S.settings.motion || document.body.classList.contains('no-motion') || now-lastAura<650) return;
   const wrap=$('character-wrap');
@@ -283,6 +300,7 @@ function auraTick(now){
 }
 window.__fanservice={
   get combo(){return comboCount;}, get stage(){return comboStage;},
+  get zone(){return lastTapZone;},
   setCombo(n){ comboCount=n; comboLast=performance.now(); applyComboStage(stageFor(n)); },
   heartEyes:heartEyesActive,
 };

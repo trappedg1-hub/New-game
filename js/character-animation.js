@@ -72,7 +72,30 @@
   breath.append(fx);
   return scene;
  }
- function stop(){for(const a of reactions)a.cancel();reactions=[];}
+ // Live2D-lite spring (damped harmonic oscillator): a soft jelly bounce on
+ // the shared breath wrapper, so face/body/hair move as one rigid stack and
+ // layer registration can never drift. Transform-only, motion-gated.
+ let springY=0,springV=0,springRaf=0,springEl=null;
+ function springReset(){springY=springV=0;if(springRaf)cancelAnimationFrame(springRaf);springRaf=0;if(springEl)springEl.style.transform='';springEl=null;}
+ function springTick(){
+  springRaf=0;
+  if(!motion()||!springEl||!springEl.isConnected){springReset();return;}
+  springV+=(-210*springY-13*springV)*.016;
+  springY+=springV*.016;
+  if(Math.abs(springY)<.05&&Math.abs(springV)<2){springEl.style.transform='';springY=springV=0;springEl=null;return;}
+  const y=Math.max(-14,Math.min(14,springY));
+  springEl.style.transform=`translateY(${y.toFixed(2)}px) scaleY(${(1-Math.abs(y)/1600).toFixed(4)})`;
+  springRaf=requestAnimationFrame(springTick);
+ }
+ function springKick(power){
+  const root=document.getElementById('character-surface');if(!root)return;
+  springEl=root.querySelector('.rig-breath')||root.querySelector('.char-single-img');
+  if(!springEl)return;
+  springEl.style.transformOrigin='50% 100%';
+  springV+=power;
+  if(!springRaf)springRaf=requestAnimationFrame(springTick);
+ }
+ function stop(){for(const a of reactions)a.cancel();reactions=[];springReset();}
  async function mount(_container,src,onCommit){
   const token=++revision;await ready;if(token!==revision)return false;
   const config=configFor(src),surface=document.getElementById('character-surface');
@@ -109,6 +132,7 @@
    for(const a of e.getAnimations())a.cancel();
    reactions.push(e.animate([{transform:'rotate(0)'},{transform:`rotate(${-angle}deg)`,offset:.25},{transform:`rotate(${angle*.5}deg)`,offset:.6},{transform:'rotate(0)'}],{duration,easing:'ease-out'}));
   }
+  springKick(root.querySelector('.rig-prop')?430:300);
   reactions=reactions.filter(a=>a.playState!=='finished');
  }
  document.addEventListener('DOMContentLoaded',()=>{if(window.ResizeObserver)new ResizeObserver(fit).observe(document.getElementById('character-wrap'));});
