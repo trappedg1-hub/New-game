@@ -63,7 +63,9 @@
    const blush=document.createElement('div');blush.className='fx-blush';
    for(const [cx,cy] of [[lx-dist*.42,ly+52],[rx+dist*.42,ry+52]]){const i=document.createElement('i');at(i,cx,cy);blush.append(i);}
    fx.append(blush);
-   const lid=document.createElement('div');lid.className='fx-eyelid';at(lid,lx-dist*.62,my-36);lid.style.width=dist*2.24/Wc*100+'%';lid.style.height=46/Hc*100+'%';fx.append(lid);
+   const lid=document.createElement('div');lid.className='fx-eyelid';
+   for(const [ex,ey] of config.eyes){const i=document.createElement('i');at(i,ex,ey);lid.append(i);}
+   fx.append(lid);
    const lip=document.createElement('div');lip.className='fx-lip';at(lip,mx,my+92);fx.append(lip);
    if(!config.tanAssets?.eyes)for(const [ex,ey] of config.eyes){const s=document.createElement('span');s.className='fx-pupil';s.textContent='\u2665';at(s,ex,ey);fx.append(s);}
   }

@@ -284,12 +284,12 @@ for group in ('tiers', 'costumes'):
             el = Image.new('RGBA', (420, 1323), (0, 0, 0, 0))
             dr = ImageDraw.Draw(el)
             for ex, ey in c['eyes']:
-                heart(dr, ex, ey + 1, 10.5, (255, 45, 110, 255))
-                heart(dr, ex, ey, 8, (255, 110, 160, 255))
+                heart(dr, ex, ey, 6.2, (255, 45, 110, 255))
+                heart(dr, ex, ey - 0.5, 4.8, (255, 110, 160, 255))
             el = el.filter(ImageFilter.GaussianBlur(.5))
             dr = ImageDraw.Draw(el)
             for ex, ey in c['eyes']:  # sparkle
-                dr.ellipse([ex - 4, ey - 5, ex - 1, ey - 2], fill=(255, 255, 255, 235))
+                dr.ellipse([ex - 2.6, ey - 3.2, ex - 0.8, ey - 1.4], fill=(255, 255, 255, 235))
             el.save(out_dir / 'eyes_heart.png', optimize=True)
 
         # dishevel overlays: own clothing bands shifted down, feathered
@@ -330,6 +330,6 @@ for group in ('tiers', 'costumes'):
         cov = 100 * mask.sum() / max(1, (balpha > 32).sum())
         print(key, 'skin coverage %.1f%% of body alpha' % cov)
 
-m['version'] = 24
+m['version'] = 25
 (ROOT / 'animation-manifest.json').write_text(json.dumps(m, indent=2) + '\n')
-print('tan assets built for all layered rigs; manifest v23')
+print('tan assets built for all layered rigs; manifest v25')
