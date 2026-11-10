@@ -59,6 +59,9 @@ body.no-motion .rig-part.face-closed {opacity:0;}
 #character-surface.heart-eyes .fx-eyelid{opacity:.55;}
 .fx-lip{position:absolute;width:4.6%;height:1%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.95),rgba(255,130,170,.4) 55%,transparent 75%);opacity:0;transition:opacity .5s;}
 #character-surface.heart-eyes .fx-lip{opacity:1;}
+.fx-glint{position:absolute;inset:0;pointer-events:none;}
+.fx-glint i{position:absolute;width:1.7%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff 0%,rgba(255,255,255,.85) 45%,rgba(255,255,255,0) 75%);transform:translate(calc(-50% + var(--gx,0px)),calc(-60% + var(--gy,0px)));animation:glintBlink 4.5s steps(1,end) infinite;}
+@keyframes glintBlink{0%,97%,100%{opacity:.9;}95%{opacity:0;}}
 /* Real per-rig art overlays (tools/build_tan_assets.py): alpha exists only on
    skin pixels, so clothing/hair/eyes are never tinted. No flat color fills. */
 .fx-art{position:absolute;inset:0;background-size:100% 100%;background-repeat:no-repeat;opacity:0;transition:opacity .45s ease;pointer-events:none;}

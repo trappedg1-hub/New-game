@@ -67,6 +67,9 @@
    for(const [ex,ey] of config.eyes){const i=document.createElement('i');at(i,ex,ey);lid.append(i);}
    fx.append(lid);
    const lip=document.createElement('div');lip.className='fx-lip';at(lip,mx,my+92);fx.append(lip);
+   const glint=document.createElement('div');glint.className='fx-glint';
+   for(const [ex,ey] of config.eyes){const i=document.createElement('i');at(i,ex,ey);glint.append(i);}
+   fx.append(glint);
    if(!config.tanAssets?.eyes)for(const [ex,ey] of config.eyes){const s=document.createElement('span');s.className='fx-pupil';s.textContent='\u2665';at(s,ex,ey);fx.append(s);}
   }
   breath.append(fx);
@@ -140,5 +143,14 @@
  document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('animation-paused',document.hidden);if(!motion())stop();});
  reduced.addEventListener?.('change',()=>{if(!motion())stop();});
  new MutationObserver(()=>{if(!motion())stop();}).observe(document.body,{attributes:true,attributeFilter:['class']});
+ // Eye-contact glints: pupils catch the light toward the pointer (max 3px).
+ document.addEventListener('pointermove',e=>{
+  if(!motion())return;
+  const s=document.getElementById('character-surface');if(!s||!s.querySelector('.fx-glint'))return;
+  const r=s.getBoundingClientRect();if(!r.width)return;
+  const nx=(e.clientX-r.left)/r.width-.5, ny=(e.clientY-r.top)/r.height-.5;
+  s.style.setProperty('--gx',(Math.max(-1,Math.min(1,nx*2))*3).toFixed(1)+'px');
+  s.style.setProperty('--gy',(Math.max(-1,Math.min(1,ny*2))*3).toFixed(1)+'px');
+ },{passive:true});
  window.CharacterAnimation={mount,ready,react};
 })();

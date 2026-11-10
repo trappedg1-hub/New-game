@@ -76,4 +76,38 @@
    src.start();src.stop(t+dur+.05);
   }catch(_){}
  }};
+ /* Procedural heartbeat (lub-dub pair), tempo follows intimacy state.
+    Same single context, same guards: silent at zero volume, hidden,
+    or before the first user-unlocked context exists. */
+ let hbTimer=0,hbNext=0,hbBpm=72;
+ function thump(t,freq,dur,peak){
+  const o=context.createOscillator(),g=context.createGain(),f=context.createBiquadFilter();
+  o.type='sine';
+  o.frequency.setValueAtTime(freq,t);
+  o.frequency.exponentialRampToValueAtTime(24,t+dur);
+  f.type='lowpass';f.frequency.value=140;
+  g.gain.setValueAtTime(0,t);
+  g.gain.exponentialRampToValueAtTime(peak,t+.012);
+  g.gain.exponentialRampToValueAtTime(.0008,t+dur);
+  o.connect(f);f.connect(g);g.connect(context.destination);
+  o.start(t);o.stop(t+dur+.02);
+ }
+ window.AmbientAudio.setHeartbeat=(on,bpm)=>{
+  hbBpm=Math.max(50,Math.min(132,bpm||72));
+  if(!on){if(hbTimer){clearInterval(hbTimer);hbTimer=0;}return;}
+  if(hbTimer)return;
+  hbTimer=setInterval(()=>{
+   try{
+    if(!context||context.state!=='running'||document.hidden||volume()===0)return;
+    const now=context.currentTime;
+    if(!hbNext||hbNext<now)hbNext=now+.05;
+    while(hbNext<now+.3){
+     const peak=Math.max(.01,volume()*.20);
+     thump(hbNext,58,.13,peak);
+     thump(hbNext+.16,72,.10,peak*.7);
+     hbNext+=60/hbBpm;
+    }
+   }catch(_){}
+  },180);
+ };
 })();

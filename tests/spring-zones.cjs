@@ -44,5 +44,28 @@ const assert = require("node:assert/strict");
   await p.waitForTimeout(200);
   assert.deepEqual(p.errors, []);
   console.log("PASS binaural sigh API guarded and error-free");
+
+  /* --- heartbeat synth API --- */
+  assert.equal(await p.evaluate(() => typeof window.AmbientAudio?.setHeartbeat), "function");
+  await p.evaluate(() => { window.AmbientAudio.setHeartbeat(true, 90); window.AmbientAudio.setHeartbeat(false); });
+  assert.deepEqual(p.errors, []);
+  console.log("PASS procedural heartbeat start/stop error-free");
+
+  /* --- eye glints track the pointer --- */
+  assert.equal(await p.locator(".fx-glint i").count(), 2);
+  await p.mouse.move(wrap.x + wrap.width * 0.95, wrap.y + wrap.height * 0.5);
+  await p.waitForTimeout(120);
+  const gx = await p.evaluate(() => document.getElementById("character-surface").style.getPropertyValue("--gx"));
+  assert(parseFloat(gx) > 1, "glint offset must follow pointer, got --gx=" + gx);
+  console.log("PASS eye glints at measured pupils track pointer within 3px");
+
+  /* --- touch heatmap accumulates and cools --- */
+  await clickAt(0.55);
+  const heat = await p.evaluate(() => window.__heatfx.count());
+  assert(heat > 0, "tap must add a heat point");
+  await p.waitForFunction(() => window.__heatfx.count() === 0, null, { timeout: 2500 });
+  assert.equal(await p.locator("#heat-canvas").count(), 1);
+  assert.deepEqual(p.errors, []);
+  console.log("PASS touch heatmap glows on tap and cools to zero");
   await b.close();
 })().catch((e) => { console.error(e); process.exit(1); });

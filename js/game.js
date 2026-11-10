@@ -216,7 +216,7 @@ function tap(x, y){
   S.stats.taps++;
   if(S.daily.date===today()) S.daily.d_taps++;
   if(crit) window.AmbientAudio?.sigh?.();
-  if(x!=null){ if(crit) floatText(x, y-36, 'CRIT TAP! x20', 'crit'); floatText(x, y-14, '+'+fmt(gain)); burst(x,y); if(crit) burst(x,y); if(lastTapZone==='head') burst(x,y); }
+  if(x!=null){ if(crit) floatText(x, y-36, 'CRIT TAP! x20', 'crit'); floatText(x, y-14, '+'+fmt(gain)); burst(x,y); if(crit) burst(x,y); if(lastTapZone==='head') burst(x,y); HeatFX.add(x, y, crit?1.35 : .65+comboStage*.18); }
   // squash
   const sh = $('char-shadow'); sh.classList.add('pop'); setTimeout(()=>sh.classList.remove('pop'),150);
   // dialogue pacing
@@ -287,6 +287,7 @@ function auraTick(now){
   const on=heartEyesActive();
   if(on && !wasHeart) window.AmbientAudio?.sigh?.();
   wasHeart=on;
+  window.AmbientAudio?.setHeartbeat?.(on||comboStage>=2, 66+comboStage*9+(on?10:0));
   $('character-surface').classList.toggle('heart-eyes', on);
   if(!on || !S.settings.motion || document.body.classList.contains('no-motion') || now-lastAura<650) return;
   const wrap=$('character-wrap');
@@ -298,6 +299,50 @@ function auraTick(now){
   h.style.fontSize=(12+Math.random()*14)+'px';
   wrap.appendChild(h); setTimeout(()=>h.remove(), 3500);
 }
+/* Touch heatmap: taps leave a brief warm glow that cools and spreads.
+   Canvas 2D only, pointer-transparent, motion-gated. */
+const HeatFX=(()=>{
+  let cv=null,cx=null,pts=[],raf=0,dpr=1;
+  function size(){
+    if(!cv) return;
+    const r=$('character-wrap').getBoundingClientRect();
+    dpr=Math.min(1.5,window.devicePixelRatio||1);
+    cv.width=Math.max(1,Math.round(r.width*dpr)); cv.height=Math.max(1,Math.round(r.height*dpr));
+  }
+  function ensure(){
+    if(cv) return true;
+    const wrap=$('character-wrap'); if(!wrap) return false;
+    cv=document.createElement('canvas'); cv.id='heat-canvas';
+    cv.style.cssText='position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;opacity:.55;';
+    wrap.appendChild(cv); cx=cv.getContext('2d'); size();
+    return true;
+  }
+  window.addEventListener('resize',size,{passive:true});
+  function frame(){
+    raf=0; if(!cx||!cv) return;
+    cx.clearRect(0,0,cv.width,cv.height);
+    const now=performance.now();
+    pts=pts.filter(p=>now-p.t<950);
+    for(const p of pts){
+      const age=(now-p.t)/950, rad=(26+age*30)*p.i*dpr, a=(1-age)*.5*p.i;
+      const g=cx.createRadialGradient(p.x,p.y,0,p.x,p.y,rad);
+      g.addColorStop(0,'rgba(255,45,95,'+(a*.6).toFixed(3)+')');
+      g.addColorStop(.55,'rgba(255,170,60,'+(a*.30).toFixed(3)+')');
+      g.addColorStop(1,'rgba(255,120,60,0)');
+      cx.fillStyle=g; cx.beginPath(); cx.arc(p.x,p.y,rad,0,6.2832); cx.fill();
+    }
+    if(pts.length) raf=requestAnimationFrame(frame);
+  }
+  function add(x,y,i){
+    if(!S.settings.motion || document.body.classList.contains('no-motion') || !ensure()) return;
+    const r=$('character-wrap').getBoundingClientRect();
+    pts.push({x:(x-r.left)*dpr, y:(y-r.top)*dpr, i:Math.min(1.4,i||.8), t:performance.now()});
+    if(pts.length>26) pts.splice(0,pts.length-26);
+    if(!raf) raf=requestAnimationFrame(frame);
+  }
+  return {add, count:()=>pts.length};
+})();
+window.__heatfx=HeatFX;
 window.__fanservice={
   get combo(){return comboCount;}, get stage(){return comboStage;},
   get zone(){return lastTapZone;},
