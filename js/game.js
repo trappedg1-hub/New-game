@@ -214,6 +214,7 @@ function tap(x, y){
   S.stats.taps++;
   if(S.daily.date===today()) S.daily.d_taps++;
   if(crit) window.AmbientAudio?.sigh?.();
+  window.AmbientAudio?.tapBlip?.(comboStage, crit);
   if(x!=null){ if(crit) floatText(x, y-36, 'CRIT TAP! x20', 'crit'); floatText(x, y-14, '+'+fmt(gain)); burst(x,y); if(crit) burst(x,y); if(lastTapZone==='head') burst(x,y); HeatFX.add(x, y, crit?1.35 : .65+comboStage*.18); }
   // squash
   const sh = $('char-shadow'); sh.classList.add('pop'); setTimeout(()=>sh.classList.remove('pop'),150);
@@ -341,6 +342,57 @@ const HeatFX=(()=>{
   return {add, count:()=>pts.length};
 })();
 window.__heatfx=HeatFX;
+/* Photo studio: composite the live stage (scene backdrop + rig layers in
+   paint order + visible art overlays) into a clean PNG — no HUD, no bubble.
+   Canvas 2D with same-origin images only; CSS-gradient fx (blush/glints)
+   are DOM paint and intentionally not rasterised. */
+const Snapshot=(()=>{
+  function loadImg(src){return new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});}
+  async function render(){
+    const surf=$('character-surface');if(!surf)return null;
+    const sr=surf.getBoundingClientRect();if(sr.width<10||sr.height<10)return null;
+    const k=Math.min(3.5,900/sr.width);
+    const W=Math.round(sr.width*k),H=Math.round(sr.height*k);
+    const cv=document.createElement('canvas');cv.width=W;cv.height=H;
+    const cx=cv.getContext('2d');if(!cx)return null;
+    cx.fillStyle='#14101f';cx.fillRect(0,0,W,H);
+    let drawn=0;
+    const bgSrc=document.body.dataset.sceneBg;
+    if(bgSrc){const bg=await loadImg(bgSrc);if(bg&&bg.naturalWidth>0){const s=Math.max(W/bg.naturalWidth,H/bg.naturalHeight);const w=bg.naturalWidth*s,h=bg.naturalHeight*s;cx.drawImage(bg,(W-w)/2,(H-h)/2,w,h);drawn++;}}
+    const layers=[];
+    surf.querySelectorAll('img').forEach(el=>layers.push(el));
+    surf.querySelectorAll('.fx-art').forEach(el=>layers.push(el));
+    for(const el of layers){
+      if(el.id==='character-art'&&surf.dataset.mode==='layered')continue;
+      const cs=getComputedStyle(el);if(parseFloat(cs.opacity)<.05)continue;
+      const r=el.getBoundingClientRect();if(r.width<1||r.height<1)continue;
+      let img=el;
+      if(el.tagName!=='IMG'){
+        const m=/url\("?([^")]+)"?\)/.exec(cs.backgroundImage||'');if(!m)continue;
+        img=await loadImg(m[1]);if(!img)continue;
+      }
+      if(!img.naturalWidth)continue;
+      cx.globalAlpha=Math.min(1,parseFloat(cs.opacity));
+      cx.drawImage(img,(r.left-sr.left)*k,(r.top-sr.top)*k,r.width*k,r.height*k);
+      cx.globalAlpha=1;drawn++;
+    }
+    return {canvas:cv,W,H,drawn};
+  }
+  async function capture(){const r=await render();return r?{w:r.W,h:r.H,drawn:r.drawn}:null;}
+  function download(){
+    render().then(r=>{
+      if(!r||r.drawn===0){toast('Photo failed — stage not ready');return;}
+      r.canvas.toBlob(b=>{
+        if(!b){toast('Photo failed');return;}
+        const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='b-capture.png';
+        document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+        toast('Photo saved 📸');
+      },'image/png');
+    }).catch(()=>toast('Photo failed'));
+  }
+  return {capture,download};
+})();
+window.__snapshot=Snapshot;
 window.__fanservice={
   get combo(){return comboCount;}, get stage(){return comboStage;},
   get zone(){return lastTapZone;},
@@ -743,6 +795,7 @@ function bind(){
     m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('open'); });
   });
   $('btn-upgrades').onclick = ()=>openModal('upgrades');
+  $('btn-snapshot').onclick = ()=>Snapshot.download();
   $('btn-auto').onclick = ()=>{
     S.auto = !autoOn();
     $('auto-state').textContent = autoOn()?'ON':'OFF';

@@ -110,4 +110,32 @@
    }catch(_){}
   },180);
  };
+ /* Combo-pitched tap blip, gated by the SFX slider (falls back to the music
+    volume when no SFX control exists). Same single ambience context and the
+    same guards as sigh/heartbeat: never creates a context, silent at zero
+    volume or while hidden, throttled so fast tapping cannot machine-gun. */
+ function sfxVolume(){
+  const raw=document.getElementById('set-sfx')?.value;
+  const value=raw==null?volume():Number(raw)/100;
+  return Number.isFinite(value)?Math.max(0,Math.min(1,value)):0;
+ }
+ let lastBlip=0;
+ window.AmbientAudio.tapBlip=(stage,crit)=>{
+  if(!context||context.state!=='running'||document.hidden)return;
+  const vol=sfxVolume();if(vol===0)return;
+  const nowMs=performance.now();if(nowMs-lastBlip<50)return;lastBlip=nowMs;
+  try{
+   const t=context.currentTime;
+   const f=300+Math.max(0,Math.min(3,stage|0))*90+(crit?190:0)+(Math.random()*24-12);
+   const o=context.createOscillator(),g=context.createGain();
+   o.type='triangle';
+   o.frequency.setValueAtTime(f,t);
+   o.frequency.exponentialRampToValueAtTime(Math.max(60,f*.55),t+.08);
+   g.gain.setValueAtTime(0,t);
+   g.gain.exponentialRampToValueAtTime(Math.max(.004,vol*.12),t+.008);
+   g.gain.exponentialRampToValueAtTime(.0008,t+.09);
+   o.connect(g);g.connect(context.destination);
+   o.start(t);o.stop(t+.1);
+  }catch(_){}
+ };
 })();
