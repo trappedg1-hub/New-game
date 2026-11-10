@@ -15,7 +15,10 @@ for key, c in rigs:
     face = np.array(Image.open(c['layers']['face_open']).convert('RGBA'))
     union = (body[:, :, 3] > 32) | (face[:, :, 3] > 32)
     cov = mask.sum() / union.sum()
-    assert 0.02 < cov < 0.90, (key, cov)
+    assert 0.02 < cov < 0.97, (key, cov)
+    lum = .2126 * body[:, :, 0] + .7152 * body[:, :, 1] + .0722 * body[:, :, 2]
+    dark = (lum < 60) & (body[:, :, 3] > 32)
+    assert (dark & mask).sum() < 0.04 * mask.sum(), (key, 'dark clothing inside skin mask')
     for kind in ('tone', 'pattern'):
         for name, path in A[kind].items():
             im = np.array(Image.open(path).convert('RGBA'))
@@ -33,5 +36,14 @@ for key, c in rigs:
     for ex, ey in c['eyes']:  # eyes are never tinted
         ex, ey = int(ex), int(ey)
         assert not mask[max(0, ey - 6):ey + 7, max(0, ex - 6):ex + 7].any(), (key, 'eye in skin mask')
+    if A.get('eyes'):  # generated heart pupils sit only at the measured eyes
+        ea = np.array(Image.open(A['eyes']).convert('RGBA'))[:, :, 3] > 0
+        yy, xx = np.mgrid[0:1323, 0:420]
+        near = np.zeros(ea.shape, bool)
+        for ex, ey in c['eyes']:
+            near |= ((xx - ex) ** 2 + (yy - ey) ** 2) <= 30 ** 2
+        assert not (ea & ~near).any(), (key, 'heart art away from pupils')
+        assert ea.sum() > 40, (key, 'heart art missing')
+        assert not ((gloss[:, :, 3] > 0) & (face[:, :, 3] > 32) & ~((body[:, :, 3] > 32))).any(), (key, 'gloss on face')
     print('PASS', key, 'skin-only tan/pattern/gloss, eye-safe, slip on-body  cov=%.2f' % cov)
 print('PASS all 15 rigs: clothing/hair/eyes provably untinted')

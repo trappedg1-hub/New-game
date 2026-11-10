@@ -42,7 +42,7 @@ def skin_classify(rgb):
     """Tight anime-skin palette; excludes cream knit, pink fabric, amber eyes."""
     hue, sat, lum = hsv_arrays(rgb)
     pinkness = rgb[:, :, 0] - 2 * rgb[:, :, 1] + rgb[:, :, 2]  # skin >> cream knit
-    return (hue >= 10) & (hue <= 38) & (sat >= .07) & (sat <= .60) & (lum >= 95) & (pinkness >= 6)
+    return (hue >= 10) & (hue <= 38) & (sat >= .07) & (sat <= .60) & (lum >= 118) & (pinkness >= 6)
 
 def face_skin_mask(frgb, falpha):
     """Complete face silhouette minus features (dark brows/lashes, lips)."""
@@ -53,16 +53,53 @@ def face_skin_mask(frgb, falpha):
     lips = sil & (((hue <= 8) | (hue >= 330)) & (sat > .26))
     return sil & ~(np.array(dark_im) > 0) & ~lips
 
-def grade(rgb, alpha, mask, tone_rgb, blend, sss):
+def feather_alpha(mask):
+    m255 = (mask * 255).astype(np.uint8)
+    blurred = np.array(Image.fromarray(m255).filter(ImageFilter.GaussianBlur(1.0))).astype(float)
+    return np.minimum(m255.astype(float), blurred)
+
+def gblur(a, sigma=1.8):
+    """Separable float Gaussian blur (numpy, deterministic)."""
+    r = max(1, int(sigma * 3))
+    x = np.arange(-r, r + 1, dtype=float)
+    k = np.exp(-(x ** 2) / (2 * sigma ** 2)); k /= k.sum()
+    def conv(a, axis):
+        pad = [(0, 0)] * a.ndim; pad[axis] = (r, r)
+        ap = np.pad(a, pad, mode='edge')
+        out = np.zeros_like(a)
+        for i, wgt in enumerate(k):
+            sl = [slice(None)] * a.ndim
+            sl[axis] = slice(i, i + a.shape[axis])
+            out += wgt * ap[tuple(sl)]
+        return out
+    return conv(conv(a, 0), 1)
+
+def grade(rgb, alpha, mask, tone_rgb, blend, sss, blend_map=None):
     lum = (0.2126 * rgb[:, :, 0] + 0.7152 * rgb[:, :, 1] + 0.0722 * rgb[:, :, 2]) / 255.0
+    # Mask-normalized smoothing: luminance at every skin pixel is the weighted
+    # average of NEARBY SKIN ONLY, so dark outline strokes, shading hatching
+    # and 1-3px grit in the source can never survive as black specks, and
+    # mask-edge pixels inherit clean interior skin colour instead of outline.
+    mf = mask.astype(float)
+    num, den = lum * mf, mf
+    for _ in range(2):
+        num, den = gblur(num, 2.0), gblur(den, 2.0)
+    lum_s = np.where(mask, num / np.maximum(den, 1e-3), lum)
+    # lift shadows: deep source shading becomes warm mid-brown, never black
+    lum_c = 1.0 - (1.0 - np.clip(lum_s, 0, 1)) ** 1.5
     tone = np.array(tone_rgb, float)
-    shaded = np.clip(tone[None, None, :] * (0.30 + 0.95 * lum[:, :, None]), 0, 255)
-    out = rgb * (1 - blend) + shaded * blend
-    hot = np.clip((lum - .72) / .28, 0, 1) * sss  # SSS warm pink on lit skin
+    shaded = np.clip(tone[None, None, :] * (0.46 + 0.66 * lum_c[:, :, None]), 0, 255)
+    # cleaned source RGB only seasons the tone (median kills residual dots)
+    rgb_c = np.array(Image.fromarray(np.clip(rgb, 0, 255).astype(np.uint8)).filter(
+        ImageFilter.MedianFilter(3)), float)
+    b = blend if blend_map is None else blend_map
+    b = .55 + .45 * b  # tan must dominate; source RGB only seasons it
+    out = rgb_c * (1 - b) + shaded * b if np.ndim(b) else rgb_c * (1 - b) + shaded * b
+    hot = np.clip((lum_s - .72) / .28, 0, 1) * sss  # SSS warm pink on lit skin
     out = out * (1 - hot[:, :, None]) + np.array((255, 158, 122), float) * hot[:, :, None]
     res = np.zeros((*mask.shape, 4), np.uint8)
     res[:, :, :3] = np.clip(out, 0, 255)
-    res[:, :, 3] = np.where(mask, alpha, 0)
+    res[:, :, 3] = np.where(mask, np.minimum(alpha, feather_alpha(mask)), 0)
     return Image.fromarray(res)
 
 def heart(draw, cx, cy, s, fill):
@@ -121,8 +158,20 @@ for group in ('tiers', 'costumes'):
         lab, comps, ds = label_components(eroded)
         neck_lab = lab[min(eroded.shape[0] - 1, (_by0 + 8) // ds), min(eroded.shape[1] - 1, _neck_cx // ds)] if len(comps) else -1
         keep = np.zeros(len(comps), bool)
+        _pink_b = brgb[:, :, 0] - 2 * brgb[:, :, 1] + brgb[:, :, 2]
+        _lum_b = 0.2126 * brgb[:, :, 0] + 0.7152 * brgb[:, :, 1] + 0.0722 * brgb[:, :, 2]
         for i, cp in enumerate(comps):
-            keep[i] = (i == neck_lab) or (cp['maxy'] >= _by0 + .52 * _bh) or ((cp['maxy'] - cp['miny']) >= .30 * _bh and cp['miny'] <= _by0 + .10 * _bh) or (cp['miny'] <= _by0 + .05 * _bh and cp['area'] >= 300)
+            anchored = (i == neck_lab) or (cp['maxy'] >= _by0 + .52 * _bh) or ((cp['maxy'] - cp['miny']) >= .30 * _bh and cp['miny'] <= _by0 + .10 * _bh) or (cp['miny'] <= _by0 + .05 * _bh and cp['area'] >= 300)
+            if anchored:
+                keep[i] = True
+                continue
+            # genuine skin islands (bare midriff, shoulders) are bright or
+            # strongly pink; cream knit shading is darker and weakly pink
+            sel = lab == i
+            if sel.any() and cp['area'] >= 350:
+                ys3, xs3 = np.where(sel)
+                ys3 = np.clip(ys3 * ds, 0, 1322); xs3 = np.clip(xs3 * ds, 0, 419)
+                keep[i] = np.median(_lum_b[ys3, xs3]) >= 195 or np.median(_pink_b[ys3, xs3]) >= 24
         if len(comps):
             small_keep = keep[np.clip(lab, 0, len(comps) - 1)] & (lab >= 0)
             kept_full = np.array(Image.fromarray((small_keep * 255).astype(np.uint8)).resize((420, 1323), Image.Resampling.NEAREST)) > 0
@@ -131,18 +180,62 @@ for group in ('tiers', 'costumes'):
         mask = body_mask | face_skin_mask(frgb, falpha)
         mask_im = Image.fromarray((mask * 255).astype(np.uint8)).filter(ImageFilter.MaxFilter(5)).filter(ImageFilter.MinFilter(5))
         mask = np.array(mask_im) > 0
-        if c.get('eyes'):  # never tint eyes
+        # drop tiny mask islands (grit), fill small interior holes (pale patches)
+        lab, comps, ds = label_components(mask, ds=2)
+        if len(comps):
+            keepc = np.array([cp['area'] >= 70 for cp in comps])
+            small_keep = keepc[np.clip(lab, 0, len(comps) - 1)] & (lab >= 0)
+            mask &= np.array(Image.fromarray((small_keep * 255).astype(np.uint8)).resize((420, 1323), Image.Resampling.NEAREST)) > 0
+        union = (balpha > 32) | (falpha > 32)
+        holes = union & ~mask
+        lab, comps, ds = label_components(holes, ds=2)
+        if len(comps):
+            mask_small = np.array(Image.fromarray((mask * 255).astype(np.uint8)).resize((lab.shape[1], lab.shape[0]), Image.Resampling.NEAREST)) > 0
+            fill = np.zeros(len(comps), bool)
+            for i, cp in enumerate(comps):
+                if cp['area'] >= 1800:
+                    continue
+                comp_im = Image.fromarray(((lab == i) * 255).astype(np.uint8))
+                ring = (np.array(comp_im.filter(ImageFilter.MaxFilter(5))) > 0) & (lab != i)
+                # fill only patches truly surrounded by skin (knee blush,
+                # sole highlights) - never clothing regions
+                fill[i] = ring.sum() and (ring & mask_small).sum() / ring.sum() > .55
+            fillmask = fill[np.clip(lab, 0, len(comps) - 1)] & (lab >= 0)
+            mask |= np.array(Image.fromarray((fillmask * 255).astype(np.uint8)).resize((420, 1323), Image.Resampling.NEAREST)) > 0
+        # geodesic growth into skin-coloured candidates (pale highlights,
+        # blush pinks, grit) - dark clothing outlines act as barriers, so
+        # growth can never leak into garments
+        hue_b, sat_b, lum_b = hsv_arrays(brgb)
+        pinkness_b = brgb[:, :, 0] - 2 * brgb[:, :, 1] + brgb[:, :, 2]
+        cand = (balpha > 32) & ~mask & (
+            (((hue_b >= 325) | (hue_b <= 12)) & (sat_b >= .08) & (sat_b <= .45) & (lum_b >= 125) & (pinkness_b >= 15))
+            | ((lum_b >= 172) & (sat_b >= .10) & (sat_b <= .34) & (hue_b <= 55) & (pinkness_b >= 2)))
+        for _ in range(90):
+            dil = mask.copy()
+            dil[1:, :] |= mask[:-1, :]; dil[:-1, :] |= mask[1:, :]
+            dil[:, 1:] |= mask[:, :-1]; dil[:, :-1] |= mask[:, 1:]
+            grown = mask | (cand & dil)
+            if (grown == mask).all():
+                break
+            mask = grown
+        # final close seals dark grit dots/hatching inside skin masses
+        mask = np.array(Image.fromarray((mask * 255).astype(np.uint8)).filter(
+            ImageFilter.MaxFilter(7)).filter(ImageFilter.MinFilter(7))) > 0
+        if c.get('eyes'):  # never tint eyes (after all mask growth)
             yy, xx = np.mgrid[0:mask.shape[0], 0:mask.shape[1]]
             for ex, ey in c['eyes']:
-                mask &= ((xx - ex) ** 2 + (yy - ey) ** 2) > 13 ** 2
-        base_rgb = np.where((skin_classify(brgb) & (balpha > 32))[:, :, None], brgb, frgb)
+                mask &= (((xx - ex) / 20.0) ** 2 + ((yy - ey) / 11.0) ** 2) > 1
+        base_rgb = np.where((balpha > 32)[:, :, None], brgb, frgb)
         base_rgb = np.where(face_skin_mask(frgb, falpha)[:, :, None], frgb, base_rgb)
         base_alpha = np.maximum(balpha, falpha)
         Image.fromarray(np.dstack([np.full(mask.shape, 255, np.uint8)] * 3 + [np.where(mask, 255, 0).astype(np.uint8)])).save(out_dir / 'skin_mask.png', optimize=True)
 
+        face_zone = face_skin_mask(frgb, falpha)
         tones = {}
         for name, (rgb_t, blend, sss) in TONES.items():
-            tones[name] = grade(base_rgb, base_alpha, mask, rgb_t, blend, sss)
+            bmap = np.full(mask.shape, blend, float)
+            bmap[face_zone] = blend * 0.62  # keep facial features/blush readable
+            tones[name] = grade(base_rgb, base_alpha, mask, rgb_t, blend, sss, bmap[:, :, None])
             tones[name].save(out_dir / f'tone_{name}.png', optimize=True)
 
         ys, xs = np.where(balpha > 32)
@@ -153,9 +246,11 @@ for group in ('tiers', 'costumes'):
             layer = Image.new('RGBA', (420, 1323), (0, 0, 0, 0))
             dr = ImageDraw.Draw(layer)
             if pattern == 'bikini':
-                dr.ellipse([cx - .30 * bw, by0 + .10 * bh, cx + .30 * bw, by0 + .20 * bh], fill=PALE + (255,))
-                dr.ellipse([cx - .33 * bw, by0 + .38 * bh, cx + .33 * bw, by0 + .50 * bh], fill=PALE + (255,))
-                dr.ellipse([cx - .24 * bw, by0 + .52 * bh, cx + .24 * bw, by0 + .62 * bh], fill=PALE + (255,))
+                for sgn in (-1, 1):  # two small soft cups at the bust
+                    ccx = cx + sgn * .11 * bw
+                    dr.ellipse([ccx - .085 * bw, by0 + .100 * bh, ccx + .085 * bw, by0 + .175 * bh], fill=PALE + (255,))
+                dr.ellipse([cx - .26 * bw, by0 + .188 * bh, cx + .26 * bw, by0 + .202 * bh], fill=PALE + (255,))  # underbust band
+                dr.ellipse([cx - .17 * bw, by0 + .358 * bh, cx + .17 * bw, by0 + .390 * bh], fill=PALE + (255,))  # pelvis
             elif pattern == 'straps':
                 w2 = 9
                 dr.polygon([(bx0 + .10 * bw, by0 + .02 * bh), (bx0 + .24 * bw, by0 + .02 * bh),
@@ -164,7 +259,7 @@ for group in ('tiers', 'costumes'):
                             (cx - .20 * bw, by0 + .30 * bh), (cx - .02 * bw, by0 + .30 * bh)], fill=PALE + (255,))
             else:
                 heart(dr, bx0 + .20 * bw, by0 + .46 * bh, 30, PALE + (255,))
-            layer = layer.filter(ImageFilter.GaussianBlur(1.1))
+            layer = layer.filter(ImageFilter.GaussianBlur(2.2))
             la = np.array(layer).astype(float)
             tan = np.array(tones['golden']).astype(float)
             pale_a = (la[:, :, 3:4] / 255.0)
@@ -176,13 +271,26 @@ for group in ('tiers', 'costumes'):
 
         # specular gloss from the art's own bright skin
         lum = (0.2126 * base_rgb[:, :, 0] + 0.7152 * base_rgb[:, :, 1] + 0.0722 * base_rgb[:, :, 2]) / 255.0
-        spec = np.clip((lum - .70) / .30, 0, 1)
+        spec = np.clip((lum - .78) / .22, 0, 1) ** 1.4
         gloss = np.zeros((1323, 420, 4), np.uint8)
         gloss[:, :, :3] = 255
-        gloss[:, :, 3] = np.where(mask, spec * 235, 0).astype(np.uint8)
+        # never on the face (it read as a glowing head) - body highlights only
+        gloss[:, :, 3] = np.where(mask & ~face_zone & ~(falpha > 32), spec * 150, 0).astype(np.uint8)
         gloss_im = Image.fromarray(gloss).filter(ImageFilter.GaussianBlur(.7))
-        ga = np.array(gloss_im); ga[:, :, 3] = np.where(mask, ga[:, :, 3], 0)
+        ga = np.array(gloss_im); ga[:, :, 3] = np.where(mask & ~face_zone & ~(falpha > 32), ga[:, :, 3], 0)
         Image.fromarray(ga).save(out_dir / 'gloss_specular.png', optimize=True)
+
+        if c.get('eyes'):  # generated heart-pupil art at the measured pupils
+            el = Image.new('RGBA', (420, 1323), (0, 0, 0, 0))
+            dr = ImageDraw.Draw(el)
+            for ex, ey in c['eyes']:
+                heart(dr, ex, ey + 1, 10.5, (255, 45, 110, 255))
+                heart(dr, ex, ey, 8, (255, 110, 160, 255))
+            el = el.filter(ImageFilter.GaussianBlur(.5))
+            dr = ImageDraw.Draw(el)
+            for ex, ey in c['eyes']:  # sparkle
+                dr.ellipse([ex - 4, ey - 5, ex - 1, ey - 2], fill=(255, 255, 255, 235))
+            el.save(out_dir / 'eyes_heart.png', optimize=True)
 
         # dishevel overlays: own clothing bands shifted down, feathered
         body_im = Image.open(c['layers']['body_base']).convert('RGBA')
@@ -217,9 +325,11 @@ for group in ('tiers', 'costumes'):
             'gloss': f'{rel}/tan/gloss_specular.png',
             'slip': [f'{rel}/tan/slip_stage{i}.png' for i in (1, 2, 3)],
         }
+        if c.get('eyes'):
+            c['tanAssets']['eyes'] = f'{rel}/tan/eyes_heart.png'
         cov = 100 * mask.sum() / max(1, (balpha > 32).sum())
         print(key, 'skin coverage %.1f%% of body alpha' % cov)
 
-m['version'] = 23
+m['version'] = 24
 (ROOT / 'animation-manifest.json').write_text(json.dumps(m, indent=2) + '\n')
 print('tan assets built for all layered rigs; manifest v23')

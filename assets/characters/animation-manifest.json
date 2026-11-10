@@ -1,5 +1,5 @@
 {
-  "version": 23,
+  "version": 24,
   "renderer": "canonical-420x1323-registered-png",
   "tiers": {
     "1": {
@@ -71,7 +71,8 @@
           "assets/characters/tier1/tan/slip_stage1.png",
           "assets/characters/tier1/tan/slip_stage2.png",
           "assets/characters/tier1/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/tier1/tan/eyes_heart.png"
       }
     },
     "2": {
@@ -143,7 +144,8 @@
           "assets/characters/tier2/tan/slip_stage1.png",
           "assets/characters/tier2/tan/slip_stage2.png",
           "assets/characters/tier2/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/tier2/tan/eyes_heart.png"
       }
     },
     "3": {
@@ -215,7 +217,8 @@
           "assets/characters/tier3/tan/slip_stage1.png",
           "assets/characters/tier3/tan/slip_stage2.png",
           "assets/characters/tier3/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/tier3/tan/eyes_heart.png"
       }
     },
     "4": {
@@ -293,7 +296,8 @@
           "assets/characters/tier4/tan/slip_stage1.png",
           "assets/characters/tier4/tan/slip_stage2.png",
           "assets/characters/tier4/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/tier4/tan/eyes_heart.png"
       }
     },
     "5": {
@@ -365,7 +369,8 @@
           "assets/characters/tier5/tan/slip_stage1.png",
           "assets/characters/tier5/tan/slip_stage2.png",
           "assets/characters/tier5/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/tier5/tan/eyes_heart.png"
       }
     }
   },
@@ -447,7 +452,8 @@
           "assets/characters/costume_apron/tan/slip_stage1.png",
           "assets/characters/costume_apron/tan/slip_stage2.png",
           "assets/characters/costume_apron/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/costume_apron/tan/eyes_heart.png"
       }
     },
     "bunny": {
@@ -527,7 +533,8 @@
           "assets/characters/costume_bunny/tan/slip_stage1.png",
           "assets/characters/costume_bunny/tan/slip_stage2.png",
           "assets/characters/costume_bunny/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/costume_bunny/tan/eyes_heart.png"
       }
     },
     "cardigan": {
@@ -607,7 +614,8 @@
           "assets/characters/costume_cardigan/tan/slip_stage1.png",
           "assets/characters/costume_cardigan/tan/slip_stage2.png",
           "assets/characters/costume_cardigan/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/costume_cardigan/tan/eyes_heart.png"
       }
     },
     "gown": {
@@ -687,7 +695,8 @@
           "assets/characters/costume_gown/tan/slip_stage1.png",
           "assets/characters/costume_gown/tan/slip_stage2.png",
           "assets/characters/costume_gown/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/costume_gown/tan/eyes_heart.png"
       }
     },
     "maid": {
@@ -771,7 +780,8 @@
           "assets/characters/costume_maid/tan/slip_stage1.png",
           "assets/characters/costume_maid/tan/slip_stage2.png",
           "assets/characters/costume_maid/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/costume_maid/tan/eyes_heart.png"
       }
     },
     "pool": {
@@ -851,7 +861,8 @@
           "assets/characters/costume_pool/tan/slip_stage1.png",
           "assets/characters/costume_pool/tan/slip_stage2.png",
           "assets/characters/costume_pool/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/costume_pool/tan/eyes_heart.png"
       }
     },
     "track": {
@@ -931,7 +942,8 @@
           "assets/characters/costume_track/tan/slip_stage1.png",
           "assets/characters/costume_track/tan/slip_stage2.png",
           "assets/characters/costume_track/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/costume_track/tan/eyes_heart.png"
       }
     },
     "ribbon": {
@@ -1006,7 +1018,8 @@
           "assets/characters/costume_ribbon/tan/slip_stage1.png",
           "assets/characters/costume_ribbon/tan/slip_stage2.png",
           "assets/characters/costume_ribbon/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/costume_ribbon/tan/eyes_heart.png"
       }
     },
     "barefoot": {
@@ -1081,7 +1094,8 @@
           "assets/characters/costume_barefoot/tan/slip_stage1.png",
           "assets/characters/costume_barefoot/tan/slip_stage2.png",
           "assets/characters/costume_barefoot/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/costume_barefoot/tan/eyes_heart.png"
       }
     },
     "cat": {
@@ -1166,7 +1180,8 @@
           "assets/characters/costume_cat/tan/slip_stage1.png",
           "assets/characters/costume_cat/tan/slip_stage2.png",
           "assets/characters/costume_cat/tan/slip_stage3.png"
-        ]
+        ],
+        "eyes": "assets/characters/costume_cat/tan/eyes_heart.png"
       }
     }
   },

@@ -54,6 +54,7 @@
    art('fx-tone-sunkissed',A.tone.sunkissed); art('fx-tone-golden',A.tone.golden); art('fx-tone-bronze',A.tone.bronze);
    art('fx-tanline-bikini',A.pattern.bikini); art('fx-tanline-straps',A.pattern.straps); art('fx-tanline-heart',A.pattern.heart);
    art('fx-glossart',A.gloss);
+   if(A.eyes)art('fx-heartart',A.eyes);
    A.slip.forEach((src,i)=>art('fx-slip-'+(i+1),src));
   }
   if(config.eyes){
@@ -64,7 +65,7 @@
    fx.append(blush);
    const lid=document.createElement('div');lid.className='fx-eyelid';at(lid,lx-dist*.62,my-36);lid.style.width=dist*2.24/Wc*100+'%';lid.style.height=46/Hc*100+'%';fx.append(lid);
    const lip=document.createElement('div');lip.className='fx-lip';at(lip,mx,my+92);fx.append(lip);
-   for(const [ex,ey] of config.eyes){const s=document.createElement('span');s.className='fx-pupil';s.textContent='\u2665';at(s,ex,ey);fx.append(s);}
+   if(!config.tanAssets?.eyes)for(const [ex,ey] of config.eyes){const s=document.createElement('span');s.className='fx-pupil';s.textContent='\u2665';at(s,ex,ey);fx.append(s);}
   }
   breath.append(fx);
   return scene;

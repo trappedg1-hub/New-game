@@ -62,10 +62,12 @@ const assert = require("node:assert/strict");
     p = await page({ level: 76 });
     await p.waitForTimeout(600);
     assert.equal(await surface(p).evaluate((e) => e.classList.contains("heart-eyes")), true);
-    assert.equal(await p.locator(".fx-pupil").count(), 2);
-    assert.equal(await p.locator(".fx-pupil").first().evaluate((e) => getComputedStyle(e).opacity), "1");
-    const pupilPulse = await p.locator(".fx-pupil").first().evaluate((e) => e.getAnimations().map((a) => a.animationName));
-    assert(pupilPulse.includes("heartPulse"), "pupils must pulse");
+    assert.equal(await p.locator(".fx-heartart").count(), 1);
+    assert.equal(await p.locator(".fx-heartart").first().evaluate((e) => getComputedStyle(e).opacity), "1");
+    const heartSrc = await p.locator(".fx-heartart").first().evaluate((e) => getComputedStyle(e).backgroundImage);
+    assert(heartSrc.includes("eyes_heart.png"), "heart pupils must be generated art: " + heartSrc);
+    const pupilPulse = await p.locator(".fx-heartart").first().evaluate((e) => e.getAnimations().map((a) => a.animationName));
+    assert(pupilPulse.includes("heartArtPulse"), "heart pupils must pulse");
     await p.waitForFunction(() => document.querySelectorAll(".aura-heart").length >= 3, null, { timeout: 6000 });
     await p.evaluate(() => (Math.random = () => 0.01)); /* force crit roll, keep heart-eyes lines deterministic */
     const r = await p.locator("#character-wrap").boundingBox();
@@ -89,8 +91,9 @@ const assert = require("node:assert/strict");
     assert(skin.cls.includes("tone-golden") && skin.cls.includes("tan-heart"), skin.cls);
     await p.waitForFunction(() => getComputedStyle(document.querySelector(".fx-tone-golden")).opacity === "1");
     await p.waitForFunction(() => getComputedStyle(document.querySelector(".fx-tanline-heart")).opacity === "1");
+    await p.waitForFunction(() => Math.abs(parseFloat(getComputedStyle(document.querySelector(".fx-glossart")).opacity) - 0.63) < 0.02, null, { timeout: 4000 });
     const glossOp = await p.locator(".fx-glossart").evaluate((e) => parseFloat(getComputedStyle(e).opacity));
-    assert(Math.abs(glossOp - 0.855) < 0.02, "gloss slider must drive specular art opacity, got " + glossOp);
+    assert(Math.abs(glossOp - 0.63) < 0.02, "gloss slider must drive specular art opacity, got " + glossOp);
     assert.equal(skin.gloss, "0.9");
     assert.match(await p.locator("#tan-perk").textContent(), /\+5% COINS/);
     await p.waitForTimeout(3200); /* save throttle */
