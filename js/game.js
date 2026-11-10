@@ -27,7 +27,6 @@ function def(){
     freePull:0, pity:{sr:0,ssr:0},
     stats:{taps:0,coins:0,pulls:0},
     prestige:0, settings:{motion:true},
-    skin:{tone:'porcelain',tan:'none',gloss:50,unlocked:[]},
     friend:'B-'+Math.floor(1000+Math.random()*9000),
     lastSeen:Date.now(), bubbleAt:0, tapTalk:0,
   };
@@ -45,7 +44,7 @@ function load(){
     S.settings = Object.assign(def().settings, d.settings||{});
     S.pity = Object.assign(def().pity, d.pity||{});
     S.daily = Object.assign(def().daily, d.daily||{});
-    S.skin = Object.assign(def().skin, d.skin||{}); if(!Array.isArray(S.skin.unlocked)) S.skin.unlocked=[];
+    delete S.skin; // legacy Skin & Tan Studio state — feature removed, purge old saves
     if(S.daily.date !== today()) S.daily = {date:today(),d_taps:0,d_earned:0,d_pulls:0,claimed:{}};
   }catch(e){ console.warn('save broken', e); }
 }
@@ -72,9 +71,8 @@ function boostMult(){
 const totalMult = () => Math.max(permMult(), boostMult());
 function tapPower(){ let p=1; for(const u of UPGRADES) if(u.kind==='tap') p += S.up[u.id]*u.eff; return p; }
 function baseCps(){ let c=0; for(const u of UPGRADES) if(u.kind==='auto') c += S.up[u.id]*u.eff; return c; }
-function tanMult(){ return 1 + 0.05*((S.skin&&S.skin.unlocked)?S.skin.unlocked.length:0); }
-function cps(){ return baseCps() * totalMult() * tanMult(); }
-function coinsPerTap(){ return tapPower() * totalMult() * tanMult(); }
+function cps(){ return baseCps() * totalMult(); }
+function coinsPerTap(){ return tapPower() * totalMult(); }
 const tierOf = lv => TIERS.find(t => lv>=t.min && lv<=t.max) || TIERS[0];
 const costOf = (u,lvl) => Math.ceil(u.base * Math.pow(u.rate, lvl));
 const autoOn = () => S.auto !== false;
@@ -349,28 +347,6 @@ window.__fanservice={
   setCombo(n){ comboCount=n; comboLast=performance.now(); applyComboStage(stageFor(n)); },
   heartEyes:heartEyesActive,
 };
-
-/* ---------------- Skin & Tan Studio ---------------- */
-function applySkin(){
-  const s=$('character-surface'); if(!s) return;
-  s.classList.remove('tone-sunkissed','tone-golden','tone-bronze','tan-bikini','tan-straps','tan-heart');
-  if(S.skin.tone!=='porcelain') s.classList.add('tone-'+S.skin.tone);
-  if(S.skin.tan!=='none') s.classList.add('tan-'+S.skin.tan);
-  s.style.setProperty('--gloss', S.skin.gloss/100);
-  document.querySelectorAll('#tone-row .swatch').forEach(b=>b.classList.toggle('active', b.dataset.tone===S.skin.tone));
-  document.querySelectorAll('#tan-row .swatch').forEach(b=>b.classList.toggle('active', b.dataset.tan===S.skin.tan));
-  if($('gloss-range')){ $('gloss-range').value=S.skin.gloss; $('gloss-val').textContent=S.skin.gloss+'%'; }
-  if($('tan-perk')) $('tan-perk').textContent='+'+(S.skin.unlocked.length*5)+'% COINS';
-}
-function bindStudio(){
-  document.querySelectorAll('#tone-row .swatch').forEach(b=>b.onclick=()=>{ S.skin.tone=b.dataset.tone; applySkin(); save(); });
-  document.querySelectorAll('#tan-row .swatch').forEach(b=>b.onclick=()=>{
-    const tan=b.dataset.tan;
-    if(tan!=='none' && !S.skin.unlocked.includes(tan)){ S.skin.unlocked.push(tan); toast('Tan style unlocked \u00b7 +5% permanent coins \u2600\ufe0f'); }
-    S.skin.tan=tan; applySkin(); save();
-  });
-  $('gloss-range').addEventListener('input', e=>{ S.skin.gloss=+e.target.value; applySkin(); save(); });
-}
 
 /* ---------------- Energy / regen tick ---------------- */
 function tickEnergy(){
@@ -866,7 +842,7 @@ function boot(){
   // preload
   [...TIERS.map(t=>t.art), ...TIERS.map(t=>t.bg)]
     .forEach(src=>{ const i=new Image(); i.src=src; });
-  renderAll(); bindStudio(); applySkin();
+  renderAll();
   setTimeout(()=>idleTalk(), 700);
   setInterval(save, CONFIG.SAVE_MS);
   setInterval(newDayCheck, 60000);

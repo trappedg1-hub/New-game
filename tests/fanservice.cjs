@@ -80,31 +80,15 @@ const assert = require("node:assert/strict");
     await p.close();
     console.log("PASS heart-eyes at Lv50+: pupils+pulse, eyelid/blush/lip overlays, aura hearts, x20 crit taps");
 
-    /* ---- 3. Skin & Tan Studio persistence + perk ---- */
-    p = await page({ level: 11 });
-    await p.locator("#toggle-right").click();
-    await p.locator('[data-tone="golden"]').click();
-    await p.locator('[data-tan="heart"]').click();
-    await p.locator("#gloss-range").fill("90");
-    await p.waitForTimeout(150);
-    let skin = await surface(p).evaluate((e) => ({ cls: e.className, gloss: e.style.getPropertyValue("--gloss") }));
-    assert(skin.cls.includes("tone-golden") && skin.cls.includes("tan-heart"), skin.cls);
-    await p.waitForFunction(() => getComputedStyle(document.querySelector(".fx-tone-golden")).opacity === "1");
-    await p.waitForFunction(() => getComputedStyle(document.querySelector(".fx-tanline-heart")).opacity === "1");
-    await p.waitForFunction(() => Math.abs(parseFloat(getComputedStyle(document.querySelector(".fx-glossart")).opacity) - 0.63) < 0.02, null, { timeout: 4000 });
-    const glossOp = await p.locator(".fx-glossart").evaluate((e) => parseFloat(getComputedStyle(e).opacity));
-    assert(Math.abs(glossOp - 0.63) < 0.02, "gloss slider must drive specular art opacity, got " + glossOp);
-    assert.equal(skin.gloss, "0.9");
-    assert.match(await p.locator("#tan-perk").textContent(), /\+5% COINS/);
-    await p.waitForTimeout(3200); /* save throttle */
-    await p.reload(); await p.waitForTimeout(900);
-    skin = await surface(p).evaluate((e) => ({ cls: e.className, gloss: e.style.getPropertyValue("--gloss") }));
-    assert(skin.cls.includes("tone-golden") && skin.cls.includes("tan-heart"), "studio must persist: " + skin.cls);
-    assert.equal(skin.gloss, "0.9");
-    const saved = await p.evaluate(() => JSON.parse(localStorage.getItem("waifuB_save_v1")).skin);
-    assert.deepEqual(saved, { tone: "golden", tan: "heart", gloss: 90, unlocked: ["heart"] });
+    /* ---- 3. Legacy saves: removed Skin & Tan Studio state is purged ---- */
+    p = await page({ level: 11, skin: { tone: "golden", tan: "heart", gloss: 90, unlocked: ["heart"] } });
+    assert.equal(await p.locator("#tan-studio").count(), 0);
+    await p.locator("#tap-btn").click();
+    await p.waitForTimeout(3400); /* save throttle */
+    const purged = await p.evaluate(() => !("skin" in JSON.parse(localStorage.getItem("waifuB_save_v1"))));
+    assert.equal(purged, true, "legacy skin key must be purged on next save");
     assert.deepEqual(p.errors, []);
     await p.close();
-    console.log("PASS Skin & Tan Studio: live tone/tan/gloss, +5% perk, localStorage persistence");
+    console.log("PASS legacy save purge: tan studio removed, stale skin state purged, no errors");
   } finally { await b.close(); }
 })().catch((e) => { console.error(e); process.exit(1); });

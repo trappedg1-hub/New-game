@@ -48,14 +48,11 @@
   faces.append(image(config.layers.face_open,'face-open layer-synced'),image(config.layers.face_closed,'face-closed layer-synced'));breath.append(faces);
   breath.append(group('rig-hair-front',config.layers.hair_front,'hair-front'));
   const fx=document.createElement('div');fx.className='rig-fx';
-  if(config.tanAssets){
-   const A=config.tanAssets;
+  if(config.fxAssets){
+   const A=config.fxAssets;
    const art=(cls,src)=>{const o=document.createElement('div');o.className='fx-art '+cls;o.style.backgroundImage=`url("${src}")`;fx.append(o);};
-   art('fx-tone-sunkissed',A.tone.sunkissed); art('fx-tone-golden',A.tone.golden); art('fx-tone-bronze',A.tone.bronze);
-   art('fx-tanline-bikini',A.pattern.bikini); art('fx-tanline-straps',A.pattern.straps); art('fx-tanline-heart',A.pattern.heart);
-   art('fx-glossart',A.gloss);
    if(A.eyes)art('fx-heartart',A.eyes);
-   A.slip.forEach((src,i)=>art('fx-slip-'+(i+1),src));
+   (A.slip||[]).forEach((src,i)=>art('fx-slip-'+(i+1),src));
   }
   if(config.eyes){
    const [Wc,Hc]=config.canvas;const [[lx,ly],[rx,ry]]=config.eyes;const mx=(lx+rx)/2,my=(ly+ry)/2,dist=rx-lx;
@@ -70,7 +67,7 @@
    const glint=document.createElement('div');glint.className='fx-glint';
    for(const [ex,ey] of config.eyes){const i=document.createElement('i');at(i,ex,ey);glint.append(i);}
    fx.append(glint);
-   if(!config.tanAssets?.eyes)for(const [ex,ey] of config.eyes){const s=document.createElement('span');s.className='fx-pupil';s.textContent='\u2665';at(s,ex,ey);fx.append(s);}
+   if(!config.fxAssets?.eyes)for(const [ex,ey] of config.eyes){const s=document.createElement('span');s.className='fx-pupil';s.textContent='\u2665';at(s,ex,ey);fx.append(s);}
   }
   breath.append(fx);
   return scene;
